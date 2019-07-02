@@ -1,0 +1,8 @@
+Author: Thorsten Tepper-Garcia
+Date: 02/07/2019
+
+The codes contained here are the precursor of the actual
+code 'two_body_orbit.py'. While correct, they may no longer
+be fully functional as the functions called within these
+codes may have evolved.
+

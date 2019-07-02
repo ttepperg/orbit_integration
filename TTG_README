@@ -1,0 +1,48 @@
+TTG 2019
+
+This is a log documenting the writing of a python code to integrate the equation of motion of two
+extended bodies orbiting in each other's potential, eventually taking dynamical friction
+into account.
+
+Approach / Steps:
+
+0   - Implement an ODE solver based on:
+0.1 - the 4th order Runge-Kutta method and test -> DONE.
+		Does not conserve energy well over extended periods of time or not small enough time steps.
+0.2 - the 2nd order leapfrog (kick-drift-kick) method -> DONE.
+		Conserves energy well on average, but may lead to orbit precession if time step not small enough.
+		Conserves angular momentum to machine precision.
+
+1   - One point mass orbiting a fixed point mass in 1D:
+1.1 - In natural units (G=1) -> DONE.
+		Problem ill-defined, does not work (only tried RK4 solver.
+		Perhaps tractable performing a change of variable u=1/r, as is
+		done in the solution pof the Kepler problem.
+
+2   - One point mass orbiting a fixed point mass in 2D:
+2.1 - In natural units (G=1) -> DONE.
+		Best results with leapfrog solver, as anticipated from 0.2. Will use this from here on.
+2.2 - In (astro-)physical units -> DONE.
+		Note that using astropy's constant G slows down the code.
+
+3   - One point mass orbiting a fixed point mass in 3D in (astro-)physical units -> DONE.
+
+4   - Two point masses orbiting around each other
+4.1	- 2D -> DONE.
+4.2	- 3D -> DONE.
+
+5   - Two masses orbiting around each other, with one of them not being point-like (3D only)
+5.1 - Requires implementing numerical differentiation -> DONE
+		Implemented a forward finite difference scheme (orders 2 and 3)
+		Implemented a central finite difference scheme (order 2 and 4)
+		A CFD scheme of order 4 conserves angular momentum to machine precision (for a Kepler potential)
+		Both schemes conserve energy well. Will use CFD from now on.
+
+	  IMPORTANT NOTE: The conserved quantities are:
+	  - relative specific angular momentum
+	  - relative specific potential energy
+	  - relative specific kinetic energy
+
+
+6   - Two masses orbiting around each other in 3D, with at least one of them not being point-like,
+	  with the less extended experiencing dynamical friction by the more extended.
