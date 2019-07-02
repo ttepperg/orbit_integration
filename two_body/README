@@ -1,7 +1,7 @@
 
 Author: 		Thorsten Tepper Garcia
 
-Last modified:	01/07/2019
+Last modified:	02/07/2019
 
 
 # BACKGROUND
@@ -15,7 +15,7 @@ others potential are:
 	dr2dt = v2
 	dv2dt = - Grad Phi1
 
-Here,
+where,
 
 	r := position vector of body 1 or 2
 	v := velocity vector of body 1 or 2
@@ -81,7 +81,8 @@ https://en.wikipedia.org/wiki/Energy_drift).
 
 Also, orbit precession may naturally result from central potentials other than
 point-like masses (Bertrand's Theorem; https://en.wikipedia.org/wiki/Bertrand%27s_theorem)
-and it thus do not necessarily indicate an error in the integration scheme.
+and it thus do not necessarily indicate an error in the integration scheme (see
+Section 'IMPORTANT REMARKS' below).
 
 
 # SPATIAL DERIVATIVES
@@ -179,8 +180,8 @@ following units are adopted:
 	Velocity unit:			1.000 km / s = 1.000000E+05 cm / s
 	Time unit:				0.978 Gyr = 3.085678E+16 s
 
-Note that the conversion factor of the time is fixed by the others. The
-choice of units for G is convenient, since any given potential (or specific
+Note that the conversion factor for the time parameter is fixed by the others.
+The choice of units for G is convenient, since any given potential (or specific
 potential energy) automatically has units of (km/s)^2, i.e. identical to the
 specific kinetic energy.
 
@@ -205,7 +206,11 @@ or
 
 The script provides both a full 3D view of the system, or alternatively,
 a 2D projection along one of the principal axis of a standard Cartesian
-reference frame.
+reference frame. In addition, the code always provides a 2D view of
+the system's evolution on the orbital plane. Hereby, a direct comparison
+to the analytic result for given values of the semi-latus rectum, the
+eccentricity, and the true anomaly offset (or apsidal angle) is readily
+implemented.
 
 This script accepts a number of input arguments, all of which are set
 to reasonable defaults, the obvious exception being the data file.
@@ -220,16 +225,28 @@ input arguments and their default values.
 # IMPORTANT REMARKS
 
 1) The conserved quantities are:
-	  - relative specific angular momentum
-	  - relative specific total (potential + kinetic) energy
+
+- relative specific angular momentum;
+	  
+- relative specific total (potential + kinetic) energy.
+
 The individual energies and angular momenta need not necessarily
-be conserved (?).
+be conserved (?). The error in the conservation of angular momentum
+# is generally orders of magnitude smaller than the error in the conservation
+of energy (why?).
+
+Also, the spatial step and the order of accuracy used when calculating
+numerical derivatives of the potential affect the conservation of angular
+momentum, but not the conservation of energy (which seems to depend on the
+time integration scheme only; why?).
+
 
 2) Only a central, Kepler (i.e. point-mass) potential yields conic
 orbits; in particular, if the eccentricity is less than unity, it leads
 to *closed* orbits. In this case, the orbit can be described by a
 unique set of orbital parameters (eccentricity, semi-major axis, period,
 etc.)
+
 
 3) Non-Keplerian potentials never lead to closed orbits, not even in
 the case that the initial conditions imply e < 1, by virtue of
