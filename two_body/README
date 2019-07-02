@@ -101,11 +101,11 @@ to change the invoked scheme explicitly in the calculation of the accelerations.
 An example on how to invoke the differentiation routines is as follows:
 
 1) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a CFD with an integration step 1.e-4 at a precision 3**2 use:
+point r = [x,y,z], using a CFD with an integration step 1.e-4 at a precision 3^2 use:
 fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
 
 2) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a FFD with an integration step 1.e-4 at a precision 3**2 use:
+point r = [x,y,z], using a FFD with an integration step 1.e-4 at a precision 3^2 use:
 fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
 
 
@@ -113,12 +113,12 @@ fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
 
 The code can be run directly from command line via:
 
-	shell> ./two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
+	shell> ./two_body_orbit.py <input parameter file>
 
 using the prededfined python interpreter given in the first line,
 or:
 
-	shell> python3.X two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
+	shell> python3.X two_body_orbit.py <input parameter file>
 
 using an alternative python interpreter. Note that a python version 3.X is
 required.
@@ -136,7 +136,10 @@ etc.) are then calculated from these.
 Note that providing the state vectos r0 and v0 for each body is the preferred
 method to specify the initial conditions of the system. However, some methods
 are available to impose certain conditions on the orbit, e.g. a circular orbit
-*within* the input parameter file (see the example parameter files).
+*within* the input parameter file.
+
+The parameter file needs to be present in the directory 'init'. There, a few
+example parameter files are provided, for guidance.
 
 
 # OUTPUT
@@ -146,12 +149,12 @@ directory './output' named after the input parameter file and appended
 by the substring "_out.dat".
 The table consists of a total of 24 columns. The first 16 contain, in that
 order, the time, the specific relative angular momentum, the relative potential
-energy, the relative kinetic energy, and (x,vx,y,vt,z,vz) for each of the
-bodies. The last 8 columnns contain (x',vx',y',vt',z',vz') for each of the
-bodies, where the primed coordinates and velocities correspond to those
-on the orbital plane. In other words, these coordinates represent a
+energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the
+bodies. The last 8 columnns contain (x',vx',y',vy') for each of the
+bodies, where the primed coordinates and velocities correspond to the coordinates
+and velocities on the orbital plane. In other words, these coordinates represent a
 rotated version of the intrinsic orbit such that the relative angular momentum
-aligns with the z-axis. If the intrinsic orbit has this property,
+of the system aligns with the z-axis. If the intrinsic orbit has this property,
 the primed and unprimed coordinates are identical. Note that the primed z
 coordinates are ignored, because they all vanish by definition.
 The set of primed coordinates are very useful for checking the numerical result
@@ -163,11 +166,12 @@ orbital parameters calculated at runtime.
 
 This code is intended mainly for astrophysical applications. Therefore, the
 following units are adopted:
-  Gravitational constant:   4.301E-06 kpc km^2 / Msun s^2
-               Mass unit:       1.000 solMass = 1.988475E+33 g
-             Length unit:       1.000 kpc = 3.085678E+21 cm
-           Velocity unit:       1.000 km / s = 1.000000E+05 cm / s
-               Time unit:       0.978 Gyr = 3.085678E+16 s
+
+	Gravitational constant:	4.301E-06 kpc km^2 / Msun s^2
+	Mass unit:				1.000 solMass = 1.988475E+33 g
+	Length unit:			1.000 kpc = 3.085678E+21 cm
+	Velocity unit:			1.000 km / s = 1.000000E+05 cm / s
+	Time unit:				0.978 Gyr = 3.085678E+16 s
 
 Note that the conversion factor of the time is fixed by the others. The
 choice of units for G is convenient, since any given potential (or specific
@@ -218,10 +222,10 @@ be conserved (?).
 2) Only a central, Kepler (i.e. point-mass) potential yields conic
 orbits; in particular, if the eccentricity is less than unity, it leads
 to *closed* orbits. In this case, the orbit can be described by a
-unique set of orbital parameters (eccentricity, semimajor axis, period,
+unique set of orbital parameters (eccentricity, semi-major axis, period,
 etc.)
 
-3) Non-Keplerian potentials never lead to closed orbit, not even in
+3) Non-Keplerian potentials never lead to closed orbits, not even in
 the case that the initial conditions imply e < 1, by virtue of
 Bertrand's theorem. In this case, the orbital parameters set by the
 initial conditions correspond, at best, to osculating parameters.
