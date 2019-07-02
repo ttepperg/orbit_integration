@@ -101,12 +101,14 @@ to change the invoked scheme explicitly in the calculation of the accelerations.
 An example on how to invoke the differentiation routines is as follows:
 
 1) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a CFD with an integration step 1.e-4 at a precision 3^2 use:
-fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
+point r = [x,y,z], using a CFD scheme of order 4 with an integration step 1.e-3
+to achieve a precision of order (1.e-3)^4 use:
+fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-3, order = 4)
 
-2) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a FFD with an integration step 1.e-4 at a precision 3^2 use:
-fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
+2) To calculate the first partial derivative of f with respect to y (var=1) at
+point r = [x,y,z], using a FFD scheme of order 3 with an integration step 1.e-4
+to achieve a precision of order (1.e-4)^3 use:
+fwd_diff_first(*r, var = 1, func = f, delta_x = 1.e-4, order = 3)
 
 
 # RUN
