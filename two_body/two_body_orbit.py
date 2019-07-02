@@ -16,7 +16,8 @@ from ode_int.leapfrog import ode_leap
 # from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
 from utils import funcs
-from astropy import units
+# from astropy import units
+from config import units
 import config.phys_consts as pc
 
 
@@ -34,18 +35,13 @@ else:
 	else:
 		initialConds = ics_file
 
-
 # Informative output
 print("\nConstants and units:\n")
 print("{:>25}{:12.3E} {:15}".format("Gravitational constant:",pc.Grav,"kpc km^2 / Msun s^2"))
-massUnit = 1. * units.M_sun
-print("{:>25}{:12.3f} = {:6E}".format("Mass unit:",massUnit,massUnit.cgs))
-lengthUnit = 1. * units.kpc
-print("{:>25}{:12.3f} = {:6E}".format("Length unit:",lengthUnit,lengthUnit.cgs))
-velUnit = (1.*units.km/units.s)
-print("{:>25}{:12.3f} = {:6E}".format("Velocity unit:",velUnit,velUnit.cgs))
-timeUnit = (1.*units.kpc / (units.km / units.s)).decompose().to(units.Gyr)
-print("{:>25}{:12.3f} = {:6E}".format("Time unit:",timeUnit,timeUnit.cgs))
+print("{:>25}{:12.3f} = {:6E}".format("Mass unit:",units.MASS,units.MASS.cgs))
+print("{:>25}{:12.3f} = {:6E}".format("Length unit:",units.LENGTH,units.LENGTH.cgs))
+print("{:>25}{:12.3f} = {:6E}".format("Velocity unit:",units.VELOCITY,units.VELOCITY.cgs))
+print("{:>25}{:12.3f} = {:6E}".format("Time unit:",units.TIME,units.TIME.cgs))
 
 
 # Initial conditions
@@ -320,19 +316,19 @@ print("\nWriting output to file {} with timestep frequency {}\n".format(outFile,
 
 f = open(outFile, 'wt')
 f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*20+"\n").\
-	format("# time ", str(timeUnit.unit), \
-		"ang.mom.", str(lengthUnit.unit*velUnit.unit), \
-		"ePot", str(velUnit.unit**2), "eKin", str(velUnit.unit**2), \
-		"x1", str(lengthUnit.unit), "vx1", str(velUnit.unit), \
-		"y1", str(lengthUnit.unit), "vy1", str(velUnit.unit), \
-		"z1", str(lengthUnit.unit), "vz1", str(velUnit.unit), \
-		"x2", str(lengthUnit.unit), "vx2", str(velUnit.unit), \
-		"y2", str(lengthUnit.unit), "vy2", str(velUnit.unit), \
-		"z2", str(lengthUnit.unit), "vz2", str(velUnit.unit), \
-		"x1_proj", str(lengthUnit.unit), "vx1_proj", str(velUnit.unit), \
-		"y1_proj", str(lengthUnit.unit), "vy1_proj", str(velUnit.unit), \
-		"x2_proj", str(lengthUnit.unit), "vx2_proj", str(velUnit.unit), \
-		"y2_proj", str(lengthUnit.unit), "vy2_proj", str(velUnit.unit)))
+	format("# time ", str(units.TIME.unit), \
+		"ang.mom.", str(units.LENGTH.unit*units.VELOCITY.unit), \
+		"ePot", str(units.VELOCITY.unit**2), "eKin", str(units.VELOCITY.unit**2), \
+		"x1", str(units.LENGTH.unit), "vx1", str(units.VELOCITY.unit), \
+		"y1", str(units.LENGTH.unit), "vy1", str(units.VELOCITY.unit), \
+		"z1", str(units.LENGTH.unit), "vz1", str(units.VELOCITY.unit), \
+		"x2", str(units.LENGTH.unit), "vx2", str(units.VELOCITY.unit), \
+		"y2", str(units.LENGTH.unit), "vy2", str(units.VELOCITY.unit), \
+		"z2", str(units.LENGTH.unit), "vz2", str(units.VELOCITY.unit), \
+		"x1_proj", str(units.LENGTH.unit), "vx1_proj", str(units.VELOCITY.unit), \
+		"y1_proj", str(units.LENGTH.unit), "vy1_proj", str(units.VELOCITY.unit), \
+		"x2_proj", str(units.LENGTH.unit), "vx2_proj", str(units.VELOCITY.unit), \
+		"y2_proj", str(units.LENGTH.unit), "vy2_proj", str(units.VELOCITY.unit)))
 eCons = 0.
 lCons = 0.
 for t in range(0,N,outStep):
@@ -359,7 +355,7 @@ for t in range(0,N,outStep):
 	x2_rot,y2_rot,_ = r2_rot
 	vx2_rot,vy2_rot,_ = v2_rot
 	f.write(("{:<15.8f}{:<23.10E}"+"{:<16.8E}"*2+"{:<14.4E}"*20+"\n").\
-		format(time[t]*timeUnit.value, Ltot, ePot, eKin, \
+		format(time[t]*units.TIME.value, Ltot, ePot, eKin, \
 			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2, \
 			x1_rot, vx1_rot, y1_rot, vy1_rot, x2_rot, vx2_rot, y2_rot, vy2_rot))
 	eCons_t = abs((ePot+eKin)/(ePot0+eKin0)-1.)
