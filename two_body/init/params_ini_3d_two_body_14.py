@@ -80,5 +80,18 @@ x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
 vx2_0 = 0.														# velocities (km/s):
-vy2_0 = funcs.v_circ_gen(x2_0-x1_0,y2_0-y1_0,z2_0-z1_0, pot = Potential1)
+vy2_0 = 0.
 vz2_0 = 0.
+
+# redefine velocities to obtain a circular orbit
+# assumption: centre of mass at rest
+from math import sqrt
+r0 = [x2_0-x1_0,y2_0-y1_0,z2_0-z1_0]
+M1 = Mass1_cum(*r0)
+M2 = Mass2_cum(*r0)
+mu = M1*M2/(M1+M2)
+gx,gy,gz = funcs.grav_field(*r0,pot=Potential1)
+g = [gx,gy,gz]
+vel_rel = sqrt(funcs.norm(*r0)*M2*funcs.norm(*g) / mu)
+vy1_0 = vel_rel * mu / M1
+vy2_0 = -1.* vel_rel * mu / M2

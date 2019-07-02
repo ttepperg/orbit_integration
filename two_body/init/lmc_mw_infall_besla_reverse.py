@@ -2,16 +2,9 @@
 Author:	Thorsten Tepper Garcia
 Date:	27/06/2019
 
-This set of parameters is intended to reproduce the infall of the Large Magellanic Cloud (LMC)
-onto the Milky Way (MW), using backwards integration, i.e. inverting the sign of the
-observed velocity. The LMC position and velocity are adapted from Pardy et al. (2018; their
-table 4).
-
-The MW is approximated by a static NFW halo; the LMC by a point-like object.
-The MW parameters are taken from Besla et al. (2010).
-
-Note that this model does not take the presence of the Small Magellanic Cloud (SMC)
-or dynamical friction into account (yet).
+This is the time reversed version of lmc_mw_infall_besla.py, taken from
+the last output line of lmc_mw_infall_besla_out.dat, with the sign of the velocities
+inverted.
 
 
 '''
@@ -32,21 +25,21 @@ Rvir1 = c1*rs1
 Potential1 = funcs.NFW_Potential(rho01,rs1)						# potential (km/s)^2
 Mass1_cum = funcs.NFW_Mass(rho01,rs1)
 Mass1 = Mass1_cum(Rvir1)										# total ('virial') mass (Msun)
-x1_0 = 0.														# positions (kpc)
-y1_0 = 0.
-z1_0 = 0.
-vx1_0 = 0.														# velocities (km/s):
-vy1_0 = 0.
-vz1_0 = 0.
+x1_0 = 7.1286E-09													# positions (kpc)
+y1_0 = 1.2991E-08
+z1_0 = -2.4789E-08
+vx1_0 = -1.2330E-09												# velocities (km/s):
+vy1_0 = -4.2230E-09
+vz1_0 = 2.7000E-09
 
 # Body 2
 Mass2 = 1.0e1													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
-x2_0 = -1.														# positions (kpc)
-y2_0 = -41.
-z2_0 = -28.
-vx2_0 = 79.														# velocities (km/s):
-vy2_0 = 227.
-vz2_0 = -208.
+x2_0 = -2.8085E+01												# positions (kpc)
+y2_0 = 3.3417E+01
+z2_0 = 1.6563E+02
+vx2_0 = 1.7074E+01												# velocities (km/s):
+vy2_0 = 8.6930E+01
+vz2_0 =  -1.4530E+01
 
