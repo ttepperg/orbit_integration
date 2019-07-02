@@ -259,6 +259,7 @@ def grav_field(*r, pot = None):
 			dpotdr.append(cen_diff_first(*r, var=i, func=pot, delta_x=1.e-4, order=4))
 		return dpotdr
 
+
 # Specific potential energy
 def ePot(*r,pot = None):
 	if pot is None:
@@ -357,7 +358,7 @@ def eccentricity(vr = None, vt = None, v0 = None, theta = None):
 	elif v0 is None:
 		raise ValueError("v0 is a required parameter in eccentricity.")
 	elif v0 <= 0:
-		raise ValueError("v0 muste be positive in eccentricity.")
+		raise ValueError("v0 must be positive in eccentricity.")
 	elif theta is None:
 		raise ValueError("theta is a required parameter in eccentricity.")
 	else:
@@ -371,6 +372,9 @@ def eccentricity(vr = None, vt = None, v0 = None, theta = None):
 
 # Specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
 # 'specific' means it is normalised by (G Mtot)*(M_reduced)
+# the direction of the LRL vector lies along the symmetry axis of the
+# conic section and points from the center of force toward the periapsis,
+# i.e., the point of closest approach.
 def eccentricity_vec(r = None, v = None, h = None, mu = None):
 	if r is None:
 		raise ValueError("r is a required parameter in eccentricity_vec.")
@@ -458,6 +462,7 @@ def period(a = None, amp = None):
 		else:
 			print("WARNING: orbital period not defined for a < 0.")
 			return float('NaN')
+
 
 # Orbit's circumference
 def circumference(a = None, b = None):
