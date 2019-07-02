@@ -2,215 +2,9 @@
 
 '''
 Author:	Thorsten Tepper Garcia
-Date:	01/07/2019
+Date: 	01/07/2019
 
-
-BACKGROUND
-
-The 3D equations of motion of two bodies of mass M1 and M2 orbiting around each
-others potential are:
-
-dr1dt = v1
-dv1dt = - Grad Phi2
-
-dr2dt = v2
-dv2dt = - Grad Phi1
-
-Here,
-
-r := position vector of body 1 or 2
-v := velocity vector of body 1 or 2
-Grad := gradient operator (nabla)
-Phi(r) = := grav. potential of body 1 or 2
-
-Here, we consider the case where body is possibly an extended object of 'total' mass M1,
-represented by an arbitrary, static potential Phi1, and a point-like body 2 of mass M2
-described by a Kepler potential (i.e. Phi1 = - G M2 / r). The latter assumption may be
-relaxed in future versions of the code. Note that the 'total' mass M1 may be subject to
-definition, e.g. in the case of a NFW potential for which the mass diverges with radius.
-
-Both Phi1 and Phi2 are assumed to be central potentials that depend on the distance
-bwetween the bodies only.
-
-Even though the equation of motion is of second order (m=2) in dt,
-due to its 3D vector nature, it is equivalent to a system of six
-first order ODEs, for each body. Thus, the rank of the system is determined
-by the order m and the dimensionality of the system D=3 as 2 * m * D = 12 in
-this case.
-
-Thus, the above vectorial equations can be written down as a system of 12
-coupled ordinary differential equations of first order in dt:
-
-dx1dt = vx1
-dy1dt = vy1
-dz1dt = vz1
-dvx1dt = - Grad_x Phi2(|r12|)
-dvy1dt = - Grad_y Phi2(|r12|)
-dvz1dt = - Grad_z Phi2(|r12|)
-
-dx2dt = vx2
-dy2dt = vy2
-dz2dt = vz2
-dvx2dt = - Grad_x Phi1(|r12|)
-dvy2dt = - Grad_y Phi1(|r12|)
-dvz2dt = - Grad_z Phi1(|r12|)
-
-Here, r12 = r1 - r2. Note that the force is radial and directed towards
-the centre of the potential at all times, by assumption.
-
-Note that a 2D system can be simulated equally well with this code by simply
-setting all z-components to 0 initially.
-
-
-TIME INTEGRATION
-
-The system of equations is numerically integrated using a 2nd order
-leapfrog (kick-drift-kick) method. This scheme is symplectic and thus features
-desired properties such  as time reversibility, conservation of the relative total
-energy to any desired accuracy -- even over significant integration times --, if the
-time step is chosen small enough, and conservation of the specific angular momentum
-generally to machine precision.
-
-Beware that the scheme may lead to orbit precession if the integration step is
-not small enough. As a general rule of thumb, the time step delta_t should
-satisfy:
-
-	delta_t < T / sqrt(2) pi ~ 0.225 T,
-
-where T is the (shortest) period of the system (see
-https://en.wikipedia.org/wiki/Energy_drift).
-
-Also, orbit precession may naturally result from central potentials other than
-point-like masses (Bertrand's Theorem; https://en.wikipedia.org/wiki/Bertrand%27s_theorem)
-and it thus do not necessarily indicate an error in the integration scheme.
-
-
-SPATIAL DERIVATIVES
-
-A number of first order, partial, spatial derivatives are required when calculating
-the force corresponding to a given potential. Two methods are implemented here:
-
-1) A central finite difference scheme of orders 2 and 4;
-
-2) A forward finite difference scheme of orders 2 and 3.
-
-Method 1 is preferred (and is the default), in particular because it leads to a
-better conservation of angular momentum for extrem potentials such as a
-point-like mass potential. Note that using a different scheme requires
-to change the invoked scheme explicitly in the calculation of the accelerations.
-
-An example on how to invoke the differentiation routines is as follows:
-
-1) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a CFD with an integration step 1.e-4 at a precision 3**2 use:
-fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
-
-2) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a FFD with an integration step 1.e-4 at a precision 3**2 use:
-fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
-
-
-RUN
-
-The code can be run directly from command line via:
-
-shell> ./two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
-
-using the prededfined python interpreter given in the first line,
-or:
-
-shell> python3.X two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
-
-using an alternative python interpreter. Note that a python version 3.X is
-required.
-
-
-INPUT
-
-The input of this program consists of a python (i.e. filename.py) input
-parameter file which contains essentially the inital state vectors, i.e.
-the initial position r0 and velocities v0 for each body, as well as their
-corresponding potential.
-The corresponding orbital parameters (e.g. eccentricity, orbital period,
-etc.) are then calculated from these.
-
-Note that providing the state vectos r0 and v0 for each body is the preferred
-method to specify the initial conditions of the system. However, some methods
-are available to impose certain conditions on the orbit, e.g. a circular orbit
-*within* the input parameter file (see the example parameter files).
-
-
-OUTPUT
-
-The output of the code consists of an ascii table redirected to the
-directory './output' named after the input parameter file and appended
-by the substring "_out.dat".
-The table consists of a total of 24 columns. The first 16 contain, in that
-order, the time, the specific relative angular momentum, the relative potential
-energy, the relative kinetic energy, and (x,vx,y,vt,z,vz) for each of the
-bodies. The last 8 columnns contain (x',vx',y',vt',z',vz') for each of the
-bodies, where the primed coordinates and velocities correspond to those
-on the orbital plane. In other words, these coordinates represent a
-rotated version of the intrinsic orbit such that the relative angular momentum
-aligns with the z-axis. If the intrinsic orbit has this property,
-the primed and unprimed coordinates are identical. Note that the primed z
-coordinates are ignored, because they all vanish by definition.
-The set of primed coordinates are very useful for checking the numerical result
-against the expected analytic solution based on the (potentially osculating)
-orbital parameters calculated at runtime.
-
-
-UNITS
-
-This code is intended mainly for astrophysical applications. Therefore, the
-following units are adopted:
-  Gravitational constant:   4.301E-06 kpc km^2 / Msun s^2
-               Mass unit:       1.000 solMass = 1.988475E+33 g
-             Length unit:       1.000 kpc = 3.085678E+21 cm
-           Velocity unit:       1.000 km / s = 1.000000E+05 cm / s
-               Time unit:       0.978 Gyr = 3.085678E+16 s
-
-Note that the conversion factor of the time is fixed by the others. The
-choice of units for G is convenient, since any given potential (or specific
-potential energy) automatically has units of (km/s)^2, i.e. identical to the
-specific kinetic energy.
-
-
-VISUALISATION
-
-A simple visualisation of the evolution of the system can be obtained
-using the gnuplot script plot_orbit_two_body.gp provided with the code's
-distribution.
-
-This script can be run:
-
-1) Directly from the command line via:
-
-shell> gnuplot plot_orbit_two_body.gp
-
-or
-
-2) Within gnuplot via:
-
-gnuplot> load 'plot_orbit_two_body.gp'
-
-The script provides both a full 3D view of the system, or alternatively,
-a 2D projection along one of the principal axis of a standard Cartesian
-reference frame.
-
-This script accepts a number of input arguments, all of which are set
-to reasonable defaults, the obvious exception being the data file.
-Other important parameters are the time step, the time output frequency,
-and the physical units, all of which are printed to stdout by the
-python code at runtime.
-
-Please consult the script's header for additional information on these
-input arguments and their default values.
-
-
-TO DO:
-
-
+See README for information on the code's background, usage, etc.
 '''
 
 import math
@@ -224,6 +18,7 @@ from num_diff.central_diff import cen_diff_first	# central finite difference sch
 from utils import funcs
 from astropy import units
 import config.phys_consts as pc
+
 
 # Collect program argument(s)
 if len(sys.argv) < 2:
@@ -416,14 +211,15 @@ else:
 	raise ValueError("Initial conditions imply a purely radial orbit (vanishing angular momentum).")
 
 
+# radial and tangential velocities
 v_tan_0 = Ltot0 / r21_0
 v_rad_0 = math.sqrt(v21_0**2 - v_tan_0**2)
 
-# Specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
+# specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
 # 'specific' means it is normalised by (G Mtot)*(M_reduced)
 ecc_vec = funcs.eccentricity_vec(r21_0_vec,v21_0_vec,Ltot0_vec,grav_param)
 
-# Eccentricity
+# eccentricity
 ecc = funcs.norm(*ecc_vec)
 
 # axes
@@ -456,13 +252,15 @@ cos_theta = funcs.dot_prod(z_axis,Ltot0_vec_norm)
 orbit_incl = math.acos(cos_theta)
 k_vec = funcs.cross_prod(Ltot0_vec_norm,z_axis)
 
-
-# This angle describes to rotation of the LRL vector with respect to the
-# x-axis and this determines the orientation of the orbit *in the orbital plane*.
-# Need to turn this into a proper function
+# rotate eccentricity vector onto orbital plane
 ecc_vec_rot = funcs.rodrigues_rot(ecc_vec,k_vec,orbit_incl)
+
+# The apsidal angle describes to rotation of the eccentricity vector with
+# respect to the # x-axis and this determines the orientation of the
+# orbit *in the orbital plane*.
 apsidal_angle = math.atan2(ecc_vec_rot[1],ecc_vec_rot[0])
 
+# Initia (osculating) orbital parameters of the system
 print("\nOrbital parameters (osculating for non-Keplerian orbits):\n")
 print("{:>40}{:>15}".format("Potential of body 1:",Phi1.__name__))
 print("{:>40}{:>15}".format("Potential of body 2:",Phi2.__name__))
@@ -513,13 +311,13 @@ print("Maximum time step to avoid energy drift: {:12.6E}"\
 #       x2 = EoM[6], vx2 = EoM[7], y2 = EoM[8], vy2 = EoM[9], z2 = EoM[10], vz2 = EoM[11]
 time, EoM = ode_leap(dr2dt2 = F, rank = 12, initCond = ics, steps = N, stepSize = timeStep)
 
-# Output
-outDir = "./output/"
 
-# 1: Intrinsic orbit
+# Output to file
+outDir = "./output/"
 outFile = outDir + initialConds + "_out.dat"
 outStep = int(N/min(1000,int(1./timeStep)))
 print("\nWriting output to file {} with timestep frequency {}\n".format(outFile, outStep))
+
 f = open(outFile, 'wt')
 f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*20+"\n").\
 	format("# time ", str(timeUnit.unit), \
@@ -547,17 +345,16 @@ for t in range(0,N,outStep):
 	v2 = [vx2,vy2,vz2]
 	r_rel = [x2-x1,y2-y1,z2-z1]
 	v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
-# 	Ltot = Mred * funcs.norm(*funcs.cross_prod(r_rel,v_rel))			# rel.ang.mom.
-	Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))					# spec.rel.ang.mom.
+	Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))					# spec.rel.ang.mom. (i.e. divided by Mred)
 	ePot1 = Phi2(*r_rel)
 	ePot2 = Phi1(*r_rel)
 	ePot = Mred * (ePot1+ePot2)											# rel. potential energy (?)
 	eKin = Mred * funcs.eKin(*v_rel)									# rel. kin. energy
-	r1_rot = funcs.rodrigues_rot(r1,k_vec,orbit_incl)						# rotate vectors
+	r1_rot = funcs.rodrigues_rot(r1,k_vec,orbit_incl)					# rotate vectors
 	v1_rot = funcs.rodrigues_rot(v1,k_vec,orbit_incl)
 	r2_rot = funcs.rodrigues_rot(r2,k_vec,orbit_incl)
 	v2_rot = funcs.rodrigues_rot(v2,k_vec,orbit_incl)
-	x1_rot,y1_rot,_ = r1_rot											# ignore z-component
+	x1_rot,y1_rot,_ = r1_rot											# ignore z-component because is 0.
 	vx1_rot,vy1_rot,_ = v1_rot
 	x2_rot,y2_rot,_ = r2_rot
 	vx2_rot,vy2_rot,_ = v2_rot
@@ -576,3 +373,7 @@ f.close()
 print("\n{:>45} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
 print("{:>45} {:8.3E} %.\n".format("Angular momentum conservation to better than",1.e2*lCons))
 
+
+# experimental
+# from utils import io
+# io.write_table("test.dat")
