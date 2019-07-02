@@ -201,7 +201,6 @@ def dvz2dt(t,*f):
 Ltot0_vec = funcs.cross_prod(r21_0_vec,v21_0_vec)
 Ltot0 = funcs.norm(*Ltot0_vec)
 if Ltot0 > 0:
-	semi_latus = funcs.semi_latus_rec(Ltot0,grav_param)
 	Ltot0_vec_norm = [ l/Ltot0 for l in Ltot0_vec]
 else:
 	raise ValueError("Initial conditions imply a purely radial orbit (vanishing angular momentum).")
@@ -218,19 +217,19 @@ ecc_vec = funcs.eccentricity_vec(r21_0_vec,v21_0_vec,Ltot0_vec,grav_param)
 # eccentricity
 ecc = funcs.norm(*ecc_vec)
 
-# axes
+# principal axes
+semi_latus = funcs.semi_latus_rec(Ltot0,grav_param)
 semimajor_axis = funcs.semimajor(ecc,semi_latus)
 semiminor_axis = funcs.semiminor(ecc,semi_latus)
 pericen = funcs.pericentre(ecc,semi_latus)
-v_peri = Ltot0 / pericen
 apocen = funcs.apocentre(ecc,semi_latus)
+
+v_peri = Ltot0 / pericen
 v_apo = Ltot0 / apocen
+orbital_circum = funcs.circumference(semimajor_axis,semiminor_axis)
 orbital_period = funcs.period(semimajor_axis,grav_param)
-
-orb_circum_approx = funcs.circumference(semimajor_axis,semiminor_axis)
-
-orbital_period_peri = orb_circum_approx / v_peri
-orbital_period_apo = orb_circum_approx / v_apo
+orbital_period_peri = orbital_circum / v_peri
+orbital_period_apo = orbital_circum / v_apo
 
 ePot0 = Mred * (Phi1(*r21_0_vec)+Phi2(*r21_0_vec))
 eKin0 = Mred * funcs.eKin(*v21_0_vec)
@@ -274,16 +273,17 @@ print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Rel. eccentricity vector (e_vec
 print("{:>40}{:15.4f}".format("Rel. eccentricity (e):",ecc))
 print("{:>40}{:15.4f}".format("Rel. semimajor axis (a):",semimajor_axis))
 print("{:>40}{:15.4f}".format("Rel. semiminor axis (b):",semiminor_axis))
+print("{:>40}{:15.4f}".format("Apsidal angle (phi_0; deg):",math.degrees(apsidal_angle)))
+print("{:>40}{:15.4f}".format("Orbital inclination (psi_0; deg):",math.degrees(orbit_incl)))
 print("{:>40}{:15.4f}".format("Rel. pericentre (rp):",pericen))
 print("{:>40}{:15.4f}".format("Vel. at pericentre (vp):",v_peri))
-print("{:>40}{:15.4f}".format("Rel. apocentre (ra):",apocen))
-print("{:>40}{:15.4f}".format("Vel. at apocentre (va):",v_apo))
-print("{:>40}{:15.4f}".format("Rel. orbital period (T):",orbital_period))
-print("{:>40}{:15.4f}".format("Approx. orbit circumference (u):",orb_circum_approx))
-print("{:>40}{:15.4f}".format("Approx. pericentric period (Tp):",orbital_period_peri))
-print("{:>40}{:15.4f}".format("Approx. apocentric period (Ta):",orbital_period_apo))
-print("{:>40}{:15.4f}".format("Apsidal angle (phi_0; deg):",math.degrees(apsidal_angle)))
-print("{:>40}{:15.4f}\n".format("Orbital inclination (psi_0; deg):",math.degrees(orbit_incl)))
+if ecc < 1.:
+	print("{:>40}{:15.4f}".format("Rel. apocentre (ra):",apocen))
+	print("{:>40}{:15.4f}".format("Vel. at apocentre (va):",v_apo))
+	print("{:>40}{:15.4f}".format("Rel. orbital period (T):",orbital_period))
+	print("{:>40}{:15.4f}".format("Approx. orbit circumference (u):",orbital_circum))
+	print("{:>40}{:15.4f}".format("Approx. pericentric period (Tp):",orbital_period_peri))
+	print("{:>40}{:15.4f}\n".format("Approx. apocentric period (Ta):",orbital_period_apo))
 
 print("{:>40}{:15.4E}".format("Rel. potential energy (T):",ePot0))
 print("{:>40}{:15.4E}".format("Rel. kinetic energy (T):",eKin0))
@@ -296,8 +296,9 @@ F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
 
 print("\nTime range [t0,t1] = [{},{}]".format(t0,t1))
 print("Time steps {};  Step size: {:8.2E}".format(N,timeStep))
-print("Maximum time step to avoid energy drift: {:12.6E}"\
-.format(orbital_period_peri / (math.sqrt(2.)*math.pi)))
+if not math.isnan(orbital_period_peri):
+	print("Maximum time step to avoid energy drift: {:12.6E}"\
+		.format(orbital_period_peri / (math.sqrt(2.)*math.pi)))
 
 # Integrate
 # Note: x1 = EoM[0], vx1 = EoM[1], y1 = EoM[2], vy1 = EoM[3], z1 = EoM[4], vz1 = EoM[5],
