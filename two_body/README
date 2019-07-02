@@ -1,5 +1,6 @@
 
 Author: 		Thorsten Tepper Garcia
+
 Last modified:	01/07/2019
 
 
@@ -8,18 +9,18 @@ Last modified:	01/07/2019
 The 3D equations of motion of two bodies of mass M1 and M2 orbiting around each
 others potential are:
 
-dr1dt = v1
-dv1dt = - Grad Phi2
+	dr1dt = v1
+	dv1dt = - Grad Phi2
 
-dr2dt = v2
-dv2dt = - Grad Phi1
+	dr2dt = v2
+	dv2dt = - Grad Phi1
 
 Here,
 
-r := position vector of body 1 or 2
-v := velocity vector of body 1 or 2
-Grad := gradient operator (nabla)
-Phi(r) = := grav. potential of body 1 or 2
+	r := position vector of body 1 or 2
+	v := velocity vector of body 1 or 2
+	Grad := gradient operator (nabla)
+	Phi(r) = := grav. potential of body 1 or 2
 
 Here, we consider the case where body is possibly an extended object of 'total' mass M1,
 represented by an arbitrary, static potential Phi1, and a point-like body 2 of mass M2
@@ -39,19 +40,19 @@ this case.
 Thus, the above vectorial equations can be written down as a system of 12
 coupled ordinary differential equations of first order in dt:
 
-dx1dt = vx1
-dy1dt = vy1
-dz1dt = vz1
-dvx1dt = - Grad_x Phi2(|r12|)
-dvy1dt = - Grad_y Phi2(|r12|)
-dvz1dt = - Grad_z Phi2(|r12|)
+	dx1dt = vx1
+	dy1dt = vy1
+	dz1dt = vz1
+	dvx1dt = - Grad_x Phi2(|r12|)
+	dvy1dt = - Grad_y Phi2(|r12|)
+	dvz1dt = - Grad_z Phi2(|r12|)
 
-dx2dt = vx2
-dy2dt = vy2
-dz2dt = vz2
-dvx2dt = - Grad_x Phi1(|r12|)
-dvy2dt = - Grad_y Phi1(|r12|)
-dvz2dt = - Grad_z Phi1(|r12|)
+	dx2dt = vx2
+	dy2dt = vy2
+	dz2dt = vz2
+	dvx2dt = - Grad_x Phi1(|r12|)
+	dvy2dt = - Grad_y Phi1(|r12|)
+	dvz2dt = - Grad_z Phi1(|r12|)
 
 Here, r12 = r1 - r2. Note that the force is radial and directed towards
 the centre of the potential at all times, by assumption.
@@ -112,12 +113,12 @@ fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
 
 The code can be run directly from command line via:
 
-shell> ./two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
+	shell> ./two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
 
 using the prededfined python interpreter given in the first line,
 or:
 
-shell> python3.X two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
+	shell> python3.X two_body_orbit_int_gen_3d_leap_phys.py <input parameter file>
 
 using an alternative python interpreter. Note that a python version 3.X is
 required.
@@ -184,13 +185,13 @@ This script can be run:
 
 1) Directly from the command line via:
 
-shell> gnuplot plot_two_body_orbit.gp
+	shell> gnuplot plot_two_body_orbit.gp
 
 or
 
 2) Within gnuplot via:
 
-gnuplot> load 'plot_two_body_orbit.gp'
+	gnuplot> load 'plot_two_body_orbit.gp'
 
 The script provides both a full 3D view of the system, or alternatively,
 a 2D projection along one of the principal axis of a standard Cartesian
