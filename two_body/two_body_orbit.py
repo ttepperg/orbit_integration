@@ -5,23 +5,29 @@ Author:	Thorsten Tepper Garcia
 Date: 	01/07/2019
 
 See README for information on the code's background, usage, etc.
+
 '''
 
+# Import necessary modules
+
+# built-in
 import math
-import sys
-sys.path.insert(0,"../.")							# include top directory
-sys.path.insert(0,"./init")						# include initial conditions directory
 import importlib									# needed to import ICs' as module
+import sys
+
+# costum
+sys.path.insert(0,"../.")							# include top directory in module search path
+sys.path.insert(0,"./init")							# include initial conditions directory
 from ode_int.leapfrog import ode_leap
 # from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
 from utils import funcs
-# from astropy import units
 from config import units
 import config.phys_consts as pc
 
 
 # Collect program argument(s)
+# Turn into a function
 if len(sys.argv) < 2:
 	print("\nUSAGE:")
 	print("{} <input parameter file>\n".format(sys.argv[0]))
@@ -116,36 +122,23 @@ except:
 
 # gravitational parameter (only affects the calculation of
 # orbital parameters but not the actual orbit calculation)
-# grav_param = pc.Grav*Mtot
 grav_param = pc.Grav*(mass1_r21_0+mass2_r21_0)
 
 # reduced mass
 Mred = (M1*M2)/Mtot											
 
-# Acceleration function definitions (consider moving these into the input parameter file)
+
+# Acceleration function definitions
+# consider moving these into the input parameter file or a function
 
 # The following functions correspond each to one of the (numerical) partial derivatives of
 # either Phi1 or Phi2; the latter must be defined in the input parameter file!
 
-# NOTE: The spatial integration step and the order of accuracy affect
-# the conservation of angular momentum, but not the conservation of energy (which
-# seems to depend on the time integration scheme only).
-#
-# Forward finite difference scheme:
-# Somewhat counterintuitive, an order 2 integration appears to show a more stable
-# evolution of the total angular momentum. Order 3 leads to a gradual increase with
-# time, although the error is orders of magnitude smaller than when using order = 2
-# for a fixed integration step. Also, the error in the conservation of angular momentum
-# is generally orders of magnitude smaller than the error in the conservation of energy (why?).
-# Example:
-# To calculate the first partial derivative of f with respect to x (var=0) at
-# point r = [x,y,z], using an integration step 1.e-4 at a precision 3**2 use:
-# fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-4, order = 3)
-
-# Central finite difference scheme:
-# Using an order 2 scheme conserves well both energy and angular momentum.
-# An order 4 scheme conserves energy well, and angular momentum to machine precision.
-# DO NOT change unless necessary!
+# Central finite difference scheme parameters:
+# 2nd order scheme conserves well both energy and angular momentum.
+# 4th order scheme conserves energy well, and angular momentum generally to
+# machine precision.
+# DO NOT change the values of the following parameters unless absolutely necessary!
 intStep = 1.e-4
 accOrder = 4
 
@@ -195,8 +188,9 @@ def dvz2dt(t,*f):
 
 
 # Calculate orbital parameters
-# Note that these are intended to characterise the orbit and do not affect the
+# NOTE: These are intended to characterise the orbit and do not affect the
 # orbit integration in any way.
+# (consider encapsulating all of this in a function)
 
 Ltot0_vec = funcs.cross_prod(r21_0_vec,v21_0_vec)
 Ltot0 = funcs.norm(*Ltot0_vec)
@@ -244,16 +238,19 @@ cos_theta = funcs.dot_prod(z_axis,Ltot0_vec_norm)
 orbit_incl = math.acos(cos_theta)
 k_vec = funcs.cross_prod(Ltot0_vec_norm,z_axis)
 
+# rotate angular momentum vector onto z-axis
+Ltot0_vec_rot = funcs.rodrigues_rot(Ltot0_vec,k_vec,orbit_incl)
+
 # rotate eccentricity vector onto orbital plane
 ecc_vec_rot = funcs.rodrigues_rot(ecc_vec,k_vec,orbit_incl)
 
-# The apsidal angle describes to rotation of the eccentricity vector with
-# respect to the # x-axis and this determines the orientation of the
-# orbit *in the orbital plane*.
+# The apsidal angle describes to rotation of the eccentricity vector,
+# which points from apocentre to pericentre, with respect to the x-axis
+# it determines the orientation of the orbit *in the orbital plane*
 apsidal_angle = math.atan2(ecc_vec_rot[1],ecc_vec_rot[0])
 
-# Initia (osculating) orbital parameters of the system
-print("\nOrbital parameters (osculating for non-Keplerian orbits):\n")
+# Output to stdout (consider including these in output file)
+print("\nInitial (osculating) orbital parameters of the system:\n")
 print("{:>40}{:>15}".format("Potential of body 1:",Phi1.__name__))
 print("{:>40}{:>15}".format("Potential of body 2:",Phi2.__name__))
 print("{:>40}{:15.4E}".format("Total mass of body 1:",M1))
@@ -266,6 +263,7 @@ print("{:>40}{:15.4f}".format("Initial tangential vel. (v_tan_0):",v_tan_0))
 print("{:>40}{:15.4f}".format("Initial radial vel. (v_rad_0):",v_rad_0))
 print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Rel. specific ang. mom. vec. (h_vec):",*Ltot0_vec))
 print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[normalised]:",*Ltot0_vec_norm))
+print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[along z-axis]:",*Ltot0_vec_rot))
 print("{:>40}{:15.4f}\n".format("Rel. specific ang. mom. (h):",Ltot0))
 
 print("{:>40}{:15.4f}".format("Rel. semi-latus rectum (p):",semi_latus))
@@ -344,7 +342,7 @@ for t in range(0,N,outStep):
 	ePot2 = Phi1(*r_rel)
 	ePot = Mred * (ePot1+ePot2)											# rel. potential energy (?)
 	eKin = Mred * funcs.eKin(*v_rel)									# rel. kin. energy
-	r1_rot = funcs.rodrigues_rot(r1,k_vec,orbit_incl)					# rotate vectors
+	r1_rot = funcs.rodrigues_rot(r1,k_vec,orbit_incl)					# rotate vectors onto orbital plane
 	v1_rot = funcs.rodrigues_rot(v1,k_vec,orbit_incl)
 	r2_rot = funcs.rodrigues_rot(r2,k_vec,orbit_incl)
 	v2_rot = funcs.rodrigues_rot(v2,k_vec,orbit_incl)
