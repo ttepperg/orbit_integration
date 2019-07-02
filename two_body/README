@@ -103,12 +103,14 @@ An example on how to invoke the differentiation routines is as follows:
 1) To calculate the first partial derivative of f with respect to x (var=0) at
 point r = [x,y,z], using a CFD scheme of order 4 with an integration step 1.e-3
 to achieve a precision of order (1.e-3)^4 use:
-fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-3, order = 4)
+
+	fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-3, order = 4)
 
 2) To calculate the first partial derivative of f with respect to y (var=1) at
 point r = [x,y,z], using a FFD scheme of order 3 with an integration step 1.e-4
 to achieve a precision of order (1.e-4)^3 use:
-fwd_diff_first(*r, var = 1, func = f, delta_x = 1.e-4, order = 3)
+
+	fwd_diff_first(*r, var = 1, func = f, delta_x = 1.e-4, order = 3)
 
 
 # RUN
@@ -148,7 +150,9 @@ example parameter files are provided, for guidance.
 
 The output of the code consists of an ascii table redirected to the
 directory './output' named after the input parameter file and appended
-by the substring "_out.dat".
+by the substring "_out.dat". If the directory 'output' does not exist,
+it needs to be created by hand.
+
 The table consists of a total of 24 columns. The first 16 contain, in that
 order, the time, the specific relative angular momentum, the relative potential
 energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the
