@@ -227,10 +227,7 @@ apocen = funcs.apocentre(ecc,semi_latus)
 v_apo = Ltot0 / apocen
 orbital_period = funcs.period(semimajor_axis,grav_param)
 
-orb_circum_corr = 0.25 * \
-	((semimajor_axis-semiminor_axis)/(semimajor_axis+semiminor_axis))**2
-orb_circum_approx = math.pi*(semimajor_axis+semimajor_axis) * \
-	(1. + orb_circum_corr + (orb_circum_corr/4.)**4)
+orb_circum_approx = funcs.circumference(semimajor_axis,semiminor_axis)
 
 orbital_period_peri = orb_circum_approx / v_peri
 orbital_period_apo = orb_circum_approx / v_apo

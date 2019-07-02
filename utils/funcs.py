@@ -403,7 +403,7 @@ def semimajor(e = None, p = None):
 			return p / (1. - e**2)
 		else:
 			print("WARNING: semimajor axis not defined for e = 1.")
-			return float("NaN")
+			return float('NaN')
 
 
 # Semiminor axis
@@ -419,7 +419,7 @@ def semiminor(e = None, p = None):
 			return p / math.sqrt(abs(1. - e**2))
 		else:
 			print("WARNING: semiminor axis not defined for e = 1.")
-			return float("NaN")
+			return float('NaN')
 
 
 # Apocentric distance
@@ -457,5 +457,23 @@ def period(a = None, amp = None):
 			return 2.*math.pi*a*math.sqrt(a/amp)
 		else:
 			print("WARNING: orbital period not defined for a < 0.")
-			return float("NaN")
+			return float('NaN')
 
+# Orbit's circumference
+def circumference(a = None, b = None):
+	''' Returns the approximate cirumference of an orbit with 0 < e < 1,
+	exact for e = 0, and undefined for e >= 1.'''
+	if a is None:
+		raise ValueError("a is a required parameter in circumference.")
+	elif b is None:
+		raise ValueError("b is a required parameter in circumference.")
+	else:
+		if a>=b:
+			# correction factor
+			corr = 0.25 * \
+		((a-b)/(a+b))**2
+			# approximate circumference (to order 4 accuracy;
+			# higher orders exist though)
+			return math.pi * (a+b) * (1.+corr+(corr/4.)**4)
+		else:
+			return float('NaN')
