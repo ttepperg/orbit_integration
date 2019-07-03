@@ -2,10 +2,7 @@
 Author:	Thorsten Tepper Garcia
 Date:	27/06/2019
 
-This is the time reversed version of lmc_mw_infall_besla.py, taken from
-the last output line of lmc_mw_infall_besla_out.dat, with the sign of the velocities
-inverted.
-
+This is just a test run.
 
 '''
 
@@ -17,7 +14,7 @@ t_0 = 0.0e0														# initial time (Gyr)
 t_1 = 1.0e1														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
-# Body 1
+# Milky Way
 c1 = 1.2e1														# NFW concentration
 rs1 = 2.0e1														# NFW scale radius (kpc)
 rho01 = 9.0e6													# core density (Msun/kpc**3)
@@ -32,7 +29,7 @@ vx1_0 = -1.2330E-09												# velocities (km/s):
 vy1_0 = -4.2230E-09
 vz1_0 = 2.7000E-09
 
-# Body 2
+# Large Magellanic Clouds
 Mass2 = 1.0e1													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
@@ -43,3 +40,6 @@ vx2_0 = 1.7074E+01												# velocities (km/s):
 vy2_0 = 8.6930E+01
 vz2_0 =  -1.4530E+01
 
+
+#output
+print("Virial radius of body 1: {}".format(Rvir1))

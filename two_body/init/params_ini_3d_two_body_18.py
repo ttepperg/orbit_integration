@@ -2,8 +2,8 @@
 Author:	Thorsten Tepper Garcia
 Date:	01/07/2019
 
-This set of parameters produces a well-behaved two-body system, with a stable, non-precessing
-elliptical orbit characterised by the following parameters:
+This set of parameters produces a well-behaved two-body system, with a stable,
+non-precessing inclined, elliptical orbit characterised by the following parameters:
 
                            Reduced mass:     5.0000E+05
 

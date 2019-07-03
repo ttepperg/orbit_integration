@@ -16,7 +16,7 @@ t_0 = 0.0e0														# initial time (Gyr)
 t_1 = 1.02e1													# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
-# Body 1
+# Milky Way
 c1 = 1.4e1														# NFW concentration
 rs1 = 1.6e1														# NFW scale radius (kpc)
 rho01 = 1.26e7													# core density (Msun/kpc**3)
@@ -31,7 +31,7 @@ vx1_0 = -7.5039E-10												# velocities (km/s):
 vy1_0 = -3.8106E-09
 vz1_0 = 6.4645E-10
 
-# Body 2
+# Large Magellanic Clouds
 Mass2 = 1.0e1													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2

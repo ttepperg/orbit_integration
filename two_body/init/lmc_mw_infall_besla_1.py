@@ -1,8 +1,8 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	27/06/2019
+Date:	03/07/2019
 
-This is just a test run.
+Experimental
 
 '''
 
@@ -17,7 +17,7 @@ delta_t = 1.0e-3												# integration time step
 # Milky Way
 c1 = 1.2e1														# NFW concentration
 rs1 = 2.0e1														# NFW scale radius (kpc)
-rho01 = 9.0e6													# core density (Msun/kpc**3)
+rho01 = 7.0e6													# core density (Msun/kpc**3)
 Rvir1 = c1*rs1
 Potential1 = funcs.NFW_Potential(rho01,rs1)						# potential (km/s)^2
 Mass1_cum = funcs.NFW_Mass(rho01,rs1)
@@ -30,7 +30,7 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Large Magellanic Clouds
-Mass2 = 1.0e1													# total mass (Msun)
+Mass2 = 2.0e10													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
 x2_0 = -1.														# positions (kpc)
