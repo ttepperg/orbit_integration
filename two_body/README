@@ -222,6 +222,13 @@ Please consult the script's header for additional information on these
 input arguments and their default values.
 
 
+# REQUIRED / OPTIONAL PACKAGES
+
+	- python 3.X
+	- astropy for python 3.X
+	- gnuplot 5+ [optional for visualisation]
+
+
 # IMPORTANT REMARKS
 
 1) The conserved quantities are:
@@ -232,7 +239,7 @@ input arguments and their default values.
 
 The individual energies and angular momenta need not necessarily
 be conserved (?). The error in the conservation of angular momentum
-# is generally orders of magnitude smaller than the error in the conservation
+is generally orders of magnitude smaller than the error in the conservation
 of energy (why?).
 
 Also, the spatial step and the order of accuracy used when calculating
