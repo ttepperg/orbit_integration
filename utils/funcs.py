@@ -375,6 +375,7 @@ def eccentricity(vr = None, vt = None, v0 = None, theta = None):
 # the direction of the LRL vector lies along the symmetry axis of the
 # conic section and points from the center of force toward the periapsis,
 # i.e., the point of closest approach.
+# See: https://en.wikipedia.org/wiki/Laplace–Runge–Lenz_vector
 def eccentricity_vec(r = None, v = None, h = None, mu = None):
 	if r is None:
 		raise ValueError("r is a required parameter in eccentricity_vec.")
