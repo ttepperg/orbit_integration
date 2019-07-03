@@ -43,9 +43,9 @@ timeUnit = 0.978
 if(!exists('plot_ana')){
 	plot_ana = 1 # -> 0/1 to turn off/on
 }
-semi_latus = 0.2325
-ecc = 0.7675
-apsidal_angle = 180.	# in degree
+semi_latus = 93.0669
+ecc =  0.9931
+apsidal_angle = -159.1120	# in degree
 
 # defaults
 
@@ -441,7 +441,7 @@ if(plotRelOrbit eq "T"){
 
 } # plot relative orbit?
 
-print "Spatial plot range: ", plotRange
+print "Spatial plot range (intrinsic orbit): ", plotRange
 
 
 set size square
@@ -575,7 +575,7 @@ if(plotRelOrbit eq "T"){
 
 } # plot relative orbit?
 
-print "Spatial plot range: ", plotRangeProj
+print "Spatial plot range (orbital plane): ", plotRangeProj
 
 # EXPERIMENTAL: Analytic solution
 if(plot_ana){
