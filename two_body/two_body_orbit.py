@@ -15,31 +15,20 @@ import math
 import importlib									# needed to import ICs' as module
 import sys
 
-# costum
+# costum modules
 sys.path.insert(0,"../.")							# include top directory in module search path
 sys.path.insert(0,"./init")							# include initial conditions directory
 from ode_int.leapfrog import ode_leap
 # from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
 from utils import funcs
+from utils import io
 from config import units
 import config.phys_consts as pc
 
 
 # Collect program argument(s)
-# Turn into a function
-if len(sys.argv) < 2:
-	print("\nUSAGE:")
-	print("{} <input parameter file>\n".format(sys.argv[0]))
-	exit()
-else:
-	ics_file = sys.argv[1]
-	ext = ".py"
-	if ext in ics_file:
-		initialConds = ics_file.replace(ext,'') 	# remove file extension if present
-		print("\nRemoved unnecessary extension {} in input parameter file.".format(ext))
-	else:
-		initialConds = ics_file
+initialConds = io.get_input()
 
 # Informative output
 print("\nConstants and units:\n")
@@ -367,5 +356,4 @@ print("{:>45} {:8.3E} %.\n".format("Angular momentum conservation to better than
 
 
 # experimental
-# from utils import io
 # io.write_table("test.dat")
