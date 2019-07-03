@@ -252,7 +252,8 @@ time integration scheme only; why?).
 orbits; in particular, if the eccentricity is less than unity, it leads
 to *closed* orbits. In this case, the orbit can be described by a
 unique set of orbital parameters (eccentricity, semi-major axis, period,
-etc.)
+etc.) The code calculates a range of orbital parameters at runtime and
+prints them to stdout.
 
 
 3) Extended, spherically symmetric bodies yield gravitational forces as
