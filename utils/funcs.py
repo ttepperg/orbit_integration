@@ -7,6 +7,7 @@ import math
 import sys
 sys.path.insert(0,"../.")
 from config.phys_consts import Grav
+from num_diff.central_diff import cen_diff_first
 
 
 # Distance
