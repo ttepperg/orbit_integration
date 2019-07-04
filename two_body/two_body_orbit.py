@@ -1,8 +1,8 @@
 #!/opt/local/bin//python3.5
 
 '''
-Author:	Thorsten Tepper Garcia
-Date: 	01/07/2019
+Author:			Thorsten Tepper Garcia
+Last modified:	04/07/2019
 
 See README for information on the code's background, usage, etc.
 
@@ -25,9 +25,9 @@ from utils import funcs
 from utils import io
 from config import units
 import config.phys_consts as pc
+from class_defs import body
 
-
-# Collect program argument(s)
+# Collect input argument(s)
 initialConds = io.get_input()
 
 # Informative output
@@ -49,39 +49,47 @@ try:
 	timeStep = ic.delta_t
 except:
 	timeStep = 0.001
+
+# experimental
+
 # Body 1
-M1 = ic.Mass1
-Phi1 = ic.Potential1
+r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
+v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
 try:
-	mass1_cum = ic.Mass1_cum
+	mass1cum=ic.Mass1_cum
 except:
-	print("\nWARNING: No cumulative mass function defined for body 1.")
-	print("Assuming a point-like mass distribution.\n")
-x10 = ic.x1_0
-y10 = ic.y1_0
-z10 = ic.z1_0
-vx10 = ic.vx1_0
-vy10 = ic.vy1_0
-vz10 = ic.vz1_0
+	mass1cum = None
+body1 = body.Body(mass=ic.Mass1,pot=ic.Potential1,r_vec=r10_vec,v_vec=v10_vec,mass_cum=mass1cum)
+M1 = body1.mass
+Phi1 = body1.potential
+mass1_cum = body1.mass_cum
+x10 = body1.x
+y10 = body1.y
+z10 = body1.z
+vx10 = body1.vx
+vy10 = body1.vy
+vz10 = body1.vz
+
 # Body 2
-M2 = ic.Mass2
-Phi2 = ic.Potential2
+r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
+v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
 try:
-	mass2_cum = ic.Mass2_cum
+	mass2cum=ic.Mass2_cum
 except:
-	print("\nWARNING: No cumulative mass function defined for body 2.")
-	print("Assuming a point-like mass distribution.\n")
-x20 = ic.x2_0
-y20 = ic.y2_0
-z20 = ic.z2_0
-vx20 = ic.vx2_0
-vy20 = ic.vy2_0
-vz20 = ic.vz2_0
+	mass2cum=None
+body2 = body.Body(mass=ic.Mass2,pot=ic.Potential2,r_vec=r20_vec,v_vec=v20_vec,mass_cum=mass2cum)
+M2 = body2.mass
+Phi2 = body2.potential
+mass2_cum = body2.mass_cum
+x20 = body2.x
+y20 = body2.y
+z20 = body2.z
+vx20 = body2.vx
+vy20 = body2.vy
+vz20 = body2.vz
+
 print("Done.")
 
-# check consistency between potential and cumulative mass function
-# TO DO
-# if Phi1.__name__ == "Kepler_Pot":
 
 # relative coordinates and velocities
 x21_0 = x20 - x10
@@ -99,15 +107,15 @@ v21_0 = funcs.norm(*v21_0_vec)
 Mtot=M1+M2
 
 # Mass of (possibly extended) body 1 at r21_0
-try:
-	mass1_r21_0 = mass1_cum(*r21_0_vec)
-except:
+if body1.mass_cum is None:
 	mass1_r21_0 = M1
+else:
+	mass1_r21_0 = mass1_cum(*r21_0_vec)
 # Mass of point-like body 2 at r21_0
-try:
-	mass2_r21_0 = mass2_cum(*r21_0_vec)
-except:
+if body2.mass_cum is None:
 	mass2_r21_0 = M2
+else:
+	mass2_r21_0 = mass2_cum(*r21_0_vec)
 
 # gravitational parameter (only affects the calculation of
 # orbital parameters but not the actual orbit calculation)
