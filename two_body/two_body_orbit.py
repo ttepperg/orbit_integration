@@ -31,6 +31,7 @@ from class_defs import body
 initialConds = io.get_input()
 
 # Informative output
+# (consider moving this into the units.py module)
 print("\nConstants and units:\n")
 print("{:>25}{:12.3E} {:15}".format("Gravitational constant:",pc.Grav,"kpc km^2 / Msun s^2"))
 print("{:>25}{:12.3f} = {:6E}".format("Mass unit:",units.MASS,units.MASS.cgs))
@@ -84,8 +85,9 @@ Mred = (body1.mass*body2.mass)/Mtot
 
 # Calculate orbital parameters
 # NOTE: These are intended to characterise the orbit and do not affect the
-# orbit integration in any way.
-# (consider encapsulating all of this in a function)
+# orbit integration in any way. They are, however, very useful when it comes
+# to a comparison between the code's result and the analytic solution.
+# (consider encapsulating all of this in a class)
 
 Ltot0_vec = funcs.cross_prod(r21_0_vec,v21_0_vec)
 Ltot0 = funcs.norm(*Ltot0_vec)
@@ -185,7 +187,7 @@ print("{:>40}{:15.4E}".format("Rel. total energy (T):",ePot0+eKin0))
 
 
 # Define acceleration function definitions
-# consider moving these into the input parameter file or a function
+# (consider moving these into the input parameter file or a function or a class)
 
 # The following functions correspond each to one of the (numerical) partial derivatives of
 # either body1.potential or body2.potential; the latter must be defined in the input parameter file!
