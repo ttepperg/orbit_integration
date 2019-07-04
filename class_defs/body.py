@@ -63,14 +63,14 @@ class Body():
 		if pot.__name__ == "Kepler_Pot": 
 			self.mass_cum = funcs.Kepler_Mass(mass)
 		elif pot.__name__ == "Plummer_Pot":
-			_a = pot.__getattribute__('a')
+			_a = pot.__getattribute__('_a')
 			self.mass_cum = funcs.Plummer_Mass(mass,_a)
 		elif pot.__name__ == "Hernquist_Pot":
-			_a = pot.__getattribute__('a')
+			_a = pot.__getattribute__('_a')
 			self.mass_cum = funcs.Hernquist_Mass(mass,_a)
 		elif pot.__name__ == "NFW_Pot":
-			_rho0 = pot.__getattribute__('rho0')
-			_rs = pot.__getattribute__('rs')
+			_rho0 = pot.__getattribute__('_rho0')
+			_rs = pot.__getattribute__('_rs')
 			self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
 		else:
 			raise ValueError("No cumulative mass function defined for Body object.")
