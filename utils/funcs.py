@@ -142,6 +142,8 @@ def Plummer_Potential(amp = None, a = None):
 				return -1. * (amp / _r)
 			else:
 				raise ValueError("Zero or negative radius in Plummer_Potential.")
+		# attributes (= parent func. params) to allow for access from outside
+		Plummer_Pot.a = a
 		return Plummer_Pot
 
 
@@ -177,6 +179,7 @@ def NFW_Potential(rho0 = None, rs = None):
 	elif rs <= 0:
 		raise ValueError("rs must be positive in NFW_Potential.")
 	else:
+
 		def NFW_Pot(*r):
 			amp = -4. * math.pi * Grav * rho0 * rs**3
 			_r = norm(*r)
@@ -184,6 +187,10 @@ def NFW_Potential(rho0 = None, rs = None):
 				return math.log(1.+_r/rs)*amp/_r
 			else:
 				raise ValueError("Zero or negative radius in NFW_Potential.")
+
+		# attributes (= parent func. params) to allow for access from outside
+		NFW_Pot.rs = rs
+		NFW_Pot.rho0 = rho0
 		return NFW_Pot
 
 
@@ -221,6 +228,8 @@ def Hernquist_Potential(amp = None, a = None):
 				return -1. * (amp / (_r+a))
 			else:
 				raise ValueError("Zero or negative radius in Hernquist_Potential.")
+		# attributes (= parent func. params) to allow for access from outside
+		Hernquist_Pot.a = a
 		return Hernquist_Pot
 	
 
@@ -234,11 +243,10 @@ def Hernquist_Mass(mass = None, a = None):
 		raise ValueError("a must be non-negative in Hernquist_Mass")
 	else:
 		def Hernquist_M(*r):
-			amp = mass
 			_r2 = norm2(*r)
 			_r = norm(*r)
 			if _r > 0:
-				return amp * _r2 / (_r+a)**2
+				return mass * _r2 / (_r+a)**2
 			else:
 				raise ValueError("Zero or negative radius in Hernquist_Mass.")
 		return Hernquist_M
