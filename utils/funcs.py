@@ -142,8 +142,8 @@ def Plummer_Potential(amp = None, a = None):
 				return -1. * (amp / _r)
 			else:
 				raise ValueError("Zero or negative radius in Plummer_Potential.")
-		# attributes (= parent func. params) to allow for access from outside
-		Plummer_Pot.a = a
+		# private attributes (= parent func. params) to allow for access from outside
+		Plummer_Pot._a = a
 		return Plummer_Pot
 
 
@@ -188,9 +188,9 @@ def NFW_Potential(rho0 = None, rs = None):
 			else:
 				raise ValueError("Zero or negative radius in NFW_Potential.")
 
-		# attributes (= parent func. params) to allow for access from outside
-		NFW_Pot.rs = rs
-		NFW_Pot.rho0 = rho0
+		# private attributes (= parent func. params) to allow for access from outside
+		NFW_Pot._rs = rs
+		NFW_Pot._rho0 = rho0
 		return NFW_Pot
 
 
@@ -228,8 +228,8 @@ def Hernquist_Potential(amp = None, a = None):
 				return -1. * (amp / (_r+a))
 			else:
 				raise ValueError("Zero or negative radius in Hernquist_Potential.")
-		# attributes (= parent func. params) to allow for access from outside
-		Hernquist_Pot.a = a
+		# private attributes (= parent func. params) to allow for access from outside
+		Hernquist_Pot._a = a
 		return Hernquist_Pot
 	
 
