@@ -43,9 +43,9 @@ timeUnit = 0.978
 if(!exists('plot_ana')){
 	plot_ana = 1 # -> 0/1 to turn off/on
 }
-semi_latus = 93.0669
-ecc =  0.9931
-apsidal_angle = -159.1120	# in degree
+semi_latus = 0.9300
+ecc =  0.5988
+apsidal_angle = -105.3847	# in degree
 
 # defaults
 
@@ -100,9 +100,9 @@ ePot = 3
 eKin = 4
 
 plotColsAngMom = \
-	sprintf("($%d):(abs(($%d)/columnhead(%d)-1.))", timeCoord, angMom, angMom)
+	sprintf("($%d):(1.e2*abs(($%d)/columnhead(%d)-1.))", timeCoord, angMom, angMom)
 plotColsEnergy = \
-	sprintf("($%d):(abs(($%d+$%d)/(columnhead(%d)+columnhead(%d))-1.))", timeCoord, ePot, eKin, ePot, eKin)
+	sprintf("($%d):(1.e2*abs(($%d+$%d)/(columnhead(%d)+columnhead(%d))-1.))", timeCoord, ePot, eKin, ePot, eKin)
 
 
 if(exists("projPlane")){ # orthogonal 3D projection onto 2D
@@ -354,7 +354,7 @@ plotColsVel2Proj = \
 # Energy conservation
 set terminal x11 0 persist title "Energy" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
-set ylabel "|{/Symbol D} E(t)/E(0) |"
+set ylabel "|{/Symbol D} E(t)/E(0) | (%)"
 pl dataFile u @plotColsEnergy w l not
 
 
@@ -362,7 +362,7 @@ pl dataFile u @plotColsEnergy w l not
 # Angular momentum conservation
 set terminal x11 1 persist title "Angular momentum" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
-set ylabel "|{/Symbol D} h(t)/h(0)|"
+set ylabel "|{/Symbol D} h(t)/h(0)| (%)"
 pl dataFile u @plotColsAngMom w l not
 
 
