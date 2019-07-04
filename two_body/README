@@ -64,10 +64,11 @@ setting all z-components to 0 initially.
 # TIME INTEGRATION
 
 The system of equations is numerically integrated using a 2nd order
-leapfrog (kick-drift-kick) method. This scheme is symplectic and thus features
-desired properties such  as time reversibility, conservation of the relative total
-energy to any desired accuracy -- even over significant integration times --, if the
-time step is chosen small enough, and conservation of the specific angular momentum
+leapfrog (kick-drift-kick) method (see https://en.wikipedia.org/wiki/Leapfrog_integration).
+This scheme is symplectic and thus features desired properties such as time
+reversibility, conservation of the relative total energy to any desired
+accuracy -- even over significant integration times --, if the time step is
+chosen small enough, and conservation of the specific angular momentum
 generally to machine precision.
 
 Beware that the scheme may lead to orbit precession if the integration step is
@@ -93,6 +94,8 @@ the force corresponding to a given potential. Two methods are implemented here:
 1) A central finite difference scheme of orders 2 and 4;
 
 2) A forward finite difference scheme of orders 2 and 3.
+
+(see https://en.wikipedia.org/wiki/Finite_difference_coefficient).
 
 Method 1 is preferred (and is the default), in particular because it leads to a
 better conservation of angular momentum for extrem potentials such as a
