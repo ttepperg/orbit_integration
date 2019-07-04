@@ -82,66 +82,6 @@ Mtot=body1.mass+body2.mass
 # reduced mass
 Mred = (body1.mass*body2.mass)/Mtot											
 
-
-# Acceleration function definitions
-# consider moving these into the input parameter file or a function
-
-# The following functions correspond each to one of the (numerical) partial derivatives of
-# either body1.potential or body2.potential; the latter must be defined in the input parameter file!
-
-# Central finite difference scheme parameters:
-# 2nd order scheme conserves well both energy and angular momentum.
-# 4th order scheme conserves energy well, and angular momentum generally to
-# machine precision.
-# DO NOT change the values of the following parameters unless absolutely necessary!
-intStep = 1.e-4
-accOrder = 4
-
-# Note: the array f = (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
-# Recall: Force field = - Grad Phi
-def dvx1dt(t,*f):
-	_x12 = f[0]-f[6]
-	_y12 = f[2]-f[8]
-	_z12 = f[4]-f[10]
-	_rvec = [_x12,_y12,_z12]
-	return  -1.*cen_diff_first(*_rvec, var=0, func=body2.potential, delta_x=intStep, order=accOrder)
-
-def dvy1dt(t,*f):
-	_x12 = f[0]-f[6]
-	_y12 = f[2]-f[8]
-	_z12 = f[4]-f[10]
-	_rvec = [_x12,_y12,_z12]
-	return   -1.*cen_diff_first(*_rvec, var=1, func=body2.potential, delta_x=intStep, order=accOrder)
-
-def dvz1dt(t,*f):
-	_x12 = f[0]-f[6]
-	_y12 = f[2]-f[8]
-	_z12 = f[4]-f[10]
-	_rvec = [_x12,_y12,_z12]
-	return   -1.*cen_diff_first(*_rvec, var=2, func=body2.potential, delta_x=intStep, order=accOrder)
-
-def dvx2dt(t,*f):
-	_x21 = f[6]-f[0]
-	_y21 = f[8]-f[2]
-	_z21 = f[10]-f[4]
-	_rvec = [_x21,_y21,_z21]
-	return  -1.*cen_diff_first(*_rvec, var=0, func=body1.potential, delta_x=intStep, order=accOrder)
-
-def dvy2dt(t,*f):
-	_x21 = f[6]-f[0]
-	_y21 = f[8]-f[2]
-	_z21 = f[10]-f[4]
-	_rvec = [_x21,_y21,_z21]
-	return  -1.*cen_diff_first(*_rvec, var=1, func=body1.potential, delta_x=intStep, order=accOrder)
-
-def dvz2dt(t,*f):
-	_x21 = f[6]-f[0]
-	_y21 = f[8]-f[2]
-	_z21 = f[10]-f[4]
-	_rvec = [_x21,_y21,_z21]
-	return  -1.*cen_diff_first(*_rvec, var=2, func=body1.potential, delta_x=intStep, order=accOrder)
-
-
 # Calculate orbital parameters
 # NOTE: These are intended to characterise the orbit and do not affect the
 # orbit integration in any way.
@@ -241,6 +181,66 @@ if ecc < 1.:
 print("{:>40}{:15.4E}".format("Rel. potential energy (T):",ePot0))
 print("{:>40}{:15.4E}".format("Rel. kinetic energy (T):",eKin0))
 print("{:>40}{:15.4E}".format("Rel. total energy (T):",ePot0+eKin0))
+
+
+
+# Define acceleration function definitions
+# consider moving these into the input parameter file or a function
+
+# The following functions correspond each to one of the (numerical) partial derivatives of
+# either body1.potential or body2.potential; the latter must be defined in the input parameter file!
+
+# Central finite difference scheme parameters:
+# 2nd order scheme conserves well both energy and angular momentum.
+# 4th order scheme conserves energy well, and angular momentum generally to
+# machine precision.
+# DO NOT change the values of the following parameters unless absolutely necessary!
+intStep = 1.e-4
+accOrder = 4
+
+# Note: the array f = (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+# Recall: Force field = - Grad Phi
+def dvx1dt(t,*f):
+	_x12 = f[0]-f[6]
+	_y12 = f[2]-f[8]
+	_z12 = f[4]-f[10]
+	_rvec = [_x12,_y12,_z12]
+	return  -1.*cen_diff_first(*_rvec, var=0, func=body2.potential, delta_x=intStep, order=accOrder)
+
+def dvy1dt(t,*f):
+	_x12 = f[0]-f[6]
+	_y12 = f[2]-f[8]
+	_z12 = f[4]-f[10]
+	_rvec = [_x12,_y12,_z12]
+	return   -1.*cen_diff_first(*_rvec, var=1, func=body2.potential, delta_x=intStep, order=accOrder)
+
+def dvz1dt(t,*f):
+	_x12 = f[0]-f[6]
+	_y12 = f[2]-f[8]
+	_z12 = f[4]-f[10]
+	_rvec = [_x12,_y12,_z12]
+	return   -1.*cen_diff_first(*_rvec, var=2, func=body2.potential, delta_x=intStep, order=accOrder)
+
+def dvx2dt(t,*f):
+	_x21 = f[6]-f[0]
+	_y21 = f[8]-f[2]
+	_z21 = f[10]-f[4]
+	_rvec = [_x21,_y21,_z21]
+	return  -1.*cen_diff_first(*_rvec, var=0, func=body1.potential, delta_x=intStep, order=accOrder)
+
+def dvy2dt(t,*f):
+	_x21 = f[6]-f[0]
+	_y21 = f[8]-f[2]
+	_z21 = f[10]-f[4]
+	_rvec = [_x21,_y21,_z21]
+	return  -1.*cen_diff_first(*_rvec, var=1, func=body1.potential, delta_x=intStep, order=accOrder)
+
+def dvz2dt(t,*f):
+	_x21 = f[6]-f[0]
+	_y21 = f[8]-f[2]
+	_z21 = f[10]-f[4]
+	_rvec = [_x21,_y21,_z21]
+	return  -1.*cen_diff_first(*_rvec, var=2, func=body1.potential, delta_x=intStep, order=accOrder)
 
 # Set up time integrator
 N = math.ceil((t1 - t0) / timeStep)
