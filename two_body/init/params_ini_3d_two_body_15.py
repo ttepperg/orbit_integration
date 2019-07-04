@@ -1,33 +1,43 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	26/06/2019
 
 N.B.: This is the time reversed evolution of the system defined by params_ini_3d_two_body_13.py.
 
 This set of parameters produces a well-behaved two-body system, with a stable, highly precessing
 orbit characterised by the following parameters:
 
-              Total mass of body 1:  1.2136E+06
-              Total mass of body 2:  1.0000E+01
-                      Reduced mass:  9.9999E+00
-     Initial rel. distance (r21_0):      0.8032
-        Initial rel. speed (v21_0):      1.7902
- Initial tangential vel. (v_tan_0):      1.2441
-     Initial radial vel. (v_rad_0):      1.2874
-Rel. specific ang. mom. vec. (h_vec): (-0.000,-0.000,-0.999)
-       Rel. specific ang. mom. (h):      0.9992
-              Rel. mean radius (p):      0.2563
-  Rel. eccentricity vector (e_vec): (-0.685,0.322,0.000)
-             Rel. eccentricity (e):      0.7567
-           Rel. semimajor axis (a):      0.5998
-           Rel. semiminor axis (b):      0.3921
-              Rel. pericentre (rp):      0.1459
-               Rel. apocentre (ra):      1.0537
- Orbital rotation angle (thetha_0):    154.8044
-           Rel. orbital period (T):      1.4789
-         Rel. potential energy (T): -1.9836E+02
-           Rel. kinetic energy (T):  1.6025E+01
-             Rel. total energy (T): -1.8233E+02
+                   Total mass of body 1:     1.2136E+06
+                   Total mass of body 2:     1.0000E+01
+                           Reduced mass:     9.9999E+00
+
+          Initial rel. distance (r21_0):         0.8032
+             Initial rel. speed (v21_0):         1.7902
+      Initial tangential vel. (v_tan_0):         1.2441
+          Initial radial vel. (v_rad_0):         1.2874
+   Rel. specific ang. mom. vec. (h_vec): (-0.000,-0.000,-0.999)
+                           [normalised]: (-0.000,-0.000,-1.000)
+                         [along z-axis]: (0.000,0.000,0.999)
+            Rel. specific ang. mom. (h):         0.9992
+
+             Rel. semi-latus rectum (p):         0.2563
+       Rel. eccentricity vector (e_vec): (-0.685,0.322,-0.000)
+                  Rel. eccentricity (e):         0.7567
+                Rel. semimajor axis (a):         0.5998
+                Rel. semiminor axis (b):         0.3921
+             Apsidal angle (phi_0; deg):       155.5204
+       Orbital inclination (psi_0; deg):       180.0000
+                   Rel. pericentre (rp):         0.1459
+                Vel. at pericentre (vp):         6.8477
+                    Rel. apocentre (ra):         1.0537
+                 Vel. at apocentre (va):         0.9483
+                Rel. orbital period (T):         1.4789
+        Approx. orbit circumference (u):         3.1503
+        Approx. pericentric period (Tp):         0.4601
+         Approx. apocentric period (Ta):         3.3221
+
+              Rel. potential energy (T):    -1.9836E+02
+                Rel. kinetic energy (T):     1.6025E+01
+                  Rel. total energy (T):    -1.8233E+02
 
 
            Energy conservation to better than 1.371E-04 %.

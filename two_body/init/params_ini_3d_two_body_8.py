@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	01/07/2019
 
 This set of parameters produces a well-behaved two-body system, with a stable, nearly
 circular, slowly precessing orbit characterised by the following parameters:
@@ -70,7 +69,6 @@ delta_t = 1.0e-4												# integration time step
 Mass1 = 1.0e11													# total mass (Msun)
 rs1 = 5.e0														# Plummer scale radius
 Potential1 = funcs.Plummer_Potential(amp=pc.Grav*Mass1,a=rs1)	# potential (km/s)^2
-Mass1_cum = funcs.Plummer_Mass(mass=Mass1,a=rs1)				# cumulative mass
 x1_0 = -1														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -81,7 +79,6 @@ vz1_0 = 0.
 # Body 2
 Mass2 = 1.0e1													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
-Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
 x2_0 = 8.2														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
@@ -93,6 +90,8 @@ vz2_0 = 0.
 # redefine velocities to obtain a circular orbit
 # assumption: centre of mass at rest
 from math import sqrt
+Mass1_cum = funcs.Plummer_Mass(mass=Mass1,a=rs1)				# cumulative mass
+Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
 r0 = [x2_0-x1_0,y2_0-y1_0,z2_0-z1_0]
 M1 = Mass1_cum(*r0)
 M2 = Mass2_cum(*r0)

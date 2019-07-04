@@ -1,6 +1,6 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	01/07/2019
+Date:	04/07/2019
 
 This set of parameters produces a well-behaved two-body system, with a stable,
 non-precessing inclined, elliptical orbit characterised by the following parameters:
