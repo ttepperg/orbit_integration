@@ -93,7 +93,7 @@ the force corresponding to a given potential. Two methods are implemented here:
 
 1) A central finite difference scheme of orders 2 and 4;
 
-2) A forward finite difference scheme of orders 2 and 3.
+2) A forward finite difference scheme of orders 2 and 3;
 
 (see https://en.wikipedia.org/wiki/Finite_difference_coefficient).
 
