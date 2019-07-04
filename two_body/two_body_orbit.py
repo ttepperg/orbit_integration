@@ -55,11 +55,8 @@ except:
 # Body 1
 r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
 v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
-try:
-	mass1cum=ic.Mass1_cum
-except:
-	mass1cum = None
-body1 = body.Body(mass=ic.Mass1,pot=ic.Potential1,r_vec=r10_vec,v_vec=v10_vec,mass_cum=mass1cum)
+print((ic.Potential1.__defaults__))
+body1 = body.Body(mass=ic.Mass1,pot=ic.Potential1,r_vec=r10_vec,v_vec=v10_vec)
 M1 = body1.mass
 Phi1 = body1.potential
 mass1_cum = body1.mass_cum
@@ -73,11 +70,7 @@ vz10 = body1.vz
 # Body 2
 r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
 v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
-try:
-	mass2cum=ic.Mass2_cum
-except:
-	mass2cum=None
-body2 = body.Body(mass=ic.Mass2,pot=ic.Potential2,r_vec=r20_vec,v_vec=v20_vec,mass_cum=mass2cum)
+body2 = body.Body(mass=ic.Mass2,pot=ic.Potential2,r_vec=r20_vec,v_vec=v20_vec)
 M2 = body2.mass
 Phi2 = body2.potential
 mass2_cum = body2.mass_cum
@@ -107,15 +100,10 @@ v21_0 = funcs.norm(*v21_0_vec)
 Mtot=M1+M2
 
 # Mass of (possibly extended) body 1 at r21_0
-if body1.mass_cum is None:
-	mass1_r21_0 = M1
-else:
-	mass1_r21_0 = mass1_cum(*r21_0_vec)
+mass1_r21_0 = mass1_cum(*r21_0_vec)
 # Mass of point-like body 2 at r21_0
-if body2.mass_cum is None:
-	mass2_r21_0 = M2
-else:
-	mass2_r21_0 = mass2_cum(*r21_0_vec)
+mass2_r21_0 = mass2_cum(*r21_0_vec)
+
 
 # gravitational parameter (only affects the calculation of
 # orbital parameters but not the actual orbit calculation)
