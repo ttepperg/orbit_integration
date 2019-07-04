@@ -10,17 +10,20 @@ from config.phys_consts import Grav
 from num_diff.central_diff import cen_diff_first
 
 
-# Distance
+# METRICS AND TRANSFORMATIONS
+
 def norm2(*r):
+	'''Euclidean distance squared'''
 	return sum(w**2 for w in r)
 
 
 def norm(*r):
+	'''Euclidean distance'''
 	return math.sqrt(norm2(*r))
 
 
-# Cross product
 def cross_prod(r = None, v = None):
+	'''Cross product between vectors r and v, i.e. r x v = - v x r'''
 	if r is None:
 		raise ValueError("r is a required parameter in cross_prod.")
 	elif v is None:
@@ -38,8 +41,9 @@ def cross_prod(r = None, v = None):
 		lz = r[0]*v[1]-r[1]*v[0]
 		return lx,ly,lz
 
-# Dot product
+
 def dot_prod(r = None, v = None):
+	'''Dot product between vectors r and v, i.e. r . v = v . r'''
 	if r is None:
 		raise ValueError("r is a required parameter in dot_prod.")
 	elif v is None:
@@ -55,7 +59,6 @@ def dot_prod(r = None, v = None):
 		return dp
 
 
-# Rodrigues' rotation formula
 def rodrigues_rot(vec = None, axis = None, incl = None):
 	'''Implements Rodrigues' rotation formula to rotate a vector 'vec'
 	by an angle 'incl' around a prescribed 'axis' represented by an unit
@@ -92,10 +95,11 @@ def rodrigues_rot(vec = None, axis = None, incl = None):
 			return vec
 
 
-# Kepler potential
+
+# POTENTIALS AND CORRESPONDING MASS PROFILES
+
 def Kepler_Potential(amp = None):
-	'''Implements the Kepler potential
-	where amp = G*M.'''
+	'''Implements a wrapper for the Kepler potential where amp = G*M.'''
 	if amp is None:
 		raise ValueError("amp is a required argument in Kepler_Potential.")
 	elif amp <= 0:
@@ -124,7 +128,7 @@ def Kepler_Mass(mass = None):
 
 # Plummer potential
 def Plummer_Potential(amp = None, a = None):
-	'''Implements the Plummer potential
+	'''Implements  a wrapper for the Plummer (1911) potential
 	where amp = G*M. Reduces to Kepler potential for a=0.'''
 	if amp is None:
 		raise ValueError("amp is a required argument in Plummer_Potential.")
@@ -169,7 +173,7 @@ def Plummer_Mass(mass = None, a = None):
 
 # Navarro, Frenk, and White (1997) potential
 def NFW_Potential(rho0 = None, rs = None):
-	'''Implements the NFW potential'''
+	'''Implements  a wrapper for the NFW (1997) potential'''
 	if rho0 is None:
 		raise ValueError("rho0 is a required argument in NFW_Potential.")
 	elif rho0 <= 0:
@@ -215,6 +219,8 @@ def NFW_Mass(rho0 = None, rs = None):
 
 # Hernquist potential
 def Hernquist_Potential(amp = None, a = None):
+	'''Implements a wrapper for the Hernquist (1990) potential
+	where amp = G*M. Reduces to Kepler potential for a=0.'''
 	if amp is None:
 		raise ValueError("amp is a required parameter in Hernquist_Potential")
 	elif a is None:
@@ -252,7 +258,8 @@ def Hernquist_Mass(mass = None, a = None):
 		return Hernquist_M
 
 
-# Gravitational field
+# FIELDS AND FORCES
+
 def grav_field(*r, pot = None):
 	'''Returns the gravitational field g = Grad Phi at r for a given
 	potential Phi. Grad Phi is calculated using a central finite difference
@@ -268,25 +275,6 @@ def grav_field(*r, pot = None):
 		return dpotdr
 
 
-# Specific potential energy
-def ePot(*r,pot = None):
-	if pot is None:
-		raise ValueError("pot is a required parameter in ePot.")
-	elif len(r) < 1:
-		raise ValueError("expected at least one element in r, got{} in ePot.".format(len(r)))
-	else:
-		return pot(*r)
-
-
-# Specific kinetic energy
-def eKin(*v):
-	if len(v) < 1:
-		raise ValueError("expected at least one element in v, got{} in eKin.".format(len(v)))
-	else:
-		return 0.5 * norm2(*v)
-
-
-# Circular velocity (valid only for Kepler potential)
 def v_circ(*r, amp = None):
 	'''Returns the circular velocity at r for a Kepler potential'''
 	if amp is None:
@@ -300,9 +288,9 @@ def v_circ(*r, amp = None):
 		else:
 			raise ValueError("Zero or negative r in v_circ.")
 
-# Generic circular velocity
 def v_circ_gen(*r, pot = None):
-	'''Returns the circular velocity at r given by sqrt(r Grad Phi)
+	'''Returns the circular velocity at r for any potential;
+	given by sqrt(r Grad Phi).
 	Grad Phi is calculated using a central finite difference
 	scheme of order 4.'''
 	if pot is None:
@@ -316,37 +304,31 @@ def v_circ_gen(*r, pot = None):
 		return math.sqrt(r_dot_dpotdr)
 
 
-# Vis-viva
-def vis_viva(*r, amp = None, a = None):
-	_r = norm(*r)
-	if 2*a > _r:
-		return math.sqrt(amp*(2./_r - 1./a))
-	else:
-		raise ValueError("Undefined velocity in vis-viva; set a > r/2.")
 
-# Semimajor axis
-# r0,v0**2,amp = pc.Grav*M
-def semimajor_from_vis(r = None,v = None, amp = None):
-	'''Returns from vis-viva equation; only valid for elliptic orbits.
-	Use instead function semimajor().'''
-	if r is None:
-		raise ValueError("r is a required parameter in semimajor_from_vis.")
-	elif v is None:
-		raise ValueError("v is a required parameter in semimajor_from_vis.")
-	elif amp is None:
-		raise ValueError("amp is a required parameter in semimajor_from_vis.")
-	else:
-		v2 = v**2
-		k1 = 2./r
-		k2 = v2/amp
-		if k1 != k2:
-			return 1./(k1 - k2)
-		else:
-			print("seminajor axis undefined in semimajor_from_vis.")
-			return float('NaN')
+# ENERGIES
 
-# Semi-latus rectum
+def ePot(*r,pot = None):
+	'''Specific potential energy'''
+	if pot is None:
+		raise ValueError("pot is a required parameter in ePot.")
+	elif len(r) < 1:
+		raise ValueError("expected at least one element in r, got{} in ePot.".format(len(r)))
+	else:
+		return pot(*r)
+
+
+def eKin(*v):
+	'''Specific kinetic energy'''
+	if len(v) < 1:
+		raise ValueError("expected at least one element in v, got{} in eKin.".format(len(v)))
+	else:
+		return 0.5 * norm2(*v)
+
+
+# ORBITAL PARAMETERS
+
 def semi_latus_rec(h = None, amp = None):
+	'''Semi-latus rectum'''
 	if h is None:
 		raise ValueError("h is a required parameter in semi_latus_rec.")
 	elif amp is None:
@@ -356,9 +338,8 @@ def semi_latus_rec(h = None, amp = None):
 	return h**2 / amp
 
 
-# Eccentricity
 def eccentricity(vr = None, vt = None, v0 = None, theta = None):
-	'''theta must be in radians'''
+	'''Returns the eccentricity. theta must be in radians'''
 	if vr is None:
 		raise ValueError("vr is a required parameter in eccentricity.")
 	elif vt is None:
@@ -378,13 +359,13 @@ def eccentricity(vr = None, vt = None, v0 = None, theta = None):
 			return vr/(v0*math.sin(theta))
 
 
-# Specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
-# 'specific' means it is normalised by (G Mtot)*(M_reduced)
-# the direction of the LRL vector lies along the symmetry axis of the
-# conic section and points from the center of force toward the periapsis,
-# i.e., the point of closest approach.
-# See: https://en.wikipedia.org/wiki/Laplace–Runge–Lenz_vector
 def eccentricity_vec(r = None, v = None, h = None, mu = None):
+	'''Specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
+	'specific' means it is normalised by (G Mtot)*(M_reduced)
+	the direction of the LRL vector lies along the symmetry axis of the
+	conic section and points from the center of force toward the periapsis,
+	i.e., the point of closest approach.
+	See: https://en.wikipedia.org/wiki/Laplace–Runge–Lenz_vector'''
 	if r is None:
 		raise ValueError("r is a required parameter in eccentricity_vec.")
 	elif v is None:
@@ -403,8 +384,8 @@ def eccentricity_vec(r = None, v = None, h = None, mu = None):
 		return [a/mu - b/_r for a, b in zip(vxh, r)]
 
 
-# Semimajor axis
 def semimajor(e = None, p = None):
+	'''Semimajor axis'''
 	if e is None:
 		raise ValueError("e is a required parameter in semimajor.")
 	if e < 0:
@@ -419,8 +400,8 @@ def semimajor(e = None, p = None):
 			return float('NaN')
 
 
-# Semiminor axis
 def semiminor(e = None, p = None):
+	'''Semiminor axis'''
 	if e is None:
 		raise ValueError("e is a required parameter in semiminor.")
 	if e < 0:
@@ -435,8 +416,8 @@ def semiminor(e = None, p = None):
 			return float('NaN')
 
 
-# Apocentric distance
 def apocentre(e = None, p = None):
+	'''Apocentric distance'''
 	if e is None:
 		raise ValueError("e is a required parameter in apocentre.")
 	elif p is None:
@@ -449,8 +430,8 @@ def apocentre(e = None, p = None):
 			return float('NaN')
 
 
-# Pericentric distance
 def pericentre(e = None, p = None):
+	'''Pericentric distance'''
 	if e is None:
 		raise ValueError("e is a required parameter in apocentre.")
 	elif p is None:
@@ -459,21 +440,20 @@ def pericentre(e = None, p = None):
 		return	p / (1. + e)
 
 
-# Orbital period
-def period(a = None, amp = None):
+def period(a = None, grav_param = None):
+	'''Orbital period. grav_param = G*Mtot.'''
 	if a is None:
 		raise ValueError("a is a required parameter in period.")
-	elif amp is None:
-		raise ValueError("amp is a required parameter in period.")
+	elif grav_param is None:
+		raise ValueError("grav_param is a required parameter in period.")
 	else:
 		if a > 0:
-			return 2.*math.pi*a*math.sqrt(a/amp)
+			return 2.*math.pi*a*math.sqrt(a/grav_param)
 		else:
 			print("WARNING: orbital period not defined for a < 0.")
 			return float('NaN')
 
 
-# Orbit's circumference
 def circumference(a = None, b = None):
 	''' Returns the approximate cirumference of an orbit with 0 < e < 1,
 	exact for e = 0, and undefined for e >= 1.'''
@@ -490,4 +470,35 @@ def circumference(a = None, b = None):
 			# higher orders exist though)
 			return math.pi * (a+b) * (1.+corr+(corr/4.)**4)
 		else:
+			return float('NaN')
+
+
+def vis_viva(*r, amp = None, a = None):
+	'''Returns the speed from the Vis-viva equation.
+	Only valid for elliptic orbits.'''
+	_r = norm(*r)
+	if 2*a > _r:
+		return math.sqrt(amp*(2./_r - 1./a))
+	else:
+		raise ValueError("Undefined velocity in vis-viva; set a > r/2.")
+
+
+# Semimajor axis from vis-viva
+def semimajor_from_vis(r = None,v = None, amp = None):
+	'''Returns from vis-viva equation; only valid for elliptic orbits.
+	Superseded by function semimajor().'''
+	if r is None:
+		raise ValueError("r is a required parameter in semimajor_from_vis.")
+	elif v is None:
+		raise ValueError("v is a required parameter in semimajor_from_vis.")
+	elif amp is None:
+		raise ValueError("amp is a required parameter in semimajor_from_vis.")
+	else:
+		v2 = v**2
+		k1 = 2./r
+		k2 = v2/amp
+		if k1 != k2:
+			return 1./(k1 - k2)
+		else:
+			print("seminajor axis undefined in semimajor_from_vis.")
 			return float('NaN')
