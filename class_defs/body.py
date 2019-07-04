@@ -8,42 +8,33 @@ from utils import funcs
 
 class Body():
 	"""General body class representing a body"""
-	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None,mass_cum=None):
+	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None):
 		"""
 		NAME:
 
-		__init__
+			__init__
 
 		PURPOSE:
 
-		Initialize a Body instance
+			Initialize a Body instance
 
 		INPUT:
 
-		mass - total mass of body (scalar)
+			mass - total mass of body (scalar)
 
-		pot	- potential of body (function of r=[x,y,z])
+			pot	- potential of body (function of r=[x,y,z])
 
-		r_vec - initial position vector of body (list)
+			r_vec - initial position vector of body (list)
 
-		v_vec - initial velocity vector of body (list)
-
-		OPTIONAL INPUT:
-
-		mass_cum - cumulative mass function of body (function of r=[x,y,z])
+			v_vec - initial velocity vector of body (list)
 
 		OUTPUT:
 
-		Instance          
+			Instance          
 
 		HISTORY:
 
-		2019-07-04 - Written - TTG
-
-		TO DO:
-
-		- add cumulative mass function corresponding to potential
-		e.g. if Phi1.__name__ == "Kepler_Pot": ...
+			2019-07-04 - Written - TTG
 
 		"""
 		if mass is None:
@@ -68,25 +59,26 @@ class Body():
 			self.vy = v_vec[1]
 			self.vz = v_vec[2]
 
-# NEED to do this in a consistent way; the problem is that mass functions such as
-# Plummer_Mass depend on additional parameters, as does the corresponding potential
-# the trick is to get the value of this parameters from the potential definition.
-# 		if pot.__name__ == "Kepler_Pot": 
-# 			self.mass_cum = funcs.Kepler_Mass(mass)
-# 		elif pot.__name__ == "Plummer_Pot": 
-# 			self.mass_cum = funcs.Plummer_Mass(mass)
-# 		else:
-		if mass_cum is None:
-			print("\nWARNING: No cumulative mass function defined for Body object.")
-			print("Assuming a point-like mass distribution.\n")
-			self.mass_cum = None
+		# set cumulative mass function self-consistently
+		if pot.__name__ == "Kepler_Pot": 
+			self.mass_cum = funcs.Kepler_Mass(mass)
+		elif pot.__name__ == "Plummer_Pot":
+			_a = pot.__getattribute__('a')
+			self.mass_cum = funcs.Plummer_Mass(mass,_a)
+		elif pot.__name__ == "Hernquist_Pot":
+			_a = pot.__getattribute__('a')
+			self.mass_cum = funcs.Hernquist_Mass(mass,_a)
+		elif pot.__name__ == "NFW_Pot":
+			_rho0 = pot.__getattribute__('rho0')
+			_rs = pot.__getattribute__('rs')
+			self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
 		else:
-			self.mass_cum = mass_cum
+			raise ValueError("No cumulative mass function defined for Body object.")
 
-	def position(self):
+	def pos(self):
 		return [self.x,self.y,self.z]
 
-	def velocity(self):
+	def vel(self):
 		return [self.vx,self.vy,self.vz]
 
 
