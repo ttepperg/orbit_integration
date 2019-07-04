@@ -55,69 +55,39 @@ except:
 # Body 1
 r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
 v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
-print((ic.Potential1.__defaults__))
 body1 = body.Body(mass=ic.Mass1,pot=ic.Potential1,r_vec=r10_vec,v_vec=v10_vec)
-M1 = body1.mass
-Phi1 = body1.potential
-mass1_cum = body1.mass_cum
-x10 = body1.x
-y10 = body1.y
-z10 = body1.z
-vx10 = body1.vx
-vy10 = body1.vy
-vz10 = body1.vz
 
 # Body 2
 r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
 v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
 body2 = body.Body(mass=ic.Mass2,pot=ic.Potential2,r_vec=r20_vec,v_vec=v20_vec)
-M2 = body2.mass
-Phi2 = body2.potential
-mass2_cum = body2.mass_cum
-x20 = body2.x
-y20 = body2.y
-z20 = body2.z
-vx20 = body2.vx
-vy20 = body2.vy
-vz20 = body2.vz
 
 print("Done.")
 
-
 # relative coordinates and velocities
-x21_0 = x20 - x10
-y21_0 = y20 - y10
-z21_0 = z20 - z10
-vx21_0 = vx20 - vx10
-vy21_0 = vy20 - vy10
-vz21_0 = vz20 - vz10
-r21_0_vec = [x21_0,y21_0,z21_0]
-v21_0_vec = [vx21_0,vy21_0,vz21_0]
-r21_0 = funcs.norm(*r21_0_vec)
-v21_0 = funcs.norm(*v21_0_vec)
-
-# total mass
-Mtot=M1+M2
-
-# Mass of (possibly extended) body 1 at r21_0
-mass1_r21_0 = mass1_cum(*r21_0_vec)
-# Mass of point-like body 2 at r21_0
-mass2_r21_0 = mass2_cum(*r21_0_vec)
+r21_0_vec = body2.pos_rel(body1)
+v21_0_vec = body2.vel_rel(body1)
+r21_0 = body2.dist_rel(body1)
+v21_0 = body2.speed_rel(body1)
 
 
 # gravitational parameter (only affects the calculation of
 # orbital parameters but not the actual orbit calculation)
-grav_param = pc.Grav*(mass1_r21_0+mass2_r21_0)
+# uses masses of bodies at r21_0_vec
+grav_param = pc.Grav*(body1.mass_cum(*r21_0_vec)+body2.mass_cum(*r21_0_vec))
+
+# total mass (NOT necessarily equal to body1.mass_cum(*r21_0_vec)+body2.mass_cum(*r21_0_vec)!)
+Mtot=body1.mass+body2.mass
 
 # reduced mass
-Mred = (M1*M2)/Mtot											
+Mred = (body1.mass*body2.mass)/Mtot											
 
 
 # Acceleration function definitions
 # consider moving these into the input parameter file or a function
 
 # The following functions correspond each to one of the (numerical) partial derivatives of
-# either Phi1 or Phi2; the latter must be defined in the input parameter file!
+# either body1.potential or body2.potential; the latter must be defined in the input parameter file!
 
 # Central finite difference scheme parameters:
 # 2nd order scheme conserves well both energy and angular momentum.
@@ -134,42 +104,42 @@ def dvx1dt(t,*f):
 	_y12 = f[2]-f[8]
 	_z12 = f[4]-f[10]
 	_rvec = [_x12,_y12,_z12]
-	return  -1.*cen_diff_first(*_rvec, var=0, func=Phi2, delta_x=intStep, order=accOrder)
+	return  -1.*cen_diff_first(*_rvec, var=0, func=body2.potential, delta_x=intStep, order=accOrder)
 
 def dvy1dt(t,*f):
 	_x12 = f[0]-f[6]
 	_y12 = f[2]-f[8]
 	_z12 = f[4]-f[10]
 	_rvec = [_x12,_y12,_z12]
-	return   -1.*cen_diff_first(*_rvec, var=1, func=Phi2, delta_x=intStep, order=accOrder)
+	return   -1.*cen_diff_first(*_rvec, var=1, func=body2.potential, delta_x=intStep, order=accOrder)
 
 def dvz1dt(t,*f):
 	_x12 = f[0]-f[6]
 	_y12 = f[2]-f[8]
 	_z12 = f[4]-f[10]
 	_rvec = [_x12,_y12,_z12]
-	return   -1.*cen_diff_first(*_rvec, var=2, func=Phi2, delta_x=intStep, order=accOrder)
+	return   -1.*cen_diff_first(*_rvec, var=2, func=body2.potential, delta_x=intStep, order=accOrder)
 
 def dvx2dt(t,*f):
 	_x21 = f[6]-f[0]
 	_y21 = f[8]-f[2]
 	_z21 = f[10]-f[4]
 	_rvec = [_x21,_y21,_z21]
-	return  -1.*cen_diff_first(*_rvec, var=0, func=Phi1, delta_x=intStep, order=accOrder)
+	return  -1.*cen_diff_first(*_rvec, var=0, func=body1.potential, delta_x=intStep, order=accOrder)
 
 def dvy2dt(t,*f):
 	_x21 = f[6]-f[0]
 	_y21 = f[8]-f[2]
 	_z21 = f[10]-f[4]
 	_rvec = [_x21,_y21,_z21]
-	return  -1.*cen_diff_first(*_rvec, var=1, func=Phi1, delta_x=intStep, order=accOrder)
+	return  -1.*cen_diff_first(*_rvec, var=1, func=body1.potential, delta_x=intStep, order=accOrder)
 
 def dvz2dt(t,*f):
 	_x21 = f[6]-f[0]
 	_y21 = f[8]-f[2]
 	_z21 = f[10]-f[4]
 	_rvec = [_x21,_y21,_z21]
-	return  -1.*cen_diff_first(*_rvec, var=2, func=Phi1, delta_x=intStep, order=accOrder)
+	return  -1.*cen_diff_first(*_rvec, var=2, func=body1.potential, delta_x=intStep, order=accOrder)
 
 
 # Calculate orbital parameters
@@ -210,7 +180,7 @@ orbital_period = funcs.period(semimajor_axis,grav_param)
 orbital_period_peri = orbital_circum / v_peri
 orbital_period_apo = orbital_circum / v_apo
 
-ePot0 = Mred * (Phi1(*r21_0_vec)+Phi2(*r21_0_vec))
+ePot0 = Mred * (body1.potential(*r21_0_vec)+body2.potential(*r21_0_vec))
 eKin0 = Mred * funcs.eKin(*v21_0_vec)
 
 # Determine transformation that maps state vectors onto
@@ -236,10 +206,10 @@ apsidal_angle = math.atan2(ecc_vec_rot[1],ecc_vec_rot[0])
 
 # Output to stdout (consider including these in output file)
 print("\nInitial (osculating) orbital parameters of the system:\n")
-print("{:>40}{:>15}".format("Potential of body 1:",Phi1.__name__))
-print("{:>40}{:>15}".format("Potential of body 2:",Phi2.__name__))
-print("{:>40}{:15.4E}".format("Total mass of body 1:",M1))
-print("{:>40}{:15.4E}".format("Total mass of body 2:",M2))
+print("{:>40}{:>15}".format("Potential of body 1:",body1.potential.__name__))
+print("{:>40}{:>15}".format("Potential of body 2:",body2.potential.__name__))
+print("{:>40}{:15.4E}".format("Total mass of body 1:",body1.mass))
+print("{:>40}{:15.4E}".format("Total mass of body 2:",body2.mass))
 print("{:>40}{:15.4E}\n".format("Reduced mass:",Mred))
 
 print("{:>40}{:15.4f}".format("Initial rel. distance (r21_0):",r21_0))
@@ -274,7 +244,7 @@ print("{:>40}{:15.4E}".format("Rel. total energy (T):",ePot0+eKin0))
 
 # Set up time integrator
 N = math.ceil((t1 - t0) / timeStep)
-ics = [t0, x10, vx10, y10, vy10, z10, vz10, x20, vx20, y20, vy20, z20, vz20]
+ics = [t0, body1.x, body1.vx, body1.y, body1.vy, body1.z, body1.vz, body2.x, body2.vx, body2.y, body2.vy, body2.z, body2.vz]
 F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
 
 print("\nTime range [t0,t1] = [{},{}]".format(t0,t1))
@@ -323,8 +293,8 @@ for t in range(0,N,outStep):
 	r_rel = [x2-x1,y2-y1,z2-z1]
 	v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
 	Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))					# spec.rel.ang.mom. (i.e. divided by Mred)
-	ePot1 = Phi2(*r_rel)
-	ePot2 = Phi1(*r_rel)
+	ePot1 = body2.potential(*r_rel)
+	ePot2 = body1.potential(*r_rel)
 	ePot = Mred * (ePot1+ePot2)											# rel. potential energy (?)
 	eKin = Mred * funcs.eKin(*v_rel)									# rel. kin. energy
 	r1_rot = funcs.rodrigues_rot(r1,k_vec,orbit_incl)					# rotate vectors onto orbital plane
