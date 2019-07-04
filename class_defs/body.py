@@ -76,11 +76,34 @@ class Body():
 			raise ValueError("No cumulative mass function defined for Body object.")
 
 	def pos(self):
+		'''Absolute position vector of Body object'''
 		return [self.x,self.y,self.z]
 
 	def vel(self):
+		'''Absolute velocity vector of Body object'''
 		return [self.vx,self.vy,self.vz]
 
+	def dist(self):
+		'''Absolute distance of Body object'''
+		return funcs.norm(*self.pos())
 
+	def speed(self):
+		'''Absolute speed of Body object'''
+		return funcs.norm(*self.vel())
 
+	def pos_rel(self,b):
+		'''Relative position vector of Body object relative to another Body object'''
+		return [self.x-b.x,self.y-b.y,self.z-b.z]
+
+	def vel_rel(self,b):
+		'''Relative velocity vector of Body object relative to another Body object'''
+		return [self.vx-b.vx,self.vy-b.vy,self.vz-b.vz]
+
+	def dist_rel(self,b):
+		'''Relative distance of Body object relative to another Body object'''
+		return funcs.norm(*self.pos_rel(b))
+
+	def speed_rel(self,b):
+		'''Relative speed of Body object relative to another Body object'''
+		return funcs.norm(*self.vel_rel(b))
 
