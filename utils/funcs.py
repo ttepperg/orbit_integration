@@ -502,3 +502,33 @@ def semimajor_from_vis(r = None,v = None, amp = None):
 		else:
 			print("seminajor axis undefined in semimajor_from_vis.")
 			return float('NaN')
+
+def kepler_orbit_polar(theta = None, p = None, e = None, theta0 = None):
+	'''Evaluates the analytic kepler orbit:
+		r(theta) = p / 1 + e cos(theta-theta0)
+		at theta (given in radians).'''
+	if theta is None:
+		raise ValueError("theta is a required parameter in kepler_orbit")
+	if p is None:
+		raise ValueError("p is a required parameter in kepler_orbit")
+	elif e is None:
+		raise ValueError("e is a required parameter in kepler_orbit")
+	elif theta0 is None:
+		raise ValueError("theta0 is a required parameter in kepler_orbit")
+	else:
+		return p / (1.+ e * math.cos(theta-theta0))
+
+def kepler_orbit_cartesian(theta = None, p = None, e = None, theta0 = None):
+	'''Returns the x,y coordinates of a Kepler orbit'''
+	if theta is None:
+		raise ValueError("theta is a required parameter in kepler_orbit")
+	if p is None:
+		raise ValueError("p is a required parameter in kepler_orbit")
+	elif e is None:
+		raise ValueError("e is a required parameter in kepler_orbit")
+	elif theta0 is None:
+		raise ValueError("theta0 is a required parameter in kepler_orbit")
+	else:
+		r = kepler_orbit_polar(theta,p,e,theta0)
+		return r*math.cos(theta), r*math.sin(theta)
+
