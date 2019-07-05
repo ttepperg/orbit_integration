@@ -39,13 +39,6 @@ velUnit = 1.
 timeUnitName = "Gyr"
 timeUnit = 0.978
 
-# EXPERIMENTAL: Analytic solution parameters
-if(!exists('plot_ana')){
-	plot_ana = 1 # -> 0/1 to turn off/on
-}
-semi_latus = 0.9300
-ecc =  0.5988
-apsidal_angle = -105.3847	# in degree
 
 # defaults
 
@@ -80,11 +73,6 @@ if(!exists("ffw")){
 #----------------------------------------------------------------------------------------
 # Internal settings
 
-# Sanity checks
-if(plotRelOrbit eq "F"){
-	plot_ana = 0
-}
-
 # Functions
 length(x,y,z) = sqrt(x**2+y**2+z**2)
 unit(s) = sprintf(" [%s]",s)
@@ -95,14 +83,14 @@ set macros
 
 # define indices based on datafile column content
 timeCoord = 1
-angMom = 2
-ePot = 3
-eKin = 4
+angMomIndex = 2
+ePotIndex = 3
+eKinIndex = 4
 
 plotColsAngMom = \
-	sprintf("($%d):(1.e2*abs(($%d)/columnhead(%d)-1.))", timeCoord, angMom, angMom)
+	sprintf("($%d):(1.e2*abs(($%d)/columnhead(%d)-1.))", timeCoord, angMomIndex, angMomIndex)
 plotColsEnergy = \
-	sprintf("($%d):(1.e2*abs(($%d+$%d)/(columnhead(%d)+columnhead(%d))-1.))", timeCoord, ePot, eKin, ePot, eKin)
+	sprintf("($%d):(1.e2*abs(($%d+$%d)/(columnhead(%d)+columnhead(%d))-1.))", timeCoord, ePotIndex, eKinIndex, ePotIndex, eKinIndex)
 
 
 if(exists("projPlane")){ # orthogonal 3D projection onto 2D
@@ -113,7 +101,7 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 
 	if((exists("projPlane"))){
 
-		x1Coord = eKin+1
+		x1Coord = eKinIndex+1
 		vx1Coord = x1Coord+1
 		y1Coord = x1Coord+2
 		vy1Coord = x1Coord+3
@@ -228,7 +216,7 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 
 	timeLabelCoords = "screen 0.1, 0.9"
 
-	x1Coord = eKin+1
+	x1Coord = eKinIndex+1
 	vx1Coord = x1Coord+1
 	y1Coord = x1Coord+2
 	vy1Coord = x1Coord+3
@@ -296,7 +284,7 @@ plotCmdOrbitProj = "pl"
 
 timeLabelCoordsProj = "first -0.9*plotRangeProj,0.9*plotRangeProj"
 
-x1CoordProj = eKin+13
+x1CoordProj = eKinIndex+13
 vx1CoordProj = x1CoordProj+1
 y1CoordProj = x1CoordProj+2
 vy1CoordProj = x1CoordProj+3
@@ -577,18 +565,6 @@ if(plotRelOrbit eq "T"){
 
 print "Spatial plot range (orbital plane): ", plotRangeProj
 
-# EXPERIMENTAL: Analytic solution
-if(plot_ana){
-	set samples 5000
-	set terminal x11 4 nopersist
-	set polar
-	pl semi_latus/(1 + ecc * cos(t - apsidal_angle*pi/180.))
-	set table "polar.dat"
-	repl
-	unset table
-	unset polar
-}
-
 
 set size square
 
@@ -603,7 +579,7 @@ if(plotRelOrbit eq "T"){
 	# Relative orbit (projected onto orbital plane)
 	set terminal x11 4 persist title "Relative orbit (orbital plane)" size 600,600 font "Times-Roman,14" enhanced solid
 
-	if((plot_ana)&&!(ffw)){
+	if(!(ffw)){
 
 		do for [i=0:NumRecordsProj-1]{ \
 			unset label
@@ -614,12 +590,12 @@ if(plotRelOrbit eq "T"){
 			dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
 			'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
 			'' u @plotColsRelVelProj w vectors t "rel. vel", \
-			'polar.dat' u 1:2 w l lc rgb "black" t "analytic"; \
+			'' u 25:26 w l lc rgb "black" t "analytic"; \
 			pause pauseStep \
 		} # do
 
 	}
-	if((plot_ana)&&(ffw)){
+	if(ffw){
 
 		do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
 			unset label
@@ -630,39 +606,10 @@ if(plotRelOrbit eq "T"){
 			dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
 			'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
 			'' u @plotColsRelVelProj w vectors t "rel. vel", \
-			'polar.dat' u 1:2 w l lc rgb "black" t "analytic" \
+			'' u 25:26 w l lc rgb "black" t "analytic" \
 		} # do
 
 	}
-	if(!(plot_ana)&&(ffw)){
-
-		do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoordsProj
-			@plotCmdOrbitProj \
-			'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
-			dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
-			'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
-			'' u @plotColsRelVelProj w vectors t "rel. vel" \
-		} # do
-
-	}
-	if(!(plot_ana)&&!(ffw)){
-
-		do for [i=0:NumRecordsProj-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoordsProj
-			@plotCmdOrbitProj \
-			'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
-			dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
-			'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
-			'' u @plotColsRelVelProj w vectors t "rel. vel"; \
-			pause pauseStep \
-		} # do
-
-	} # plot analytic solution (projected onto orbital plane)?
 
 } else {
 
@@ -706,9 +653,6 @@ if(plotRelOrbit eq "T"){
 
 } # plot relative orbit  (projected onto orbital plane)?
 
-
-# remove temporary file
-if(plot_ana){ system("rm -f polar.dat") }
 
 #EOF
 
