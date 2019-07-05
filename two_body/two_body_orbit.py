@@ -51,7 +51,6 @@ try:
 except:
 	timeStep = 0.001
 
-# experimental
 
 # Body 1
 r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
@@ -86,7 +85,8 @@ Mred = (body1.mass*body2.mass)/Mtot
 # Calculate orbital parameters
 # NOTE: These are intended to characterise the orbit and do not affect the
 # orbit integration in any way. They are, however, very useful when it comes
-# to a comparison between the code's result and the analytic solution.
+# to a comparison between the code's result and the analytic solution, as well
+# and to check the conservation laws (total energy and angular momentum).
 # (consider encapsulating all of this in a class)
 
 Ltot0_vec = funcs.cross_prod(r21_0_vec,v21_0_vec)
@@ -99,7 +99,7 @@ else:
 
 # radial and tangential velocities
 v_tan_0 = Ltot0 / r21_0
-v_rad_0 = math.sqrt(v21_0**2 - v_tan_0**2)
+v_rad_0 = math.sqrt(v21_0**2-v_tan_0**2)
 
 # specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
 # 'specific' means it is normalised by (G Mtot)*(M_reduced)
@@ -268,7 +268,8 @@ outStep = int(N/min(1000,int(1./timeStep)))
 print("\nWriting output to file {} with timestep frequency {}\n".format(outFile, outStep))
 
 f = open(outFile, 'wt')
-f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*20+"\n").\
+
+f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*22+"\n").\
 	format("# time ", str(units.TIME.unit), \
 		"ang.mom.", str(units.LENGTH.unit*units.VELOCITY.unit), \
 		"ePot", str(units.VELOCITY.unit**2), "eKin", str(units.VELOCITY.unit**2), \
@@ -281,10 +282,14 @@ f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*20+"\n").\
 		"x1_proj", str(units.LENGTH.unit), "vx1_proj", str(units.VELOCITY.unit), \
 		"y1_proj", str(units.LENGTH.unit), "vy1_proj", str(units.VELOCITY.unit), \
 		"x2_proj", str(units.LENGTH.unit), "vx2_proj", str(units.VELOCITY.unit), \
-		"y2_proj", str(units.LENGTH.unit), "vy2_proj", str(units.VELOCITY.unit)))
+		"y2_proj", str(units.LENGTH.unit), "vy2_proj", str(units.VELOCITY.unit), \
+		"KeplerOrbitAna_X", str(units.LENGTH.unit), "KeplerOrbitAna_Y", str(units.LENGTH.unit)))
+
 eCons = 0.
 lCons = 0.
+
 for t in range(0,N,outStep):
+
 	x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2 = \
 		EoM[0][t],EoM[1][t],EoM[2][t],EoM[3][t],EoM[4][t],EoM[5][t], \
 		EoM[6][t],EoM[7][t],EoM[8][t],EoM[9][t],EoM[10][t],EoM[11][t]
@@ -307,16 +312,20 @@ for t in range(0,N,outStep):
 	vx1_rot,vy1_rot,_ = v1_rot
 	x2_rot,y2_rot,_ = r2_rot
 	vx2_rot,vy2_rot,_ = v2_rot
-	f.write(("{:<15.8f}{:<23.10E}"+"{:<16.8E}"*2+"{:<14.4E}"*20+"\n").\
+
+	f.write(("{:<15.8f}{:<23.10E}"+"{:<16.8E}"*2+"{:<14.4E}"*22+"\n").\
 		format(time[t]*units.TIME.value, Ltot, ePot, eKin, \
 			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2, \
-			x1_rot, vx1_rot, y1_rot, vy1_rot, x2_rot, vx2_rot, y2_rot, vy2_rot))
+			x1_rot, vx1_rot, y1_rot, vy1_rot, x2_rot, vx2_rot, y2_rot, vy2_rot, \
+			*funcs.kepler_orbit_cartesian(t*2.*math.pi/N,semi_latus,ecc,apsidal_angle)))
+
 	eCons_t = abs((ePot+eKin)/(ePot0+eKin0)-1.)
 	if eCons_t > eCons:
 		eCons = eCons_t
 	lCons_t = abs((Ltot/Ltot0)-1.)
 	if lCons_t > lCons:
 		lCons = lCons_t
+
 f.close()
 
 print("\n{:>45} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
