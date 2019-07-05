@@ -82,7 +82,7 @@ https://en.wikipedia.org/wiki/Energy_drift).
 
 Also, orbit precession may naturally result from central potentials other than
 point-like masses (Bertrand's Theorem; https://en.wikipedia.org/wiki/Bertrand%27s_theorem)
-and it thus do not necessarily indicate an error in the integration scheme (see
+and it thus does not necessarily indicate an error in the integration scheme (see
 Section 'IMPORTANT REMARKS' below).
 
 
@@ -157,19 +157,20 @@ directory './output' named after the input parameter file and appended
 by the substring "_out.dat". If the directory 'output' does not exist,
 it needs to be created by hand.
 
-The table consists of a total of 24 columns. The first 16 contain, in that
+The table consists of a total of 26 columns. The first 16 contain, in that
 order, the time, the specific relative angular momentum, the relative potential
 energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the
-bodies. The last 8 columnns contain (x',vx',y',vy') for each of the
+bodies. The next 8 columnns contain (x',vx',y',vy') for each of the
 bodies, where the primed coordinates and velocities correspond to the coordinates
 and velocities on the orbital plane. In other words, these coordinates represent a
 rotated version of the intrinsic orbit such that the relative angular momentum
 of the system aligns with the z-axis. If the intrinsic orbit has this property,
 the primed and unprimed coordinates are identical. Note that the primed z
-coordinates are ignored, because they all vanish by definition.
-The set of primed coordinates are very useful for checking the numerical result
-against the expected analytic solution based on the (potentially osculating)
-orbital parameters calculated at runtime.
+coordinates are ignored, because they all vanish by definition. The last two
+columns contain the (x,y) coordinates of the analytic solution of the problem,
+using the orbital parameters self-consistently calculated within the code.
+The latter can be directly compared to the set of primed coordinates as a check
+of the numerical result against the expected analytic solution.
 
 
 # UNITS
