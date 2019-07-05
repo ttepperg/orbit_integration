@@ -170,7 +170,9 @@ coordinates are ignored, because they all vanish by definition. The last two
 columns contain the (x,y) coordinates of the analytic solution of the problem,
 using the orbital parameters self-consistently calculated within the code.
 The latter can be directly compared to the set of primed coordinates as a check
-of the numerical result against the expected analytic solution.
+of the numerical result against the expected analytic solution, keeping in
+mind that for non-Keplerian potentials the analytic solution merely corresponds
+to an osculating orbit consistent with the initial conditions.
 
 
 # UNITS
