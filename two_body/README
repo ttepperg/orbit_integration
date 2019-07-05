@@ -267,12 +267,15 @@ though their masses were concentrated at their respective centres (Newton's
 shell theorem; https://en.wikipedia.org/wiki/Shell_theorem). This implies
 that the gravitational force between an extended body and a point-like mass
 in principle behaves with their relative distance d as 1/d^2. This is, however,
-misleading, as the the mass of the extended body depends on its radius, and
-can therefore be considered as variable along the point-mass' orbit. Thus, by
-virtue of Bertrand's theorem (https://en.wikipedia.org/wiki/Bertrand%27s_theorem),
-extended central bodies never lead to closed orbits, not even in the case
-that the initial conditions imply e < 1. The orbital parameters set by the
-initial conditions correspond, at best, to *osculating* parameters in this case.
-The same is true for non-spherically symmetric potentials.
+misleading, as the the mass of the extended body `felt' by the second body
+depends on their relative position, and can therefore be considered as variable
+along the second bodys' orbit. In other words, the changing mass introduces a
+dependence of distance into the expression for the gravitational force that
+breaks the 1/d^2 dependence. Thus, by virtue of Bertrand's theorem
+(https://en.wikipedia.org/wiki/Bertrand%27s_theorem), extended central bodies
+never lead to closed orbits, not even in the case that the initial conditions
+imply e < 1. The orbital parameters set by the initial conditions correspond,
+at best, to *osculating* parameters in this case. The same is true for non-spherically
+symmetric potentials.
 
 
