@@ -201,7 +201,8 @@ are available to impose certain conditions on the orbit, e.g. a circular orbit
 *within* the input parameter file.
 
 The corresponding orbital parameters (e.g. eccentricity, orbital period,
-etc.) are then calculated from these at runtime and written to stodut.
+etc.) are then calculated from the initial orbital state vectors at runtime
+and written to stodut.
 
 The parameter file needs to be present in the directory 'init'. There, a few
 example parameter files are provided, for guidance.
