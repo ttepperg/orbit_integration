@@ -42,9 +42,10 @@ print("{:>25}{:12.3f} = {:6E}".format("Time unit:",units.TIME,units.TIME.cgs))
 
 
 # Initial conditions
-# Recall: body 1 may be an extended object, while body 2 is a point mass.
+# (consider moving this into body class)
 ic = importlib.import_module(initialConds)
 print("\nGathering input parameters from file {}...".format(initialConds))
+
 try:
 	t0 = ic.t_0
 except:
@@ -57,7 +58,6 @@ try:
 	timeStep = ic.delta_t
 except:
 	timeStep = 0.001
-
 
 # Body 1
 try:
@@ -79,132 +79,12 @@ body2 = body.Body(mass=ic.Mass2,pot=Pot,r_vec=r20_vec,v_vec=v20_vec)
 
 print("Done.")
 
-
-# Calculate orbital parameters
-# NOTE: These are intended to characterise the orbit and do not affect the
-# orbit integration in any way. They are, however, very useful when it comes
-# to a comparison between the code's result and the analytic solution, as well
-# and to check the conservation laws (total energy and angular momentum).
-# (consider encapsulating all of this in a class)
-
-# initialise an Orbit object
+# Initialise an Orbit object
 orbit = orbit.Orbit(body1,body2)
 
-# relative coordinates and velocities
-r21_0_vec = orbit.pos()
-v21_0_vec = orbit.vel()
-r21_0 = orbit.dist()
-v21_0 = orbit.speed()
-
-# gravitational parameter (only affects the calculation of
-# orbital parameters but not the actual orbit calculation)
-# depends on masses of bodies at r21_0_vec *not* total masses!
-grav_param = orbit.grav_param()
-
-# total mass (*not* necessarily equal to sum of masses at r21_0_vec!)
-Mtot = orbit.mtot()
-
-# reduced mass
-Mred = orbit.mred()
-
-Ltot0_vec = orbit.ang_mom_vec()
-Ltot0 = orbit.ang_mom()
-Ltot0_vec_norm = orbit.ang_mom_vec_norm()
-
-
-# specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
-# 'specific' means it is normalised by (G Mtot)*(M_reduced)
-ecc_vec = orbit.eccentricity_vec()
-
-# eccentricity
-ecc = orbit.eccentricity()
-
-# principal axes
-semi_latus = orbit.semi_latus_rec()
-semimajor_axis = orbit.semimajor()
-semiminor_axis = orbit.semiminor()
-pericen = orbit.pericenter()
-apocen = orbit.apocenter()
-
-# orbit size, period and velocities
-v_tan_0 = orbit.v_tan()
-v_rad_0 = orbit.v_rad()
-v_peri = orbit.v_peri()
-v_apo = orbit.v_apo()
-orbital_circum = orbit.circumference()
-orbital_period = orbit.period()
-orbital_period_peri = 1./orbit.pericentric_freq()
-
-# energies
-ePot0 = orbit.energy_pot()
-eKin0 = orbit.energy_kin()
-
-# Determine transformation that maps state vectors onto
-# orbital plane
-# The transformation is such that the angular momentum aligns
-# with the positive z-axis
-orbit_incl, k_vec = orbit.orbital_plane()
-
-# rotate angular momentum vector onto z-axis
-Ltot0_vec_rot = orbit.orbital_plane(Ltot0_vec)
-
-# rotate eccentricity vector onto orbital plane
-ecc_vec_rot = orbit.orbital_plane(ecc_vec)
-
-# The apsidal angle describes to rotation of the eccentricity vector,
-# which points from apocentre to pericentre, with respect to the x-axis
-# it determines the orientation of the orbit *in the orbital plane*
-apsidal_angle = orbit.apsidal_angle()
-
-# Ascending node
-n_vec = orbit.asc_node_vec()
-
-# Longitude of ascending node
-long_asc_node = orbit.long_asc_node()
-
-# Argument of periapsis
-arg_peri = orbit.arg_periapsis()
-
-# Output to stdout (consider including these in output file)
-print("\nInitial (osculating) orbital parameters of the system:\n")
-print("{:>40}{:>15}".format("Potential of body 1:",body1.potential.__name__))
-print("{:>40}{:>15}".format("Potential of body 2:",body2.potential.__name__))
-print("{:>40}{:15.4E}".format("Total mass of body 1:",body1.mass))
-print("{:>40}{:15.4E}".format("Total mass of body 2:",body2.mass))
-print("{:>40}{:15.4E}\n".format("Reduced mass:",Mred))
-
-print("{:>40}{:15.4f}".format("Initial rel. distance (r21_0):",r21_0))
-print("{:>40}{:15.4f}".format("Initial rel. speed (v21_0):",v21_0))
-print("{:>40}{:15.4f}".format("Initial tangential vel. (v_tan_0):",v_tan_0))
-print("{:>40}{:15.4f}".format("Initial radial vel. (v_rad_0):",v_rad_0))
-print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Rel. specific ang. mom. vec. (h_vec):",*Ltot0_vec))
-print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[normalised]:",*Ltot0_vec_norm))
-print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[along z-axis]:",*Ltot0_vec_rot))
-print("{:>40}{:15.4f}\n".format("Rel. specific ang. mom. (h):",Ltot0))
-
-print("{:>40}{:15.4f}".format("Eccentricity (e):",ecc))
-print("{:>40}{:15.4f}".format("Semi-latus rectum (p):",semi_latus))
-print("{:>40}{:15.4f}".format("Semimajor axis (a):",semimajor_axis))
-print("{:>40}{:15.4f}".format("Semiminor axis (b):",semiminor_axis))
-print("{:>40}{:15.4f}".format("Orbital inclination (psi_0; deg):",math.degrees(orbit_incl)))
-print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Ascending node (n_vec):",*n_vec))
-print("{:>40}{:15.4f}".format("Long. of asc. node (Omega_0; deg):",math.degrees(long_asc_node)))
-print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Eccentricity vector (e_vec):",*ecc_vec))
-print("{:>40}{:15.4f}".format("Apsidal angle (phi_0; deg):",math.degrees(apsidal_angle)))
-print("{:>40}{:15.4f}".format("Argument of periapsis (omega_0; deg):",math.degrees(arg_peri)))
-print("{:>40}{:15.4f}".format("Rel. pericentre (rp):",pericen))
-print("{:>40}{:15.4f}".format("Vel. at pericentre (vp):",v_peri))
-if ecc < 1.:
-	print("{:>40}{:15.4f}".format("Rel. apocentre (ra):",apocen))
-	print("{:>40}{:15.4f}".format("Vel. at apocentre (va):",v_apo))
-	print("{:>40}{:15.4f}".format("Rel. orbital period (T):",orbital_period))
-	print("{:>40}{:15.4f}".format("Approx. orbit circumference (u):",orbital_circum))
-	print("{:>40}{:15.4f}".format("Approx. pericentric period (Tp):",orbital_period_peri))
-
-print("{:>40}{:15.4E}".format("Rel. potential energy (V):",ePot0))
-print("{:>40}{:15.4E}".format("Rel. kinetic energy (T):",eKin0))
-print("{:>40}{:15.4E}".format("Rel. total energy (E):",ePot0+eKin0))
-
+# Output to stdout
+# (consider redirecting these to output file as well)
+orbit.orbit_info()
 
 # Define acceleration function definitions
 # (consider moving these into the input parameter file or a function or a class)
@@ -273,17 +153,22 @@ F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
 
 print("\nTime range [t0,t1] = [{},{}]".format(t0,t1))
 print("Time steps {};  Step size: {:8.2E}".format(N,timeStep))
-if not math.isnan(orbital_period_peri):
-	print("Maximum time step to avoid energy drift: {:12.6E}"\
-		.format(orbital_period_peri / (math.sqrt(2.)*math.pi)))
+print("Maximum time step to avoid energy drift: {:12.6E}".format(orbit.energy_drift_lim()))
 
-# Integrate
+# Integrate orbit
 # Note: x1 = EoM[0], vx1 = EoM[1], y1 = EoM[2], vy1 = EoM[3], z1 = EoM[4], vz1 = EoM[5],
 #       x2 = EoM[6], vx2 = EoM[7], y2 = EoM[8], vy2 = EoM[9], z2 = EoM[10], vz2 = EoM[11]
 # 		each EoM[i] is 'function' of time, i.e. an array where each item corresponds to a
 # 		given integration time, i.e. EoM[i][t]
 time, EoM = ode_leap(dr2dt2 = F, rank = 12, initCond = ics, steps = N, stepSize = timeStep)
 
+
+# initial relative energies
+ePot0 = orbit.energy_pot()
+eKin0 = orbit.energy_kin()
+
+# initial relative angular momentum
+Ltot0 = orbit.ang_mom()
 
 # Output to file
 outDir = "./output/"
@@ -326,8 +211,8 @@ for t in range(0,N,outStep):
 	Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))					# spec.rel.ang.mom. (i.e. divided by Mred)
 	ePot1 = body2.potential(*r_rel)
 	ePot2 = body1.potential(*r_rel)
-	ePot = Mred * (ePot1+ePot2)											# rel. potential energy (?)
-	eKin = Mred * funcs.eKin(*v_rel)									# rel. kin. energy
+	ePot = orbit.mred() * (ePot1+ePot2)											# rel. potential energy (?)
+	eKin = orbit.mred() * funcs.eKin(*v_rel)									# rel. kin. energy
 	r1_rot = orbit.orbital_plane(r1)									# rotate vectors onto orbital plane
 	v1_rot = orbit.orbital_plane(v1)
 	r2_rot = orbit.orbital_plane(r2)
