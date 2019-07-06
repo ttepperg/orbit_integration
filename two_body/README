@@ -146,8 +146,8 @@ specific kinetic energy.
 
 # INSTALLATION
 
-	Assuming a working copy of python 3.X and of astropy for python 3.X,
-	simply clone the repository.
+	If a working copy of python 3.X and of astropy for python 3.X is already
+	installed, simply clone the repository.
 
 
 # RUN
@@ -238,10 +238,17 @@ A simple visualisation of the evolution of the system can be obtained
 using the gnuplot script plot_two_body_orbit.gp provided with the code's
 distribution.
 
-This script can be run directly from the command line via:
+This script can be run:
+
+1) directly from a terminal via:
 
 	shell> gnuplot plot_two_body_orbit.gp
 
+or
+
+2) within gnuplot via:
+
+	gnuplot> load 'plot_two_body_orbit.gp'
 
 The script provides both a full 3D view of the system, or alternatively,
 a 2D projection along one of the principal axis of a standard Cartesian
@@ -251,11 +258,11 @@ to the analytic result for given values of the semi-latus rectum, the
 eccentricity, and the true anomaly offset (or apsidal angle) is readily
 implemented.
 
-This script accepts a number of input arguments, all of which are set
-to reasonable defaults, the obvious exception being the data file.
-Other important parameters are the time step, the time output frequency,
-and the physical units, all of which are printed to stdout by the
-python code at runtime.
+If run from a terminal, the script accepts a number of input arguments,
+all of which are set to reasonable defaults, the obvious exception being
+the data file. Other important parameters are the time step, the time
+output frequency, and the physical units, all of which are printed to
+stdout by the python code at runtime.
 
 Please consult the script's header for additional information on these
 input arguments and their default values.
