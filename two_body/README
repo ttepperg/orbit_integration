@@ -63,6 +63,7 @@ setting all z-components to 0 initially.
 Currently, only a number of spherically symmetric potentials are implemented.
 See Section INPUT below.
 
+
 # TIME INTEGRATION
 
 The system of equations is numerically integrated using a 2nd order
@@ -117,6 +118,23 @@ point r = [x,y,z], using a FFD scheme of order 3 with an integration step 1.e-4
 to achieve a precision of order (1.e-4)^3 use:
 
 	fwd_diff_first(*r, var = 1, func = f, delta_x = 1.e-4, order = 3)
+
+
+# UNITS
+
+This code is intended mainly for astrophysical applications. Therefore, the
+following units are adopted:
+
+	Gravitational constant:	4.301E-06 kpc km^2 / Msun s^2
+	Mass unit:				1.000 solMass = 1.988475E+33 g
+	Length unit:			1.000 kpc = 3.085678E+21 cm
+	Velocity unit:			1.000 km / s = 1.000000E+05 cm / s
+	Time unit:				0.978 Gyr = 3.085678E+16 s
+
+Note that the conversion factor for the time parameter is fixed by the others.
+The choice of units for G is convenient, since any given potential (or specific
+potential energy) automatically has units of (km/s)^2, i.e. identical to the
+specific kinetic energy.
 
 
 # REQUIRED / OPTIONAL PACKAGES
@@ -177,7 +195,6 @@ the central density of the body, in addition the value of the concentration,
 as well as its extension (typically the virial radius) from which the total mass
 is calculated.
 
-
 Note that providing the state vectos r0 and v0 for each body is the preferred
 method to specify the initial conditions of the system. However, some methods
 are available to impose certain conditions on the orbit, e.g. a circular orbit
@@ -213,23 +230,6 @@ The latter can be directly compared to the set of primed coordinates as a check
 of the numerical result against the expected analytic solution, keeping in
 mind that for non-Keplerian potentials the analytic solution merely corresponds
 to an osculating orbit consistent with the initial conditions.
-
-
-# UNITS
-
-This code is intended mainly for astrophysical applications. Therefore, the
-following units are adopted:
-
-	Gravitational constant:	4.301E-06 kpc km^2 / Msun s^2
-	Mass unit:				1.000 solMass = 1.988475E+33 g
-	Length unit:			1.000 kpc = 3.085678E+21 cm
-	Velocity unit:			1.000 km / s = 1.000000E+05 cm / s
-	Time unit:				0.978 Gyr = 3.085678E+16 s
-
-Note that the conversion factor for the time parameter is fixed by the others.
-The choice of units for G is convenient, since any given potential (or specific
-potential energy) automatically has units of (km/s)^2, i.e. identical to the
-specific kinetic energy.
 
 
 # VISUALISATION
