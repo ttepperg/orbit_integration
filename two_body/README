@@ -1,7 +1,7 @@
 
 Author: 		Thorsten Tepper Garcia
 
-Last modified:	02/07/2019
+Last modified:	06/07/2019
 
 
 # BACKGROUND
@@ -60,6 +60,8 @@ the centre of the potential at all times, by assumption.
 Note that a 2D system can be simulated equally well with this code by simply
 setting all z-components to 0 initially.
 
+Currently, only a number of spherically symmetric potentials are implemented.
+See Section INPUT below.
 
 # TIME INTEGRATION
 
@@ -148,16 +150,41 @@ required.
 # INPUT
 
 The input of this program consists of a python (i.e. filename.py) input
-parameter file which contains essentially the inital state vectors, i.e.
-the initial position r0 and velocities v0 for each body, as well as their
-corresponding potential.
-The corresponding orbital parameters (e.g. eccentricity, orbital period,
-etc.) are then calculated from these.
+parameter file which must contain as a minimum a the masses, and the inital
+state vectors, i.e. the initial position r0 and velocities v0 for each body.
+
+The initial and final times, as well as the timestep for the integration of
+the orbit can (and preferentially should) be specified. These default to 0.,
+10., and 1.e-4, in time units (see Section UNITS).
+
+In addition to the total mass, the potential for each body may be specified.
+Currently, only a number of spherically symmetric potentials are implemented:
+
+- Kepler (or point-like) potential
+
+- Plummer (1911) potential (see https://en.wikipedia.org/wiki/Plummer_model)
+
+- Hernquist (1990) potential (see http://adsabs.harvard.edu/abs/1990ApJ...356..359H)
+
+- Navarro, Frenk, and White (1997) potential (see https://en.wikipedia.org/wiki/Navarro–Frenk–White_profile)
+
+If not specified, the potential defaults to the Kepler potential.
+Potentials other than the Kepler potential require the value of an additional
+parameter, i.e. the scale radius.
+Note that the mass of the NFW profile diverges with radius. Therefore, for
+this particular model instead of the total mass, it is necessary to specify
+the central density of the body, in addition the value of the concentration,
+as well as its extension (typically the virial radius) from which the total mass
+is calculated.
+
 
 Note that providing the state vectos r0 and v0 for each body is the preferred
 method to specify the initial conditions of the system. However, some methods
 are available to impose certain conditions on the orbit, e.g. a circular orbit
 *within* the input parameter file.
+
+The corresponding orbital parameters (e.g. eccentricity, orbital period,
+etc.) are then calculated from these at runtime and written to stodut.
 
 The parameter file needs to be present in the directory 'init'. There, a few
 example parameter files are provided, for guidance.
