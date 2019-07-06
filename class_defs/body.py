@@ -5,6 +5,7 @@ Author:	Thorsten Tepper Garcia
 import sys
 sys.path.insert(0,"../.")							# include top directory in module search path
 from utils import funcs
+import config.phys_consts as pc
 
 class Body():
 	"""General body class representing a body"""
@@ -41,10 +42,6 @@ class Body():
 			raise ValueError("mass is a required parameter of Body instance.")
 		else:
 			self.mass = mass
-		if pot is None:
-			raise ValueError("pot is a required parameter of Body instance.")
-		else:
-			self.potential = pot
 		if r_vec is None:
 			raise ValueError("r_vec is a required parameter of Body instance.")
 		elif v_vec is None:
@@ -63,21 +60,28 @@ class Body():
 			self.dist = funcs.norm(*self.pos)
 			self.speed = funcs.norm(*self.vel)
 
-		# set cumulative mass function self-consistently
-		if pot.__name__ == "Kepler_Pot": 
-			self.mass_cum = funcs.Kepler_Mass(mass)
-		elif pot.__name__ == "Plummer_Pot":
-			_a = pot.__getattribute__('_a')
-			self.mass_cum = funcs.Plummer_Mass(mass,_a)
-		elif pot.__name__ == "Hernquist_Pot":
-			_a = pot.__getattribute__('_a')
-			self.mass_cum = funcs.Hernquist_Mass(mass,_a)
-		elif pot.__name__ == "NFW_Pot":
-			_rho0 = pot.__getattribute__('_rho0')
-			_rs = pot.__getattribute__('_rs')
-			self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
-		else:
-			raise ValueError("No cumulative mass function defined for Body instance.")
+			if pot is None:
+				print("\nWARNING: No potential specified for Body object.")
+				print("Assuming a Kepler (point-like) potential.\n")
+				self.potential = funcs.Kepler_Potential(amp=pc.Grav*self.mass)
+			else:
+				self.potential = pot
+
+			# set cumulative mass function self-consistently
+			if self.potential.__name__ == "Kepler_Pot": 
+				self.mass_cum = funcs.Kepler_Mass(mass)
+			elif self.potential.__name__ == "Plummer_Pot":
+				_a = self.potential.__getattribute__('_a')
+				self.mass_cum = funcs.Plummer_Mass(mass,_a)
+			elif self.potential.__name__ == "Hernquist_Pot":
+				_a = self.potential.__getattribute__('_a')
+				self.mass_cum = funcs.Hernquist_Mass(mass,_a)
+			elif self.potential.__name__ == "NFW_Pot":
+				_rho0 = self.potential.__getattribute__('_rho0')
+				_rs = self.potential.__getattribute__('_rs')
+				self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
+			else:
+				raise ValueError("No cumulative mass function defined for Body instance.")
 
 	def pos_rel(self,b):
 		'''Relative position vector of Body instance relative to another Body instance'''
