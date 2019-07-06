@@ -130,6 +130,11 @@ class Orbit():
 		return 0.5*self.mred()*_v**2
 
 
+	def energy_tot(self):
+		'''total specific energy'''
+		return self.energy_pot()+self.energy_kin()
+
+
 	def eccentricity_vec(self):
 		'''calculates the specific Laplace-Runge-Lenz vector a.k.a. 'eccentricity vector'
 		'specific' means it is normalised by (G Mtot)*(M_reduced)
@@ -228,6 +233,16 @@ class Orbit():
 	def pericentric_freq(self):
 		'''orbital frequency at pericenter; undefined for e >= 1'''
 		return self.v_peri() / self.circumference()
+
+
+	def energy_drift_lim(self):
+		'''returns an estimate of the time step required to
+		avoid energy drift in the time integration.'''
+		w = self.pericentric_freq()
+		if not math.isnan(w):
+			return 1. / w / (math.sqrt(2.)*math.pi)
+		else:
+			return float('NaN')
 
 
 	def orbital_plane(self, vec = None):
@@ -336,3 +351,47 @@ class Orbit():
 
 
 
+	def orbit_info(self):
+		'''prints a number of orbit parameter values to stdout'''
+
+		_incl, _ = self.orbital_plane()	# skip k_vec from output
+		_orbital_period_peri = 1./self.pericentric_freq()
+
+		print("\nInitial (osculating) orbital parameters of the system:\n")
+		print("{:>40}{:>15}".format("Potential of body 1:",self.b1.potential.__name__))
+		print("{:>40}{:>15}".format("Potential of body 2:",self.b2.potential.__name__))
+		print("{:>40}{:15.4E}".format("Total mass of body 1:",self.b1.mass))
+		print("{:>40}{:15.4E}".format("Total mass of body 2:",self.b2.mass))
+		print("{:>40}{:15.4E}\n".format("Reduced mass:",self.mred()))
+
+		print("{:>40}{:15.4f}".format("Initial rel. distance (r21_0):",self.dist()))
+		print("{:>40}{:15.4f}".format("Initial rel. speed (v21_0):",self.speed()))
+		print("{:>40}{:15.4f}".format("Initial tangential vel. (v_tan_0):",self.v_tan()))
+		print("{:>40}{:15.4f}".format("Initial radial vel. (v_rad_0):",self.v_rad()))
+		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Rel. specific ang. mom. vec. (h_vec):",*self.ang_mom_vec()))
+		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[normalised]:",*self.ang_mom_vec_norm()))
+		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[along z-axis]:",*self.orbital_plane(self.ang_mom_vec())))
+		print("{:>40}{:15.4f}\n".format("Rel. specific ang. mom. (h):",self.ang_mom()))
+
+		print("{:>40}{:15.4f}".format("Eccentricity (e):",self.eccentricity()))
+		print("{:>40}{:15.4f}".format("Semi-latus rectum (p):",self.semi_latus_rec()))
+		print("{:>40}{:15.4f}".format("Semimajor axis (a):",self.semimajor()))
+		print("{:>40}{:15.4f}".format("Semiminor axis (b):",self.semiminor()))
+		print("{:>40}{:15.4f}".format("Orbital inclination (psi_0; deg):",math.degrees(_incl)))
+		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Ascending node (n_vec):",*self.asc_node_vec()))
+		print("{:>40}{:15.4f}".format("Long. of asc. node (Omega_0; deg):",math.degrees(self.long_asc_node())))
+		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Eccentricity vector (e_vec):",*self.eccentricity_vec()))
+		print("{:>40}{:15.4f}".format("Apsidal angle (phi_0; deg):",math.degrees(self.apsidal_angle())))
+		print("{:>40}{:15.4f}".format("Argument of periapsis (omega_0; deg):",math.degrees(self.arg_periapsis())))
+		print("{:>40}{:15.4f}".format("Rel. pericentre (rp):",self.pericenter()))
+		print("{:>40}{:15.4f}".format("Vel. at pericentre (vp):",self.v_peri()))
+		if self.eccentricity() < 1.:
+			print("{:>40}{:15.4f}".format("Rel. apocentre (ra):",self.apocenter()))
+			print("{:>40}{:15.4f}".format("Vel. at apocentre (va):",self.v_apo()))
+			print("{:>40}{:15.4f}".format("Rel. orbital period (T):",self.period()))
+			print("{:>40}{:15.4f}".format("Approx. orbit circumference (u):",self.circumference()))
+			print("{:>40}{:15.4f}".format("Approx. pericentric period (Tp):",_orbital_period_peri))
+
+		print("{:>40}{:15.4E}".format("Rel. potential energy (V):",self.energy_pot()))
+		print("{:>40}{:15.4E}".format("Rel. kinetic energy (T):",self.energy_kin()))
+		print("{:>40}{:15.4E}".format("Rel. total energy (E):",self.energy_tot()))
