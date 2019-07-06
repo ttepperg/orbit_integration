@@ -38,17 +38,17 @@ class Body():
 
 		"""
 		if mass is None:
-			raise ValueError("mass is a required parameter of Body object.")
+			raise ValueError("mass is a required parameter of Body instance.")
 		else:
 			self.mass = mass
 		if pot is None:
-			raise ValueError("pot is a required parameter of Body object.")
+			raise ValueError("pot is a required parameter of Body instance.")
 		else:
 			self.potential = pot
 		if r_vec is None:
-			raise ValueError("r_vec is a required parameter of Body object.")
+			raise ValueError("r_vec is a required parameter of Body instance.")
 		elif v_vec is None:
-			raise ValueError("v_vec is a required parameter of Body object.")
+			raise ValueError("v_vec is a required parameter of Body instance.")
 		elif len(r_vec) != len(v_vec):
 			raise ValueError("r_vec and v_vec have differen dimensionality.")
 		else:
@@ -58,6 +58,10 @@ class Body():
 			self.vx = v_vec[0]
 			self.vy = v_vec[1]
 			self.vz = v_vec[2]
+			self.pos = [self.x,self.y,self.z]
+			self.vel = [self.vx,self.vy,self.vz]
+			self.dist = funcs.norm(*self.pos)
+			self.speed = funcs.norm(*self.vel)
 
 		# set cumulative mass function self-consistently
 		if pot.__name__ == "Kepler_Pot": 
@@ -73,37 +77,21 @@ class Body():
 			_rs = pot.__getattribute__('_rs')
 			self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
 		else:
-			raise ValueError("No cumulative mass function defined for Body object.")
-
-	def pos(self):
-		'''Absolute position vector of Body object'''
-		return [self.x,self.y,self.z]
-
-	def vel(self):
-		'''Absolute velocity vector of Body object'''
-		return [self.vx,self.vy,self.vz]
-
-	def dist(self):
-		'''Absolute distance of Body object'''
-		return funcs.norm(*self.pos())
-
-	def speed(self):
-		'''Absolute speed of Body object'''
-		return funcs.norm(*self.vel())
+			raise ValueError("No cumulative mass function defined for Body instance.")
 
 	def pos_rel(self,b):
-		'''Relative position vector of Body object relative to another Body object'''
+		'''Relative position vector of Body instance relative to another Body instance'''
 		return [self.x-b.x,self.y-b.y,self.z-b.z]
 
 	def vel_rel(self,b):
-		'''Relative velocity vector of Body object relative to another Body object'''
+		'''Relative velocity vector of Body instance relative to another Body instance'''
 		return [self.vx-b.vx,self.vy-b.vy,self.vz-b.vz]
 
 	def dist_rel(self,b):
-		'''Relative distance of Body object relative to another Body object'''
+		'''Relative distance of Body instance relative to another Body instance'''
 		return funcs.norm(*self.pos_rel(b))
 
 	def speed_rel(self,b):
-		'''Relative speed of Body object relative to another Body object'''
+		'''Relative speed of Body instance relative to another Body instance'''
 		return funcs.norm(*self.vel_rel(b))
 
