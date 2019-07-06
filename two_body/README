@@ -117,6 +117,19 @@ to achieve a precision of order (1.e-4)^3 use:
 	fwd_diff_first(*r, var = 1, func = f, delta_x = 1.e-4, order = 3)
 
 
+# REQUIRED / OPTIONAL PACKAGES
+
+	- python 3.X
+	- astropy for python 3.X
+	- gnuplot 5+ [optional for visualisation]
+
+
+# INSTALLATION
+
+	Assuming a working copy of python 3.X and of astropy for python 3.X,
+	simply clone the repository.
+
+
 # RUN
 
 The code can be run directly from command line via:
@@ -198,17 +211,10 @@ A simple visualisation of the evolution of the system can be obtained
 using the gnuplot script plot_two_body_orbit.gp provided with the code's
 distribution.
 
-This script can be run:
-
-1) Directly from the command line via:
+This script can be run directly from the command line via:
 
 	shell> gnuplot plot_two_body_orbit.gp
 
-or
-
-2) Within gnuplot via:
-
-	gnuplot> load 'plot_two_body_orbit.gp'
 
 The script provides both a full 3D view of the system, or alternatively,
 a 2D projection along one of the principal axis of a standard Cartesian
@@ -226,13 +232,6 @@ python code at runtime.
 
 Please consult the script's header for additional information on these
 input arguments and their default values.
-
-
-# REQUIRED / OPTIONAL PACKAGES
-
-	- python 3.X
-	- astropy for python 3.X
-	- gnuplot 5+ [optional for visualisation]
 
 
 # IMPORTANT REMARKS
@@ -267,9 +266,9 @@ though their masses were concentrated at their respective centres (Newton's
 shell theorem; https://en.wikipedia.org/wiki/Shell_theorem). This implies
 that the gravitational force between an extended body and a point-like mass
 in principle behaves with their relative distance d as 1/d^2. This is, however,
-misleading, as the the mass of the extended body `felt' by the second body
+misleading, as the the mass of the extended body `felt' by the point-like body
 depends on their relative position, and can therefore be considered as variable
-along the second bodys' orbit. In other words, the changing mass introduces a
+along the point-like body's orbit. In other words, the changing mass introduces a
 dependence of distance into the expression for the gravitational force that
 breaks the 1/d^2 dependence. Thus, by virtue of Bertrand's theorem
 (https://en.wikipedia.org/wiki/Bertrand%27s_theorem), extended central bodies
