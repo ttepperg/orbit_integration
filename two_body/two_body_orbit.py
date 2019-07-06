@@ -45,8 +45,14 @@ print("{:>25}{:12.3f} = {:6E}".format("Time unit:",units.TIME,units.TIME.cgs))
 # Recall: body 1 may be an extended object, while body 2 is a point mass.
 ic = importlib.import_module(initialConds)
 print("\nGathering input parameters from file {}...".format(initialConds))
-t0 = ic.t_0
-t1 = ic.t_1
+try:
+	t0 = ic.t_0
+except:
+	t0 = 0.
+try:
+	t1 = ic.t_1
+except:
+	t1 = 10.
 try:
 	timeStep = ic.delta_t
 except:
@@ -54,14 +60,22 @@ except:
 
 
 # Body 1
+try:
+	Pot = ic.Potential1
+except:
+	Pot = None
 r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
 v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
-body1 = body.Body(mass=ic.Mass1,pot=ic.Potential1,r_vec=r10_vec,v_vec=v10_vec)
+body1 = body.Body(mass=ic.Mass1,pot=Pot,r_vec=r10_vec,v_vec=v10_vec)
 
 # Body 2
+try:
+	Pot = ic.Potential2
+except:
+	Pot = None
 r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
 v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
-body2 = body.Body(mass=ic.Mass2,pot=ic.Potential2,r_vec=r20_vec,v_vec=v20_vec)
+body2 = body.Body(mass=ic.Mass2,pot=Pot,r_vec=r20_vec,v_vec=v20_vec)
 
 print("Done.")
 
