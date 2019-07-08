@@ -46,8 +46,8 @@ if(!exists('ndim')){
 	ndim = 3
 }
 if(!exists('dataFile')){
-	print "\nFull pat to input datafile name required, e.g.:"
-	print "gnuplot -e 'dataFile = \"full-path-to-file\"' plot_two_body_orbit.gp"
+	print "\nFull path to input datafile name required, e.g.:"
+	print "gnuplot -e 'dataFile = \"full-path-to-file\"' plot_two_body_orbit.gp\n"
 	quit
 }
 if(!exists("velVectorScale")){
