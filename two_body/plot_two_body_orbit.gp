@@ -13,7 +13,7 @@
 
 #----------------------------------------------------------------------------------------
 
-# Author:		Thorsten Tepper Garcia
+# Author:			Thorsten Tepper Garcia
 # Last modified:	01/07/2019
 
 #----------------------------------------------------------------------------------------
@@ -116,57 +116,60 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 		vz2Coord = x1Coord+11
 
 
-		if(projPlane eq "xy"){ # default setting
-			xAxisLabel = "x".unit(lengthUnitName)
-			yAxisLabel = "y".unit(lengthUnitName)
-			# dummy
-			zAxisLabel = ""
-		} else {
-			if(projPlane eq "xz"){
-				aux1Coord = y1Coord
-				vaux1Coord = vy1Coord
-				y1Coord = z1Coord
-				vy1Coord = vz1Coord
-				z1Coord = aux1Coord
-				vz1Coord = vaux1Coord
-				aux2Coord = y2Coord
-				vaux2Coord = vy2Coord
-				y2Coord = z2Coord
-				vy2Coord = vz2Coord
-				z2Coord = aux2Coord
-				vz2Coord = vaux2Coord
+		if(projPlane ne "op"){
+
+			if(projPlane eq "xy"){ # default setting
 				xAxisLabel = "x".unit(lengthUnitName)
-				yAxisLabel = "z".unit(lengthUnitName)
+				yAxisLabel = "y".unit(lengthUnitName)
 				# dummy
 				zAxisLabel = ""
 			} else {
-				if(projPlane eq "yz"){
-					aux1Coord = x1Coord
-					vaux1Coord = vx1Coord
-					x1Coord = y1Coord
-					vx1Coord = vy1Coord
+				if(projPlane eq "xz"){
+					aux1Coord = y1Coord
+					vaux1Coord = vy1Coord
 					y1Coord = z1Coord
 					vy1Coord = vz1Coord
 					z1Coord = aux1Coord
 					vz1Coord = vaux1Coord
-					aux2Coord = x2Coord
-					vaux2Coord = vx2Coord
-					x2Coord = y2Coord
-					vx2Coord = vy2Coord
+					aux2Coord = y2Coord
+					vaux2Coord = vy2Coord
 					y2Coord = z2Coord
 					vy2Coord = vz2Coord
 					z2Coord = aux2Coord
 					vz2Coord = vaux2Coord
-					xAxisLabel = "y".unit(lengthUnitName)
+					xAxisLabel = "x".unit(lengthUnitName)
 					yAxisLabel = "z".unit(lengthUnitName)
 					# dummy
 					zAxisLabel = ""
 				} else {
-					print "unknown projection ", projPlane
-					quit
+					if(projPlane eq "yz"){
+						aux1Coord = x1Coord
+						vaux1Coord = vx1Coord
+						x1Coord = y1Coord
+						vx1Coord = vy1Coord
+						y1Coord = z1Coord
+						vy1Coord = vz1Coord
+						z1Coord = aux1Coord
+						vz1Coord = vaux1Coord
+						aux2Coord = x2Coord
+						vaux2Coord = vx2Coord
+						x2Coord = y2Coord
+						vx2Coord = vy2Coord
+						y2Coord = z2Coord
+						vy2Coord = vz2Coord
+						z2Coord = aux2Coord
+						vz2Coord = vaux2Coord
+						xAxisLabel = "y".unit(lengthUnitName)
+						yAxisLabel = "z".unit(lengthUnitName)
+						# dummy
+						zAxisLabel = ""
+					} else {
+						print "unknown projection ", projPlane
+						quit
+					}
 				}
-			}
-		} # projPlane
+			} # projPlane
+		} # skip settings in case projPlane = "op"
 
 	} # if-else 3D projection
 
@@ -279,62 +282,64 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 
 
 # Settings for system's evolution projected onto orbital plane, i.e. such that the
-# relative angular momentum is aligns with the positive z-axis.
+# relative angular momentum aligns with the positive z-axis.
 
-plotCmdOrbitProj = "pl"
+# if(projPlane eq "op"){
 
-timeLabelCoordsProj = "first -0.9*plotRangeProj,0.9*plotRangeProj"
+	plotCmdOrbitProj = "pl"
 
-x1CoordProj = eKinIndex+13
-vx1CoordProj = x1CoordProj+1
-y1CoordProj = x1CoordProj+2
-vy1CoordProj = x1CoordProj+3
-x2CoordProj = x1CoordProj+4
-vx2CoordProj = x1CoordProj+5
-y2CoordProj = x1CoordProj+6
-vy2CoordProj = x1CoordProj+7
+	timeLabelCoordsProj = "first -0.9*plotRangeProj,0.9*plotRangeProj"
 
-xAxisLabelProj = "x_{proj}".unit(lengthUnitName)
-yAxisLabelProj = "y_{proj}".unit(lengthUnitName)
+	x1CoordProj = eKinIndex+13
+	vx1CoordProj = x1CoordProj+1
+	y1CoordProj = x1CoordProj+2
+	vy1CoordProj = x1CoordProj+3
+	x2CoordProj = x1CoordProj+4
+	vx2CoordProj = x1CoordProj+5
+	y2CoordProj = x1CoordProj+6
+	vy2CoordProj = x1CoordProj+7
 
-statColsXProj = sprintf("($%d-$%d)", x2CoordProj, x1CoordProj)
-statColsYProj = sprintf("($%d-$%d)", y2CoordProj, y1CoordProj)
+	xAxisLabelProj = "x_{proj}".unit(lengthUnitName)
+	yAxisLabelProj = "y_{proj}".unit(lengthUnitName)
 
-plotColsRelOrbitProj_line = \
-	sprintf("($%d-$%d):($0 <= i ? $%d-$%d : 1/0)", \
-		x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj)
-plotColsRelOrbitProj_dot = \
-	sprintf("($%d-$%d):($0 == i ? $%d-$%d : 1/0)", \
-		x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj)
-plotColsRelVelProj = \
-	sprintf("($%d-$%d):($0 == i ? $%d-$%d : 1/0):(%f*($%d-$%d)):(%f*($%d-$%d))", \
-	x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj, \
-	velVectorScale, vx2CoordProj, vx1CoordProj, velVectorScale, vy2CoordProj, vy1CoordProj)
-plotColsRelDistProj = \
-	sprintf("($%d):(length($%d-$%d,$%d-$%d,0.))", \
-		timeCoord, x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj)
-plotColsRelSpeedProj = \
-	sprintf("($%d):(length($%d-$%d,$%d-$%d,0.))", \
-		timeCoord, vx2CoordProj, vx1CoordProj, vy2CoordProj, vy1CoordProj)
+	statColsXProj = sprintf("($%d-$%d)", x2CoordProj, x1CoordProj)
+	statColsYProj = sprintf("($%d-$%d)", y2CoordProj, y1CoordProj)
 
-statColsX1Proj = sprintf("($%d)", x1CoordProj)
-statColsY1Proj = sprintf("($%d)", y1CoordProj)
-statColsX2Proj = sprintf("($%d)", x2CoordProj)
-statColsY2Proj = sprintf("($%d)", y2CoordProj)
+	plotColsRelOrbitProj_line = \
+		sprintf("($%d-$%d):($0 <= i ? $%d-$%d : 1/0)", \
+			x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj)
+	plotColsRelOrbitProj_dot = \
+		sprintf("($%d-$%d):($0 == i ? $%d-$%d : 1/0)", \
+			x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj)
+	plotColsRelVelProj = \
+		sprintf("($%d-$%d):($0 == i ? $%d-$%d : 1/0):(%f*($%d-$%d)):(%f*($%d-$%d))", \
+		x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj, \
+		velVectorScale, vx2CoordProj, vx1CoordProj, velVectorScale, vy2CoordProj, vy1CoordProj)
+	plotColsRelDistProj = \
+		sprintf("($%d):(length($%d-$%d,$%d-$%d,0.))", \
+			timeCoord, x2CoordProj, x1CoordProj, y2CoordProj, y1CoordProj)
+	plotColsRelSpeedProj = \
+		sprintf("($%d):(length($%d-$%d,$%d-$%d,0.))", \
+			timeCoord, vx2CoordProj, vx1CoordProj, vy2CoordProj, vy1CoordProj)
 
-plotColsOrbit1Proj_line = sprintf("($%d):($0 <= i ? $%d : 1/0)", x1CoordProj, y1CoordProj)
-plotColsOrbit1Proj_dot = sprintf("($%d):($0 == i ? $%d : 1/0)", x1CoordProj, y1CoordProj)
-plotColsVel1Proj = \
-	sprintf("($%d):($0 == i ? $%d : 1/0):(%f*($%d)):(%f*($%d))", \
-	x1CoordProj, y1CoordProj, velVectorScale, vx1CoordProj, velVectorScale, vy1CoordProj)
+	statColsX1Proj = sprintf("($%d)", x1CoordProj)
+	statColsY1Proj = sprintf("($%d)", y1CoordProj)
+	statColsX2Proj = sprintf("($%d)", x2CoordProj)
+	statColsY2Proj = sprintf("($%d)", y2CoordProj)
 
-plotColsOrbit2Proj_line = sprintf("($%d):($0 <= i ? $%d : 1/0)", x2CoordProj, y2CoordProj)
-plotColsOrbit2Proj_dot = sprintf("($%d):($0 == i ? $%d : 1/0)", x2CoordProj, y2CoordProj)
-plotColsVel2Proj = \
-	sprintf("($%d):($0 == i ? $%d : 1/0):(%f*($%d)):(%f*($%d))", \
-	x2CoordProj, y2CoordProj, velVectorScale, vx2CoordProj, velVectorScale, vy2CoordProj)
+	plotColsOrbit1Proj_line = sprintf("($%d):($0 <= i ? $%d : 1/0)", x1CoordProj, y1CoordProj)
+	plotColsOrbit1Proj_dot = sprintf("($%d):($0 == i ? $%d : 1/0)", x1CoordProj, y1CoordProj)
+	plotColsVel1Proj = \
+		sprintf("($%d):($0 == i ? $%d : 1/0):(%f*($%d)):(%f*($%d))", \
+		x1CoordProj, y1CoordProj, velVectorScale, vx1CoordProj, velVectorScale, vy1CoordProj)
 
+	plotColsOrbit2Proj_line = sprintf("($%d):($0 <= i ? $%d : 1/0)", x2CoordProj, y2CoordProj)
+	plotColsOrbit2Proj_dot = sprintf("($%d):($0 == i ? $%d : 1/0)", x2CoordProj, y2CoordProj)
+	plotColsVel2Proj = \
+		sprintf("($%d):($0 == i ? $%d : 1/0):(%f*($%d)):(%f*($%d))", \
+		x2CoordProj, y2CoordProj, velVectorScale, vx2CoordProj, velVectorScale, vy2CoordProj)
 
+# } # projection plane = orbital plane
 
 #----------------------------------------------------------------------------------------
 # PLOTS
@@ -372,288 +377,298 @@ set ytics mirror
 
 
 #----------------------------------------------------------------------------------------
-# Orbits
+# Orbit
 
 #----------------------------------------------------------------------------------------
 # 1: Full 3D or 2D orthogonal projection
-if(plotRelOrbit eq "T"){
 
-	stats dataFile u @statColsX nooutput name 'X'
-	stats dataFile u @statColsY nooutput name 'Y'
-	Z_min = 0.
-	Z_max = 0.
-	if(!exists("projPlane")){
-		stats dataFile u @statColsZ nooutput name 'Z'
-	}
+if(projPlane ne "op"){
 
-	X = max(abs(X_min),abs(X_max))
-	Y = max(abs(Y_min),abs(Y_max))
-	Z = max(abs(Z_min),abs(Z_max))
+	set xrange [ * : * ]
+	set yrange [ * : * ]
 
-	plotRange = 1.1*max(abs(Z),max(abs(X),abs(Y)))
+	if(plotRelOrbit eq "T"){
 
-	NumRecords = X_records
+		stats dataFile u @statColsX nooutput name 'X'
+		stats dataFile u @statColsY nooutput name 'Y'
+		Z_min = 0.
+		Z_max = 0.
+		if(!exists("projPlane")){
+			stats dataFile u @statColsZ nooutput name 'Z'
+		}
 
-} else {
+		X = max(abs(X_min),abs(X_max))
+		Y = max(abs(Y_min),abs(Y_max))
+		Z = max(abs(Z_min),abs(Z_max))
 
-	stats dataFile u @statColsX1 nooutput name 'X1'
-	stats dataFile u @statColsY1 nooutput name 'Y1'
-	Z1_min = 0.
-	Z1_max = 0.
-	if(!exists("projPlane")){
-		stats dataFile u @statColsZ1 nooutput name 'Z1'
-	}
+		plotRange = 1.1*max(abs(Z),max(abs(X),abs(Y)))
 
-	X1 = max(abs(X1_min),abs(X1_max))
-	Y1 = max(abs(Y1_min),abs(Y1_max))
-	Z1 = max(abs(Z1_min),abs(Z1_max))
-
-	plotRange1 = max(abs(Z1),max(abs(X1),abs(Y1)))
-
-	stats dataFile u @statColsX2 nooutput name 'X2'
-	stats dataFile u @statColsY2 nooutput name 'Y2'
-	Z2_min = 0.
-	Z2_max = 0.
-	if(!exists("projPlane")){
-		stats dataFile u @statColsZ2 nooutput name 'Z2'
-	}
-
-	X2 = max(abs(X2_min),abs(X2_max))
-	Y2 = max(abs(Y2_min),abs(Y2_max))
-	Z2 = max(abs(Z2_min),abs(Z2_max))
-
-	plotRange2 = max(abs(Z2),max(abs(X2),abs(Y2)))
-
-	plotRange = 1.1*max(plotRange1,plotRange2)
-
-	NumRecords = X1_records
-
-} # plot relative orbit?
-
-print "Spatial plot range (intrinsic orbit): ", plotRange
-
-
-set size square
-
-set xrange [-plotRange:plotRange]
-set yrange [-plotRange:plotRange]
-if(!exists("projPlane")){
-	set zrange [-plotRange:plotRange]
-}
-
-set xlabel xAxisLabel
-set ylabel yAxisLabel
-if(!exists("projPlane")){
-	set zlabel zAxisLabel
-}
-
-if(plotRelOrbit eq "T"){
-
-	# Relative orbit (full 3D or 2D orthogonal projection)
-	set terminal x11 3 persist title "Relative Orbit" size 600,600 font "Times-Roman,14" enhanced solid
-
-	if(ffw){
-
-		do for [i=NumRecords-2:NumRecords-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoords
-			@plotCmdOrbit \
-			'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
-			dataFile u @plotColsRelOrbit_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
-			'' u @plotColsRelOrbit_line w l lw 2 t "rel. orbit", \
-			'' u @plotColsRelVel w vectors t "rel. vel"; \
-			pause pauseStep \
-		} # do
+		NumRecords = X_records
 
 	} else {
 
-		do for [i=0:NumRecords-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoords
-			@plotCmdOrbit \
-			'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
-			dataFile u @plotColsRelOrbit_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
-			'' u @plotColsRelOrbit_line w l lw 2 t "rel. orbit", \
-			'' u @plotColsRelVel w vectors t "rel. vel"; \
-			pause pauseStep \
-		} # do
+		stats dataFile u @statColsX1 nooutput name 'X1'
+		stats dataFile u @statColsY1 nooutput name 'Y1'
+		Z1_min = 0.
+		Z1_max = 0.
+		if(!exists("projPlane")){
+			stats dataFile u @statColsZ1 nooutput name 'Z1'
+		}
 
-	} # fast-forward?
+		X1 = max(abs(X1_min),abs(X1_max))
+		Y1 = max(abs(Y1_min),abs(Y1_max))
+		Z1 = max(abs(Z1_min),abs(Z1_max))
 
-} else {
+		plotRange1 = max(abs(Z1),max(abs(X1),abs(Y1)))
 
-	# Orbit of each body (full 3D or 2D orthogonal projection)
-	set terminal x11 3 persist title "Individual Orbits" size 600,600 font "Times-Roman,14" enhanced solid
+		stats dataFile u @statColsX2 nooutput name 'X2'
+		stats dataFile u @statColsY2 nooutput name 'Y2'
+		Z2_min = 0.
+		Z2_max = 0.
+		if(!exists("projPlane")){
+			stats dataFile u @statColsZ2 nooutput name 'Z2'
+		}
 
-	if(ffw){
+		X2 = max(abs(X2_min),abs(X2_max))
+		Y2 = max(abs(Y2_min),abs(Y2_max))
+		Z2 = max(abs(Z2_min),abs(Z2_max))
 
-		do for [i=NumRecords-2:NumRecords-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoords
-			@plotCmdOrbit \
-			dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
-			'' u @plotColsOrbit1_line w l t "orbit 1", \
-			'' u @plotColsVel1 w vectors t "vel 1", \
-			'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
-			'' u @plotColsOrbit2_line w l t "orbit 2", \
-			'' u @plotColsVel2 w vectors t "vel 2"; \
-			pause pauseStep \
-		} # do
+		plotRange2 = max(abs(Z2),max(abs(X2),abs(Y2)))
+
+		plotRange = 1.1*max(plotRange1,plotRange2)
+
+		NumRecords = X1_records
+
+	} # plot relative orbit?
+
+	print "Spatial plot range (intrinsic orbit): ", plotRange
+
+
+	set size square
+
+	set xrange [-plotRange:plotRange]
+	set yrange [-plotRange:plotRange]
+	if(!exists("projPlane")){
+		set zrange [-plotRange:plotRange]
+	}
+
+	set xlabel xAxisLabel
+	set ylabel yAxisLabel
+	if(!exists("projPlane")){
+		set zlabel zAxisLabel
+	}
+
+	if(plotRelOrbit eq "T"){
+
+		# Relative orbit (full 3D or 2D orthogonal projection)
+		set terminal x11 3 persist title "Relative Orbit" size 600,600 font "Times-Roman,14" enhanced solid
+
+		if(ffw){
+
+			do for [i=NumRecords-2:NumRecords-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoords
+				@plotCmdOrbit \
+				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsRelOrbit_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
+				'' u @plotColsRelOrbit_line w l lw 2 t "rel. orbit", \
+				'' u @plotColsRelVel w vectors t "rel. vel"; \
+				pause pauseStep \
+			} # do
+
+		} else {
+
+			do for [i=0:NumRecords-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoords
+				@plotCmdOrbit \
+				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsRelOrbit_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
+				'' u @plotColsRelOrbit_line w l lw 2 t "rel. orbit", \
+				'' u @plotColsRelVel w vectors t "rel. vel"; \
+				pause pauseStep \
+			} # do
+
+		} # fast-forward?
 
 	} else {
 
-		do for [i=0:NumRecords-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoords
-			@plotCmdOrbit \
-			dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
-			'' u @plotColsOrbit1_line w l t "orbit 1", \
-			'' u @plotColsVel1 w vectors t "vel 1", \
-			'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
-			'' u @plotColsOrbit2_line w l t "orbit 2", \
-			'' u @plotColsVel2 w vectors t "vel 2"; \
-			pause pauseStep \
-		} # do
+		# Orbit of each body (full 3D or 2D orthogonal projection)
+		set terminal x11 3 persist title "Individual Orbits" size 600,600 font "Times-Roman,14" enhanced solid
 
-	} # fast-forward?
+		if(ffw){
 
-} # plot relative orbit (full 3D or 2D orthogonal projection)?
+			do for [i=NumRecords-2:NumRecords-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoords
+				@plotCmdOrbit \
+				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				'' u @plotColsOrbit1_line w l t "orbit 1", \
+				'' u @plotColsVel1 w vectors t "vel 1", \
+				'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2_line w l t "orbit 2", \
+				'' u @plotColsVel2 w vectors t "vel 2"; \
+				pause pauseStep \
+			} # do
+
+		} else {
+
+			do for [i=0:NumRecords-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoords
+				@plotCmdOrbit \
+				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				'' u @plotColsOrbit1_line w l t "orbit 1", \
+				'' u @plotColsVel1 w vectors t "vel 1", \
+				'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2_line w l t "orbit 2", \
+				'' u @plotColsVel2 w vectors t "vel 2"; \
+				pause pauseStep \
+			} # do
+
+		} # fast-forward?
+
+	} # plot relative orbit (full 3D or 2D orthogonal projection)?
 
 
+} else {
 #----------------------------------------------------------------------------------------
 # 2: System's evolution projected onto orbital plane
-set xrange [ * : * ]
-set yrange [ * : * ]
-if(plotRelOrbit eq "T"){
 
-	stats dataFile u @statColsXProj nooutput name 'XProj'
-	stats dataFile u @statColsYProj nooutput name 'YProj'
+	set xrange [ * : * ]
+	set yrange [ * : * ]
 
-	XProj = max(abs(XProj_min),abs(XProj_max))
-	YProj = max(abs(YProj_min),abs(YProj_max))
+	if(plotRelOrbit eq "T"){
 
-	plotRangeProj = 1.1*max(abs(XProj),abs(YProj))
+		stats dataFile u @statColsXProj nooutput name 'XProj'
+		stats dataFile u @statColsYProj nooutput name 'YProj'
 
-	NumRecordsProj = XProj_records
+		XProj = max(abs(XProj_min),abs(XProj_max))
+		YProj = max(abs(YProj_min),abs(YProj_max))
 
-} else {
+		plotRangeProj = 1.1*max(abs(XProj),abs(YProj))
 
-	stats dataFile u @statColsX1Proj nooutput name 'X1Proj'
-	stats dataFile u @statColsY1Proj nooutput name 'Y1Proj'
-
-	X1Proj = max(abs(X1Proj_min),abs(X1Proj_max))
-	Y1Proj = max(abs(Y1Proj_min),abs(Y1Proj_max))
-
-	plotRange1Proj = max(abs(X1Proj),abs(Y1Proj))
-
-	stats dataFile u @statColsX2Proj nooutput name 'X2Proj'
-	stats dataFile u @statColsY2Proj nooutput name 'Y2Proj'
-
-	X2Proj = max(abs(X2Proj_min),abs(X2Proj_max))
-	Y2Proj = max(abs(Y2Proj_min),abs(Y2Proj_max))
-
-	plotRange2Proj = max(abs(X2Proj),abs(Y2Proj))
-
-	plotRangeProj = 1.1*max(plotRange1Proj,plotRange2Proj)
-
-	NumRecordsProj = X1Proj_records
-
-} # plot relative orbit?
-
-print "Spatial plot range (orbital plane): ", plotRangeProj
-
-
-set size square
-
-set xrange [-plotRangeProj:plotRangeProj]
-set yrange [-plotRangeProj:plotRangeProj]
-
-set xlabel xAxisLabelProj
-set ylabel yAxisLabelProj
-
-if(plotRelOrbit eq "T"){
-
-	# Relative orbit (projected onto orbital plane)
-	set terminal x11 4 persist title "Relative orbit (orbital plane)" size 600,600 font "Times-Roman,14" enhanced solid
-
-	if(!(ffw)){
-
-		do for [i=0:NumRecordsProj-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoordsProj
-			@plotCmdOrbitProj \
-			'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
-			dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
-			'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
-			'' u @plotColsRelVelProj w vectors t "rel. vel", \
-			'' u 25:26 w l lc rgb "black" t "analytic"; \
-			pause pauseStep \
-		} # do
-
-	}
-	if(ffw){
-
-		do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoordsProj
-			@plotCmdOrbitProj \
-			'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
-			dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
-			'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
-			'' u @plotColsRelVelProj w vectors t "rel. vel", \
-			'' u 25:26 w l lc rgb "black" t "analytic" \
-		} # do
-
-	}
-
-} else {
-
-	# Orbit of each body (projected onto orbital plane)
-	set terminal x11 4 persist title "Individual Orbits (orbital plane)" size 600,600 font "Times-Roman,14" enhanced solid
-
-	if(ffw){
-
-		do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoordsProj
-			@plotCmdOrbitProj \
-			dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
-			'' u @plotColsOrbit1Proj_line w l t "orbit 1", \
-			'' u @plotColsVel1Proj w vectors t "vel 1", \
-			'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
-			'' u @plotColsOrbit2Proj_line w l t "orbit 2", \
-			'' u @plotColsVel2Proj w vectors t "vel 2" \
-		} # do
+		NumRecordsProj = XProj_records
 
 	} else {
+
+		stats dataFile u @statColsX1Proj nooutput name 'X1Proj'
+		stats dataFile u @statColsY1Proj nooutput name 'Y1Proj'
+
+		X1Proj = max(abs(X1Proj_min),abs(X1Proj_max))
+		Y1Proj = max(abs(Y1Proj_min),abs(Y1Proj_max))
+
+		plotRange1Proj = max(abs(X1Proj),abs(Y1Proj))
+
+		stats dataFile u @statColsX2Proj nooutput name 'X2Proj'
+		stats dataFile u @statColsY2Proj nooutput name 'Y2Proj'
+
+		X2Proj = max(abs(X2Proj_min),abs(X2Proj_max))
+		Y2Proj = max(abs(Y2Proj_min),abs(Y2Proj_max))
+
+		plotRange2Proj = max(abs(X2Proj),abs(Y2Proj))
+
+		plotRangeProj = 1.1*max(plotRange1Proj,plotRange2Proj)
+
+		NumRecordsProj = X1Proj_records
+
+	} # plot relative orbit?
+
+	print "Spatial plot range (orbital plane): ", plotRangeProj
+
+
+	set size square
+
+	set xrange [-plotRangeProj:plotRangeProj]
+	set yrange [-plotRangeProj:plotRangeProj]
+
+	set xlabel xAxisLabelProj
+	set ylabel yAxisLabelProj
+
+	if(plotRelOrbit eq "T"){
+
+		# Relative orbit (projected onto orbital plane)
+		set terminal x11 4 persist title "Relative orbit (orbital plane)" size 600,600 font "Times-Roman,14" enhanced solid
+
+		if(!(ffw)){
+
+			do for [i=0:NumRecordsProj-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoordsProj
+				@plotCmdOrbitProj \
+				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
+				'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
+				'' u @plotColsRelVelProj w vectors t "rel. vel", \
+				'' u 25:26 w l lc rgb "black" t "analytic"; \
+				pause pauseStep \
+			} # do
+
+		}
+		if(ffw){
+
+			do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoordsProj
+				@plotCmdOrbitProj \
+				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
+				'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
+				'' u @plotColsRelVelProj w vectors t "rel. vel", \
+				'' u 25:26 w l lc rgb "black" t "analytic" \
+			} # do
+
+		}
+
+	} else {
+
+		# Orbit of each body (projected onto orbital plane)
+		set terminal x11 4 persist title "Individual Orbits (orbital plane)" size 600,600 font "Times-Roman,14" enhanced solid
+
+		if(ffw){
+
+			do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoordsProj
+				@plotCmdOrbitProj \
+				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				'' u @plotColsOrbit1Proj_line w l t "orbit 1", \
+				'' u @plotColsVel1Proj w vectors t "vel 1", \
+				'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2Proj_line w l t "orbit 2", \
+				'' u @plotColsVel2Proj w vectors t "vel 2" \
+			} # do
+
+		} else {
 	
 
-		do for [i=0:NumRecordsProj-1]{ \
-			unset label
-			set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
-			at @timeLabelCoordsProj
-			@plotCmdOrbitProj \
-			dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
-			'' u @plotColsOrbit1Proj_line w l t "orbit 1", \
-			'' u @plotColsVel1Proj w vectors t "vel 1", \
-			'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
-			'' u @plotColsOrbit2Proj_line w l t "orbit 2", \
-			'' u @plotColsVel2Proj w vectors t "vel 2"; \
-			pause pauseStep \
-		} # do
+			do for [i=0:NumRecordsProj-1]{ \
+				unset label
+				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				at @timeLabelCoordsProj
+				@plotCmdOrbitProj \
+				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				'' u @plotColsOrbit1Proj_line w l t "orbit 1", \
+				'' u @plotColsVel1Proj w vectors t "vel 1", \
+				'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2Proj_line w l t "orbit 2", \
+				'' u @plotColsVel2Proj w vectors t "vel 2"; \
+				pause pauseStep \
+			} # do
 
-	} # fast-forward?
+		} # fast-forward?
 	
 
-} # plot relative orbit  (projected onto orbital plane)?
+	} # plot relative orbit?
 
+} # full 3D, orthogonal projection, or projection onto orbital plane?
 
 #EOF
 
