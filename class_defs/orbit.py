@@ -44,6 +44,7 @@ class Orbit():
 		else:
 			self.b1 = b1
 			self.b2 = b2
+			self.orbit_info()	# dump initial orbital parameters to stdout
 
 
 	def pos(self):
@@ -74,6 +75,7 @@ class Orbit():
 	def mred(self):
 		'''reduced mass'''
 		return self.b1.mass*self.b2.mass/self.mtot()
+
 
 	def grav_param(self):
 		'''gravitational parameter'''
@@ -356,50 +358,91 @@ class Orbit():
 
 
 
-	def orbit_info(self):
-		'''prints a number of orbit parameter values to stdout'''
+	def orbit_info(self, filename = None):
+		'''prints a number of relevant orbit parameter values to stdout or a file if provided'''
 
 		_incl, _ = self.orbital_plane()	# skip k_vec from output
 		_orbital_period_peri = 1./self.pericentric_freq()
 
-		print("\nInitial (osculating) orbital parameters of the system:\n")
-		print("{:>40}{:>15}".format("Potential of body 1:",self.b1.potential.__name__))
-		print("{:>40}{:>15}".format("Potential of body 2:",self.b2.potential.__name__))
-		print("{:>40}{:15.4E}".format("Total mass of body 1:",self.b1.mass))
-		print("{:>40}{:15.4E}".format("Total mass of body 2:",self.b2.mass))
-		print("{:>40}{:15.4E}\n".format("Reduced mass:",self.mred()))
+		if filename is not None:
+			fileout = open(filename,'wt')
+			first_chr = '# '
+		else:
+			fileout = sys.stdout
+			first_chr = ''
 
-		print("{:>40}{:15.4f}".format("Initial rel. distance (r21_0):",self.dist()))
-		print("{:>40}{:15.4f}".format("Initial rel. speed (v21_0):",self.speed()))
-		print("{:>40}{:15.4f}".format("Initial tangential vel. (v_tan_0):",self.v_tan()))
-		print("{:>40}{:15.4f}".format("Initial radial vel. (v_rad_0):",self.v_rad()))
-		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Rel. specific ang. mom. vec. (h_vec):",*self.ang_mom_vec()))
-		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[normalised]:",*self.ang_mom_vec_norm()))
-		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("[along z-axis]:",*self.orbital_plane(self.ang_mom_vec())))
-		print("{:>40}{:15.4f}\n".format("Rel. specific ang. mom. (h):",self.ang_mom()))
-
-		print("{:>40}{:15.4f}".format("Eccentricity (e):",self.eccentricity()))
-		print("{:>40}{:15.4f}".format("Semi-latus rectum (p):",self.semi_latus_rec()))
-		print("{:>40}{:15.4f}".format("Semimajor axis (a):",self.semimajor()))
-		print("{:>40}{:15.4f}".format("Semiminor axis (b):",self.semiminor()))
-		print("{:>40}{:15.4f}".format("Orbital inclination (psi_0; deg):",math.degrees(_incl)))
-		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Ascending node (n_vec):",*self.asc_node_vec()))
-		print("{:>40}{:15.4f}".format("Long. of asc. node (Omega_0; deg):",math.degrees(self.long_asc_node())))
-		print("{:>40} ({:5.3f},{:5.3f},{:5.3f})".format("Eccentricity vector (e_vec):",*self.eccentricity_vec()))
-		print("{:>40}{:15.4f}".format("Apsidal angle (phi_0; deg):",math.degrees(self.apsidal_angle())))
-		print("{:>40}{:15.4f}".format("Argument of periapsis (omega_0; deg):",math.degrees(self.arg_periapsis())))
-		print("{:>40}{:15.4f}".format("Rel. pericentre (rp):",self.pericenter()))
-		print("{:>40}{:15.4f}".format("Vel. at pericentre (vp):",self.v_peri()))
+		print("\n{}Initial (osculating) orbital parameters of the system:\n".format(first_chr), \
+			file = fileout)
+		print("{}{:>40}{:>15}".format(first_chr,"Potential of body 1:",self.b1.potential.__name__), \
+			file = fileout)
+		print("{}{:>40}{:>15}".format(first_chr,"Potential of body 2:",self.b2.potential.__name__), \
+			file = fileout)
+		print("{}{:>40}{:15.4E}".format(first_chr,"Total mass of body 1:",self.b1.mass), \
+			file = fileout)
+		print("{}{:>40}{:15.4E}".format(first_chr,"Total mass of body 2:",self.b2.mass), \
+			file = fileout)
+		print("{}{:>40}{:15.4E}\n".format(first_chr,"Reduced mass:",self.mred()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Initial rel. distance (r21_0):",self.dist()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Initial rel. speed (v21_0):",self.speed()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Initial tangential vel. (v_tan_0):",self.v_tan()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Initial radial vel. (v_rad_0):",self.v_rad()), \
+			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Rel. specific ang. mom. vec. (h_vec):",*self.ang_mom_vec()), \
+			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"[normalised]:",*self.ang_mom_vec_norm()), \
+			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"[along z-axis]:",*self.orbital_plane(self.ang_mom_vec())), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}\n".format(first_chr,"Rel. specific ang. mom. (h):",self.ang_mom()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Eccentricity (e):",self.eccentricity()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Semi-latus rectum (p):",self.semi_latus_rec()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Semimajor axis (a):",self.semimajor()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Semiminor axis (b):",self.semiminor()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Orbital inclination (psi_0; deg):",math.degrees(_incl)), \
+			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Ascending node (n_vec):",*self.asc_node_vec()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Long. of asc. node (Omega_0; deg):",math.degrees(self.long_asc_node())), \
+			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Eccentricity vector (e_vec):",*self.eccentricity_vec()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Apsidal angle (phi_0; deg):",math.degrees(self.apsidal_angle())), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Argument of periapsis (omega_0; deg):",math.degrees(self.arg_periapsis())), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Rel. pericentre (rp):",self.pericenter()), \
+			file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Vel. at pericentre (vp):",self.v_peri()), \
+			file = fileout)
 		if self.eccentricity() < 1.:
-			print("{:>40}{:15.4f}".format("Rel. apocentre (ra):",self.apocenter()))
-			print("{:>40}{:15.4f}".format("Vel. at apocentre (va):",self.v_apo()))
-			print("{:>40}{:15.4f}".format("Rel. orbital period (T):",self.period()))
-			print("{:>40}{:15.4f}".format("Approx. orbit circumference (u):",self.circumference()))
-			print("{:>40}{:15.4f}".format("Approx. pericentric period (Tp):",_orbital_period_peri))
-
-		print("{:>40}{:15.4E}".format("Rel. potential energy (V):",self.energy_pot()))
-		print("{:>40}{:15.4E}".format("Rel. kinetic energy (T):",self.energy_kin()))
-		print("{:>40}{:15.4E}".format("Rel. total energy (E):",self.energy_tot()))
+			print("{}{:>40}{:15.4f}".format(first_chr,"Rel. apocentre (ra):",self.apocenter()), \
+			file = fileout)
+			print("{}{:>40}{:15.4f}".format(first_chr,"Vel. at apocentre (va):",self.v_apo()), \
+			file = fileout)
+			print("{}{:>40}{:15.4f}".format(first_chr,"Rel. orbital period (T):",self.period()), \
+			file = fileout)
+			print("{}{:>40}{:15.4f}".format(first_chr,"Approx. orbit circumference (u):",self.circumference()), \
+			file = fileout)
+			print("{}{:>40}{:15.4f}".format(first_chr,"Approx. pericentric period (Tp):",_orbital_period_peri), \
+			file = fileout)
+		print("{}{:>40}{:15.4E}".format(first_chr,"Rel. potential energy (V):",self.energy_pot()), \
+			file = fileout)
+		print("{}{:>40}{:15.4E}".format(first_chr,"Rel. kinetic energy (T):",self.energy_kin()), \
+			file = fileout)
+		print("{}{:>40}{:15.4E}\n".format(first_chr,"Rel. total energy (E):",self.energy_tot()), \
+			file = fileout)
+		
+		if filename is not None:
+			fileout.close()
 
 
 
@@ -442,7 +485,7 @@ class Orbit():
 			# Define acceleration function definitions
 
 			# The following functions correspond each to one of the (numerical) partial derivatives of
-			# either self.b1.potential or self.b2.potential
+			# the potential of each body.
 			# Here, a central finite difference scheme is used to calculate the derivatives.
 			# Other schemes are possible, but a CFD has been tested thoroughly and has been found
 			# to perform well, even for cuspy potentials such as the Kepler potential.
@@ -456,6 +499,7 @@ class Orbit():
 			accOrder = 4
 
 			# Note: the array f = (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+			# the shape of f is dictated by the module cen_diff_first
 			# Recall: Force field = - Grad Phi
 			def dvx1dt(t,*f):
 				_x12 = f[0]-f[6]
@@ -501,20 +545,27 @@ class Orbit():
 
 
 			# Set up time integrator
+			
+			# number of time steps
 			_N = math.ceil((time_end - time_start) / time_step)
 
+			# initial conditions
+			# note: the shape of _ics is dictated by module ode_leap
 			_ics = \
 				[time_start, \
 				self.b1.x, self.b1.vx, self.b1.y, self.b1.vy, self.b1.z, self.b1.vz, \
 				self.b2.x, self.b2.vx, self.b2.y, self.b2.vy, self.b2.z, self.b2.vz]
 
+			# accelerations
+			# note: the shape of _F is dictated by module ode_leap
 			_F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
 
-			print("\nTime range [t0,t1] = [{},{}]".format(time_start,time_end))
-			print("Time steps {};  Step size: {:8.2E}".format(_N,time_step))
-			print("Maximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
+			print("\nOrbit integration:")
+			print("\tTime range [t0,t1] = [{},{}]".format(time_start,time_end))
+			print("\tTime steps {};  Step size: {:8.2E}".format(_N,time_step))
+			print("\tMaximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
 
-			# Integrate orbit
+			# Integrate system
 			# Note: x1 = EoM[0], vx1 = EoM[1], y1 = EoM[2], vy1 = EoM[3], z1 = EoM[4], vz1 = EoM[5],
 			#       x2 = EoM[6], vx2 = EoM[7], y2 = EoM[8], vy2 = EoM[9], z2 = EoM[10], vz2 = EoM[11]
 			# 		each EoM[i] is 'function' of time, i.e. an array where each item corresponds to a
@@ -532,7 +583,24 @@ class Orbit():
 
 		PURPOSE:
 
-			Dump the evolution of an orbit to an ascii file
+			Dump the orbital evolution to an ascii table.
+			The table consists of a total of 26 columns. The first 16 contain, in that
+			order, the time, the specific relative angular momentum, the relative potential
+			energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the
+			bodies. The next 8 columnns contain (x',vx',y',vy') for each of the
+			bodies, where the primed coordinates and velocities correspond to the coordinates
+			and velocities on the orbital plane. In other words, these coordinates represent a
+			rotated version of the intrinsic orbit such that the relative angular momentum
+			of the system aligns with the z-axis. If the intrinsic orbit has this property,
+			the primed and unprimed coordinates are identical. Note that the primed z
+			coordinates are ignored, because they all vanish by definition. The last two
+			columns contain the (x,y) coordinates of the analytic solution of the problem,
+			using the orbital parameters self-consistently calculated within the code.
+			The latter can be directly compared to the set of primed coordinates as a check
+			of the numerical result against the expected analytic solution, keeping in
+			mind that for non-Keplerian potentials the analytic solution merely corresponds
+			to an osculating orbit consistent with the initial conditions.
+
 
 		INPUT:
 
@@ -560,16 +628,19 @@ class Orbit():
 			raise ValueError("output_freq is a required parameter in write_table")
 		else:
 
+			# include initial orbital parameters in header of output file
+			self.orbit_info(filename)
+
 			# The following are required to calculate the conservation of energy and
 			# angular momentum:
 			ePot0 = self.energy_pot()	# Initial relative energies
 			eKin0 = self.energy_kin()
 			Ltot0 = self.ang_mom()		# Initial relative angular momentum
 
-			f = open(filename, 'wt')
+			f = open(filename, 'at')	# append orbital evolution
 
 			f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*22+"\n").\
-				format("# time ", units.TIME_UNIT_STR, \
+				format("# time", units.TIME_UNIT_STR, \
 					"ang.mom.", units.ANG_MOM_UNIT_STR, \
 					"ePot", units.ENERGY_UNIT_STR, "eKin", units.ENERGY_UNIT_STR, \
 					"x1", units.LENGTH_UNIT_STR, "vx1", units.VEL_UNIT_STR, \
@@ -584,6 +655,7 @@ class Orbit():
 					"y2_proj", units.LENGTH_UNIT_STR, "vy2_proj", units.VEL_UNIT_STR, \
 					"KeplerOrbitAna_X", units.LENGTH_UNIT_STR, "KeplerOrbitAna_Y", units.LENGTH_UNIT_STR))
 
+			mred = self.mred()
 			eCons = 0.
 			lCons = 0.
 			time_steps = len(time_list)
@@ -600,16 +672,15 @@ class Orbit():
 				v2 = [vx2,vy2,vz2]
 				r_rel = [x2-x1,y2-y1,z2-z1]
 				v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
-				Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))		# spec.rel.ang.mom. (i.e. divided by Mred)
-				ePot1 = self.b2.potential(*r_rel)
-				ePot2 = self.b1.potential(*r_rel)
-				ePot = self.mred() * (ePot1+ePot2)						# rel. potential energy (?)
-				eKin = self.mred() * funcs.eKin(*v_rel)					# rel. kin. energy
-				r1_rot = self.orbital_plane(r1)							# rotate vectors onto orbital plane
+				Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))				# spec.rel.ang.mom. (divided by Mred)
+				ePot = \
+					mred * (self.b1.potential(*r_rel)+self.b2.potential(*r_rel))# rel. potential energy (?)
+				eKin = mred * funcs.eKin(*v_rel)								# rel. kin. energy
+				r1_rot = self.orbital_plane(r1)									# rotate vectors onto orbital plane
 				v1_rot = self.orbital_plane(v1)
 				r2_rot = self.orbital_plane(r2)
 				v2_rot = self.orbital_plane(v2)
-				x1_rot,y1_rot,_ = r1_rot								# ignore z-components because they are 0.
+				x1_rot,y1_rot,_ = r1_rot										# ignore z-comps. because they are 0.
 				vx1_rot,vy1_rot,_ = v1_rot
 				x2_rot,y2_rot,_ = r2_rot
 				vx2_rot,vy2_rot,_ = v2_rot

@@ -2,7 +2,7 @@
 
 '''
 Author:			Thorsten Tepper Garcia
-Last modified:	04/07/2019
+Last modified:	09/07/2019
 
 See README for information on the code's background, usage, etc.
 
@@ -10,19 +10,16 @@ See README for information on the code's background, usage, etc.
 
 # Import necessary modules
 
-# built-in
-import math
+# built-in modules
 import importlib									# needed to import ICs' as module
 import sys
 
 # costum modules
 sys.path.insert(0,"../.")							# include top directory in module search path
 sys.path.insert(0,"./init")							# include initial conditions directory
-from utils import funcs
 from utils import io
 from class_defs import body
 from class_defs import orbit
-# from config import units
 
 
 # Collect input argument
@@ -33,6 +30,7 @@ initialConds = io.get_input()
 ic = importlib.import_module(initialConds)
 print("\nGathering input parameters from file {}...".format(initialConds))
 
+# Time integration settings
 try:
 	t0 = ic.t_0
 except:
@@ -70,16 +68,11 @@ print("Done.")
 # Initialise Orbit object
 orbit = orbit.Orbit(body1,body2)
 
-# Output initial orbital parameters to stdout
-# (consider redirecting these to output file as well)
-orbit.orbit_info()
-
 # Integrate orbit
 time, EoM = orbit.integrate(t0,t1,timeStep)
 
 # Write orbit evolution to file
 outDir = "./output/"
 outFile = outDir + initialConds + "_out.dat"
-outStep = 10
 
-orbit.write_table(time_list = time, state_vector = EoM, filename = outFile, output_freq = outStep)
+orbit.write_table(time_list = time, state_vector = EoM, filename = outFile, output_freq = 10)
