@@ -40,24 +40,27 @@ timeUnitName = "Gyr"
 timeUnit = 0.978
 
 
-# defaults
+# Sanity checks and defaults
 
-if(!exists('ndim')){
-	ndim = 3
-}
 if(!exists('dataFile')){
-	print "\nFull path to input datafile name required, e.g.:"
+	print "\nFull path to specify input datafile name, either directly in file or via command-line e.g.:"
 	print "gnuplot -e 'dataFile = \"full-path-to-file\"' plot_two_body_orbit.gp\n"
+	quit
+}
+if(!exists("timeStep")){
+# 	timeStep = 0.0001
+	print "\nNeed to specify time step, either in file or via command-line e.g.:"
+	print "gnuplot -e 'timeStep = 1.e-4' plot_two_body_orbit.gp\n"
+	quit
+}
+if(!exists("timeFreq")){
+# 	timeFreq = 10
+	print "\nNeed to specify time step, either in file or via command-line e.g.:"
+	print "gnuplot -e 'timeFreq = 10' plot_two_body_orbit.gp\n"
 	quit
 }
 if(!exists("velVectorScale")){
 	velVectorScale = 0.1	# for nice arrows on plot
-}
-if(!exists("timeStep")){
-	timeStep = 0.001
-}
-if(!exists("timeFreq")){
-	timeFreq = 10
 }
 if(!exists("pauseStep")){
 	pauseStep = 0.001
@@ -168,7 +171,7 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 						quit
 					}
 				}
-			} # projPlane
+			} # projPlane xy, xz, or xz?
 		} # skip settings in case projPlane = "op"
 
 	} # if-else 3D projection
