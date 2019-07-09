@@ -28,6 +28,22 @@
 # Plot full data (no evolution) projected onto 2D
 # $> gnuplot e 'ffw=1; dataFile="./output/filename.dat"; plotRelOrbit = "T"; projPlane = "xz"' plot_orbit_two_body.gp
 
+# the mandatory input parameters and their possible values are:
+#
+# dataFile - full path to input data file (string)
+# timeStep - value of integration time step (float)
+# timeFreq - value of time step output frequency (int)
+#
+# the optional input parameters and their possible values are:
+# 
+# plotRelOrbit - T / F (string); T means that the relative orbit is plotted; otherwise the
+#				 individual orbit of each body are plotted
+# projPlane - xy, xz, yz, or op (string); if set, plot the orbit on an orthogonal Cartesian
+# 			  projection, or onto the orbital plane. The latter includes the analytic result.
+# ffw - 1 / 0 (int); 0 yields an animation to the orbit's evolution; 1 fast-forwards in time
+# 		and plots the full evolution in one step
+# pauseStep - (float) pause in seconds between frames when ffw=0
+# 
 #----------------------------------------------------------------------------------------
 # User settings
 
@@ -63,7 +79,6 @@ if(!exists("velVectorScale")){
 if(!exists("pauseStep")){
 	pauseStep = 0.001
 }
-# If F, will plot individual orbits instead
 if(!exists("plotRelOrbit")){
 	plotRelOrbit = "T"
 }
@@ -383,7 +398,7 @@ set ytics mirror
 #----------------------------------------------------------------------------------------
 # 1: Full 3D or 2D orthogonal projection
 
-if(projPlane ne "op"){
+if(!exists("projPlane")||(projPlane ne "op")){
 
 	set xrange [ * : * ]
 	set yrange [ * : * ]
