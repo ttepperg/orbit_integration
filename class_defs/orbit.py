@@ -7,6 +7,10 @@ import sys
 sys.path.insert(0,"../.")							# include top directory in module search path
 from utils import funcs
 import config.phys_consts as pc
+# from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme
+from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
+from ode_int.leapfrog import ode_leap
+
 
 class Orbit():
 	"""General Orbit class representing an orbit"""
@@ -395,3 +399,114 @@ class Orbit():
 		print("{:>40}{:15.4E}".format("Rel. potential energy (V):",self.energy_pot()))
 		print("{:>40}{:15.4E}".format("Rel. kinetic energy (T):",self.energy_kin()))
 		print("{:>40}{:15.4E}".format("Rel. total energy (E):",self.energy_tot()))
+
+
+
+	def integrate(self,time_start = None, time_end = None, time_step = None):
+		"""
+		NAME:
+
+			integrate
+
+		PURPOSE:
+
+			Integrate an orbit in time
+
+		INPUT:
+
+
+		OUTPUT:
+          
+
+		HISTORY:
+
+			2019-07-09 - Written - TTG
+
+		"""
+		if time_start is None:
+			raise ValueError("time_start is a required parameter in integrate.")
+		elif time_end is None:
+			raise ValueError("time_end is a required parameter in integrate.")
+		elif time_step is None:
+			raise ValueError("time_step is a required parameter in integrate.")
+		else:
+			# Define acceleration function definitions
+			# (consider moving these into the input parameter file or a function or a class)
+
+			# The following functions correspond each to one of the (numerical) partial derivatives of
+			# either self.b1.potential or self.b2.potential; the latter must be defined in the input parameter file!
+
+			# Central finite difference scheme parameters:
+			# Notes:
+			# - a 2nd order scheme conserves well both energy and angular momentum.
+			# - a 4th order scheme conserves energy well, and angular momentum generally to machine precision.
+			# DO NOT change the values of the following parameters unless absolutely necessary!
+			intStep = 1.e-4
+			accOrder = 4
+
+			# Note: the array f = (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+			# Recall: Force field = - Grad Phi
+			def dvx1dt(t,*f):
+				_x12 = f[0]-f[6]
+				_y12 = f[2]-f[8]
+				_z12 = f[4]-f[10]
+				_rvec = [_x12,_y12,_z12]
+				return  -1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
+
+			def dvy1dt(t,*f):
+				_x12 = f[0]-f[6]
+				_y12 = f[2]-f[8]
+				_z12 = f[4]-f[10]
+				_rvec = [_x12,_y12,_z12]
+				return   -1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
+
+			def dvz1dt(t,*f):
+				_x12 = f[0]-f[6]
+				_y12 = f[2]-f[8]
+				_z12 = f[4]-f[10]
+				_rvec = [_x12,_y12,_z12]
+				return   -1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
+
+			def dvx2dt(t,*f):
+				_x21 = f[6]-f[0]
+				_y21 = f[8]-f[2]
+				_z21 = f[10]-f[4]
+				_rvec = [_x21,_y21,_z21]
+				return  -1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
+
+			def dvy2dt(t,*f):
+				_x21 = f[6]-f[0]
+				_y21 = f[8]-f[2]
+				_z21 = f[10]-f[4]
+				_rvec = [_x21,_y21,_z21]
+				return  -1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
+
+			def dvz2dt(t,*f):
+				_x21 = f[6]-f[0]
+				_y21 = f[8]-f[2]
+				_z21 = f[10]-f[4]
+				_rvec = [_x21,_y21,_z21]
+				return  -1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
+
+
+			# Set up time integrator
+			N = math.ceil((time_end - time_start) / time_step)
+			ics = \
+				[time_start, \
+				self.b1.x, self.b1.vx, self.b1.y, self.b1.vy, self.b1.z, self.b1.vz, \
+				self.b2.x, self.b2.vx, self.b2.y, self.b2.vy, self.b2.z, self.b2.vz]
+			F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
+
+			print("\nTime range [t0,t1] = [{},{}]".format(time_start,time_end))
+			print("Time steps {};  Step size: {:8.2E}".format(N,time_step))
+			print("Maximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
+
+			# Integrate orbit
+			# Note: x1 = EoM[0], vx1 = EoM[1], y1 = EoM[2], vy1 = EoM[3], z1 = EoM[4], vz1 = EoM[5],
+			#       x2 = EoM[6], vx2 = EoM[7], y2 = EoM[8], vy2 = EoM[9], z2 = EoM[10], vz2 = EoM[11]
+			# 		each EoM[i] is 'function' of time, i.e. an array where each item corresponds to a
+			# 		given integration time, i.e. EoM[i][t]
+			time, EoM = ode_leap(dr2dt2 = F, rank = 12, initCond = ics, steps = N, stepSize = time_step)
+
+			return N, time, EoM
+
