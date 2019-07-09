@@ -23,25 +23,15 @@ from ode_int.leapfrog import ode_leap
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
 from utils import funcs
 from utils import io
-from config import units
-import config.phys_consts as pc
 from class_defs import body
 from class_defs import orbit
+from config import units
+
 
 # Collect input argument(s)
 initialConds = io.get_input()
 
-# Informative output
-# (consider moving this into the units.py module)
-print("\nConstants and units:\n")
-print("{:>25}{:12.3E} {:15}".format("Gravitational constant:",pc.Grav,"kpc km^2 / Msun s^2"))
-print("{:>25}{:12.3f} = {:6E}".format("Mass unit:",units.MASS,units.MASS.cgs))
-print("{:>25}{:12.3f} = {:6E}".format("Length unit:",units.LENGTH,units.LENGTH.cgs))
-print("{:>25}{:12.3f} = {:6E}".format("Velocity unit:",units.VELOCITY,units.VELOCITY.cgs))
-print("{:>25}{:12.3f} = {:6E}".format("Time unit:",units.TIME,units.TIME.cgs))
-
-
-# Initial conditions
+# Set initial conditions
 # (consider moving this into body class)
 ic = importlib.import_module(initialConds)
 print("\nGathering input parameters from file {}...".format(initialConds))
@@ -78,6 +68,7 @@ v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
 body2 = body.Body(mass=ic.Mass2,pot=Pot,r_vec=r20_vec,v_vec=v20_vec)
 
 print("Done.")
+
 
 # Initialise an Orbit object
 orbit = orbit.Orbit(body1,body2)
