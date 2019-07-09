@@ -93,9 +93,9 @@ orbit.orbit_info()
 # either body1.potential or body2.potential; the latter must be defined in the input parameter file!
 
 # Central finite difference scheme parameters:
-# 2nd order scheme conserves well both energy and angular momentum.
-# 4th order scheme conserves energy well, and angular momentum generally to
-# machine precision.
+# Notes:
+# - a 2nd order scheme conserves well both energy and angular momentum.
+# - a 4th order scheme conserves energy well, and angular momentum generally to machine precision.
 # DO NOT change the values of the following parameters unless absolutely necessary!
 intStep = 1.e-4
 accOrder = 4
@@ -179,20 +179,20 @@ print("\nWriting output to file {} with timestep frequency {}\n".format(outFile,
 f = open(outFile, 'wt')
 
 f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*22+"\n").\
-	format("# time ", str(units.TIME.unit), \
-		"ang.mom.", str(units.LENGTH.unit*units.VELOCITY.unit), \
-		"ePot", str(units.VELOCITY.unit**2), "eKin", str(units.VELOCITY.unit**2), \
-		"x1", str(units.LENGTH.unit), "vx1", str(units.VELOCITY.unit), \
-		"y1", str(units.LENGTH.unit), "vy1", str(units.VELOCITY.unit), \
-		"z1", str(units.LENGTH.unit), "vz1", str(units.VELOCITY.unit), \
-		"x2", str(units.LENGTH.unit), "vx2", str(units.VELOCITY.unit), \
-		"y2", str(units.LENGTH.unit), "vy2", str(units.VELOCITY.unit), \
-		"z2", str(units.LENGTH.unit), "vz2", str(units.VELOCITY.unit), \
-		"x1_proj", str(units.LENGTH.unit), "vx1_proj", str(units.VELOCITY.unit), \
-		"y1_proj", str(units.LENGTH.unit), "vy1_proj", str(units.VELOCITY.unit), \
-		"x2_proj", str(units.LENGTH.unit), "vx2_proj", str(units.VELOCITY.unit), \
-		"y2_proj", str(units.LENGTH.unit), "vy2_proj", str(units.VELOCITY.unit), \
-		"KeplerOrbitAna_X", str(units.LENGTH.unit), "KeplerOrbitAna_Y", str(units.LENGTH.unit)))
+	format("# time ", units.TIME_UNIT_STR, \
+		"ang.mom.", units.ANG_MOM_UNIT_STR, \
+		"ePot", units.ENERGY_UNIT_STR, "eKin", units.ENERGY_UNIT_STR, \
+		"x1", units.LENGTH_UNIT_STR, "vx1", units.VEL_UNIT_STR, \
+		"y1", units.LENGTH_UNIT_STR, "vy1", units.VEL_UNIT_STR, \
+		"z1", units.LENGTH_UNIT_STR, "vz1", units.VEL_UNIT_STR, \
+		"x2", units.LENGTH_UNIT_STR, "vx2", units.VEL_UNIT_STR, \
+		"y2", units.LENGTH_UNIT_STR, "vy2", units.VEL_UNIT_STR, \
+		"z2", units.LENGTH_UNIT_STR, "vz2", units.VEL_UNIT_STR, \
+		"x1_proj", units.LENGTH_UNIT_STR, "vx1_proj", units.VEL_UNIT_STR, \
+		"y1_proj", units.LENGTH_UNIT_STR, "vy1_proj", units.VEL_UNIT_STR, \
+		"x2_proj", units.LENGTH_UNIT_STR, "vx2_proj", units.VEL_UNIT_STR, \
+		"y2_proj", units.LENGTH_UNIT_STR, "vy2_proj", units.VEL_UNIT_STR, \
+		"KeplerOrbitAna_X", units.LENGTH_UNIT_STR, "KeplerOrbitAna_Y", units.LENGTH_UNIT_STR))
 
 eCons = 0.
 lCons = 0.
