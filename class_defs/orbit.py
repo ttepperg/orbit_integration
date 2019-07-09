@@ -10,6 +10,7 @@ import config.phys_consts as pc
 # from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
 from ode_int.leapfrog import ode_leap
+from config import units
 
 
 class Orbit():
@@ -414,9 +415,16 @@ class Orbit():
 
 		INPUT:
 
+			time_start - initial time
+			time_end - end time
+			time_step - size of time step
 
 		OUTPUT:
           
+          time_steps - Number of time steps
+          time - list of integration time steps (with length = time_steps)
+          EoM - interleaved list if state vectors for each body (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+        		for each time step
 
 		HISTORY:
 
@@ -430,12 +438,15 @@ class Orbit():
 		elif time_step is None:
 			raise ValueError("time_step is a required parameter in integrate.")
 		else:
+
 			# Define acceleration function definitions
-			# (consider moving these into the input parameter file or a function or a class)
 
 			# The following functions correspond each to one of the (numerical) partial derivatives of
-			# either self.b1.potential or self.b2.potential; the latter must be defined in the input parameter file!
-
+			# either self.b1.potential or self.b2.potential
+			# Here, a central finite difference scheme is used to calculate the derivatives.
+			# Other schemes are possible, but a CFD has been tested thoroughly and has been found
+			# to perform well, even for cuspy potentials such as the Kepler potential.
+			#
 			# Central finite difference scheme parameters:
 			# Notes:
 			# - a 2nd order scheme conserves well both energy and angular momentum.
@@ -490,15 +501,17 @@ class Orbit():
 
 
 			# Set up time integrator
-			N = math.ceil((time_end - time_start) / time_step)
-			ics = \
+			_N = math.ceil((time_end - time_start) / time_step)
+
+			_ics = \
 				[time_start, \
 				self.b1.x, self.b1.vx, self.b1.y, self.b1.vy, self.b1.z, self.b1.vz, \
 				self.b2.x, self.b2.vx, self.b2.y, self.b2.vy, self.b2.z, self.b2.vz]
-			F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
+
+			_F = [dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt]
 
 			print("\nTime range [t0,t1] = [{},{}]".format(time_start,time_end))
-			print("Time steps {};  Step size: {:8.2E}".format(N,time_step))
+			print("Time steps {};  Step size: {:8.2E}".format(_N,time_step))
 			print("Maximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
 
 			# Integrate orbit
@@ -506,7 +519,122 @@ class Orbit():
 			#       x2 = EoM[6], vx2 = EoM[7], y2 = EoM[8], vy2 = EoM[9], z2 = EoM[10], vz2 = EoM[11]
 			# 		each EoM[i] is 'function' of time, i.e. an array where each item corresponds to a
 			# 		given integration time, i.e. EoM[i][t]
-			time, EoM = ode_leap(dr2dt2 = F, rank = 12, initCond = ics, steps = N, stepSize = time_step)
+			time, EoM = ode_leap(dr2dt2 = _F, rank = 12, initCond = _ics, steps = _N, stepSize = time_step)
 
-			return N, time, EoM
+			return time, EoM
+
+
+	def write_table(self, time_list = None, state_vector = None, filename = None, output_freq = None):
+		"""
+		NAME:
+
+			write_table
+
+		PURPOSE:
+
+			Dump the evolution of an orbit to an ascii file
+
+		INPUT:
+
+			filename - full path to output file
+			time_list - list of integration time steps (with length = time_steps)
+			state_vector - interleaved list if state vectors for each body
+						   (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2) for each time step
+
+		OUTPUT:
+          
+			None
+
+		HISTORY:
+
+			2019-07-09 - Written - TTG
+
+		"""
+		if time_list is None:
+			raise ValueError("time_list is a required parameter in write_table")
+		elif state_vector is None:
+			raise ValueError("state_vector is a required parameter in write_table")
+		elif filename is None:
+			raise ValueError("filename is a required parameter in write_table")
+		elif output_freq is None:
+			raise ValueError("output_freq is a required parameter in write_table")
+		else:
+
+			# The following are required to calculate the conservation of energy and
+			# angular momentum:
+			ePot0 = self.energy_pot()	# Initial relative energies
+			eKin0 = self.energy_kin()
+			Ltot0 = self.ang_mom()		# Initial relative angular momentum
+
+			f = open(filename, 'wt')
+
+			f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*22+"\n").\
+				format("# time ", units.TIME_UNIT_STR, \
+					"ang.mom.", units.ANG_MOM_UNIT_STR, \
+					"ePot", units.ENERGY_UNIT_STR, "eKin", units.ENERGY_UNIT_STR, \
+					"x1", units.LENGTH_UNIT_STR, "vx1", units.VEL_UNIT_STR, \
+					"y1", units.LENGTH_UNIT_STR, "vy1", units.VEL_UNIT_STR, \
+					"z1", units.LENGTH_UNIT_STR, "vz1", units.VEL_UNIT_STR, \
+					"x2", units.LENGTH_UNIT_STR, "vx2", units.VEL_UNIT_STR, \
+					"y2", units.LENGTH_UNIT_STR, "vy2", units.VEL_UNIT_STR, \
+					"z2", units.LENGTH_UNIT_STR, "vz2", units.VEL_UNIT_STR, \
+					"x1_proj", units.LENGTH_UNIT_STR, "vx1_proj", units.VEL_UNIT_STR, \
+					"y1_proj", units.LENGTH_UNIT_STR, "vy1_proj", units.VEL_UNIT_STR, \
+					"x2_proj", units.LENGTH_UNIT_STR, "vx2_proj", units.VEL_UNIT_STR, \
+					"y2_proj", units.LENGTH_UNIT_STR, "vy2_proj", units.VEL_UNIT_STR, \
+					"KeplerOrbitAna_X", units.LENGTH_UNIT_STR, "KeplerOrbitAna_Y", units.LENGTH_UNIT_STR))
+
+			eCons = 0.
+			lCons = 0.
+			time_steps = len(time_list)
+
+			for t in range(0,time_steps,output_freq):
+
+				x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
+					state_vector[0][t], state_vector[1][t], state_vector[2][t], state_vector[3][t], \
+					state_vector[4][t], state_vector[5][t], state_vector[6][t], state_vector[7][t], \
+					state_vector[8][t], state_vector[9][t], state_vector[10][t], state_vector[11][t]
+				r1 = [x1,y1,z1]
+				v1 = [vx1,vy1,vz1]
+				r2 = [x2,y2,z2]
+				v2 = [vx2,vy2,vz2]
+				r_rel = [x2-x1,y2-y1,z2-z1]
+				v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
+				Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))		# spec.rel.ang.mom. (i.e. divided by Mred)
+				ePot1 = self.b2.potential(*r_rel)
+				ePot2 = self.b1.potential(*r_rel)
+				ePot = self.mred() * (ePot1+ePot2)						# rel. potential energy (?)
+				eKin = self.mred() * funcs.eKin(*v_rel)					# rel. kin. energy
+				r1_rot = self.orbital_plane(r1)							# rotate vectors onto orbital plane
+				v1_rot = self.orbital_plane(v1)
+				r2_rot = self.orbital_plane(r2)
+				v2_rot = self.orbital_plane(v2)
+				x1_rot,y1_rot,_ = r1_rot								# ignore z-components because they are 0.
+				vx1_rot,vy1_rot,_ = v1_rot
+				x2_rot,y2_rot,_ = r2_rot
+				vx2_rot,vy2_rot,_ = v2_rot
+
+				f.write(("{:<15.8f}{:<23.10E}"+"{:<16.8E}"*2+"{:<14.4E}"*22+"\n").\
+					format(time_list[t]*units.TIME.value, Ltot, ePot, eKin, \
+						x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2, \
+						x1_rot, vx1_rot, y1_rot, vy1_rot, x2_rot, vx2_rot, y2_rot, vy2_rot, \
+						*self.kepler_orbit_cartesian(t*2.*math.pi/time_steps)))
+			
+				# Calculate state of conservation laws
+				eCons_t = abs((ePot+eKin)/(ePot0+eKin0)-1.)
+				if eCons_t > eCons:
+					eCons = eCons_t
+				lCons_t = abs((Ltot/Ltot0)-1.)
+				if lCons_t > lCons:
+					lCons = lCons_t
+
+			f.close()
+
+			print("\n{:>45} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
+			print("{:>45} {:8.3E} %.\n".format("Angular momentum conservation to better than",1.e2*lCons))
+
+
+			print("\nOutput written to file {} with timestep frequency {}\n".format(filename, output_freq))
+
+
 
