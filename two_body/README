@@ -202,7 +202,8 @@ are available to impose certain conditions on the orbit, e.g. a circular orbit
 
 The corresponding orbital parameters (e.g. eccentricity, orbital period,
 etc.) are then calculated from the initial orbital state vectors at runtime
-and written to stodut.
+and written to stodut, as well as in the form of a header in the output file
+(see Section OUTPUT).
 
 The parameter file needs to be present in the directory 'init'. There, a few
 example parameter files are provided, for guidance.
@@ -215,7 +216,12 @@ directory './output' named after the input parameter file and appended
 by the substring "_out.dat". If the directory 'output' does not exist,
 it needs to be created by hand.
 
-The table consists of a total of 26 columns. The first 16 contain, in that
+The table contains a header enlisting the system's properties, e.g. the potential
+and masses of the bodies, their initial state, as well as a number of orbital
+parameters and their values. This output is identical to the one dumped by the
+program to stdout, with exception of warning or error messages (if any).
+
+The table data is organized in a total of 26 columns. The first 16 contain, in that
 order, the time, the specific relative angular momentum, the relative potential
 energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the
 bodies. The next 8 columnns contain (x',vx',y',vy') for each of the
@@ -243,27 +249,27 @@ This script can be run:
 
 1) directly from a terminal via:
 
-	shell> gnuplot plot_two_body_orbit.gp
+	shell> gnuplot -e '<arg1=value>; <arg2=value>; ...' plot_two_body_orbit.gp
 
 or
 
 2) within gnuplot via:
 
-	gnuplot> load 'plot_two_body_orbit.gp'
+	gnuplot> call 'plot_two_body_orbit.gp' <arg1=value> <arg2=value> ...
 
-The script provides both a full 3D view of the system, or alternatively,
-a 2D projection along one of the principal axis of a standard Cartesian
-reference frame. In addition, the code always provides a 2D view of
-the system's evolution on the orbital plane. Hereby, a direct comparison
-to the analytic result for given values of the semi-latus rectum, the
-eccentricity, and the true anomaly offset (or apsidal angle) is readily
-implemented.
+The script plots either 1) a full 3D view of the system; 2) a 2D projection
+along one of the principal axis of a standard Cartesian reference frame; or
+3) a 2D view of the system's evolution on the orbital plane. If the latter,
+the analytic result -- self-consistently calculated from the initial orbital
+parameters -- is included as  to allow for a check of the numerical result.
+Beware that in the case of non-closed orbits, the analytic result will merely
+agree with a fragment of the orbit only (osculating orbits).
 
-If run from a terminal, the script accepts a number of input arguments,
-all of which are set to reasonable defaults, the obvious exception being
-the data file. Other important parameters are the time step, the time
-output frequency, and the physical units, all of which are printed to
-stdout by the python code at runtime.
+The script requires some settings. These can be accomplished by directly editing
+the script's header to set e.g. the physical units, or via input arguments.
+Some of the latter are optional and set to reasonable defaults. Other are mandatory,
+such as input data filename, the time step, and the time output frequency, whose
+values are printed to stdout by the python code at runtime.
 
 Please consult the script's header for additional information on these
 input arguments and their default values.
