@@ -48,13 +48,11 @@ if(!exists('dataFile')){
 	quit
 }
 if(!exists("timeStep")){
-# 	timeStep = 0.0001
 	print "\nNeed to specify time step, either in file or via command-line e.g.:"
 	print "gnuplot -e 'timeStep = 1.e-4' plot_two_body_orbit.gp\n"
 	quit
 }
 if(!exists("timeFreq")){
-# 	timeFreq = 10
 	print "\nNeed to specify time step, either in file or via command-line e.g.:"
 	print "gnuplot -e 'timeFreq = 10' plot_two_body_orbit.gp\n"
 	quit
@@ -69,7 +67,7 @@ if(!exists("pauseStep")){
 if(!exists("plotRelOrbit")){
 	plotRelOrbit = "T"
 }
-# if 1, skip animation an plot full orbit
+# if 1, fast-forward animation ans plot full orbit evolution in one step
 if(!exists("ffw")){
 	ffw = 0
 }
