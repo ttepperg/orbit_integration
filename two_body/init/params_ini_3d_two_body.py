@@ -1,30 +1,42 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	22/062019
+Date:	09/07/2019
 
 This set of parameters produces a well-behaved two-body system, with a stable, non-precessing
 orbit characterised by the following parameters:
 
-              Total mass of body 1:  1.0000E+06
-              Total mass of body 2:  1.0000E+01
-                      Reduced mass:  9.9999E+00
-      Initial rel. distance (r210):      1.0000
-         Initial rel. speed (v210):      1.0000
-  Initial tangential vel. (v0_tan):      1.0000
-      Initial radial vel. (v0_rad):      0.0000
-              True anomaly (theta):    180.0000
-  Rel. specific ang. mom. vec. (h): (0.000,0.000,1.000)
-       Rel. specific ang. mom. (h):      1.0000
-              Rel. mean radius (p):      0.2325
-             Rel. eccentricity (e):      0.7675
-           Rel. semimajor axis (a):      0.5658
-           Rel. semiminor axis (b):      0.3627
-              Rel. pericentre (rp):      0.1315
-               Rel. apocentre (ra):      1.0000
-           Rel. orbital period (T):      1.2893
-         Rel. potential energy (T): -4.3009E+01
-           Rel. kinetic energy (T):  5.0000E+00
-             Rel. total energy (T): -3.8009E+01
+                           Reduced mass:     9.9999E+00
+
+          Initial rel. distance (r21_0):         1.0000
+             Initial rel. speed (v21_0):         1.0000
+      Initial tangential vel. (v_tan_0):         1.0000
+          Initial radial vel. (v_rad_0):         0.0000
+   Rel. specific ang. mom. vec. (h_vec): (0.000,0.000,1.000)
+                           [normalised]: (0.000,0.000,1.000)
+                         [along z-axis]: (0.000,0.000,1.000)
+            Rel. specific ang. mom. (h):         1.0000
+
+                       Eccentricity (e):         0.7675
+                  Semi-latus rectum (p):         0.2325
+                     Semimajor axis (a):         0.5658
+                     Semiminor axis (b):         0.3627
+       Orbital inclination (psi_0; deg):         0.0000
+                 Ascending node (n_vec): (0.000,0.000,0.000)
+      Long. of asc. node (Omega_0; deg):         0.0000
+            Eccentricity vector (e_vec): (-0.767,0.000,0.000)
+             Apsidal angle (phi_0; deg):       180.0000
+   Argument of periapsis (omega_0; deg):       180.0000
+                   Rel. pericentre (rp):         0.1315
+                Vel. at pericentre (vp):         7.6019
+                    Rel. apocentre (ra):         1.0000
+                 Vel. at apocentre (va):         1.0000
+                Rel. orbital period (T):         1.2893
+        Approx. orbit circumference (u):         2.9517
+        Approx. pericentric period (Tp):         0.3883
+              Rel. potential energy (V):    -4.3009E+01
+                Rel. kinetic energy (T):     5.0000E+00
+                  Rel. total energy (E):    -3.8009E+01
+
 
            Energy conservation to better than 1.715E-01 %.
  Angular momentum conservation to better than 1.076E-10 %.
