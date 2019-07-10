@@ -2,6 +2,11 @@
 Author:	Thorsten Tepper Garcia
 Date:	03/07/2019
 '''
+
+# 'Infinity' (in units of length, e.g. kpc)
+# Required as an integration limit
+Infinity = 1.e6
+
 # from astropy import constants
 # 
 # Interesting note:
