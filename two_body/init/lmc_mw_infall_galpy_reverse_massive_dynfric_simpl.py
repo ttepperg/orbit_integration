@@ -2,8 +2,8 @@
 Author:	Thorsten Tepper Garcia
 Date:	10/07/2019
 
-This setup is in essence identical to lmc_mw_infall_galpy_reverse_massive_dynfric.py, but
-adopting Chandrasekhar's formula for the dynamical friction and a Maxwellian distribution.
+This setup is in essence identical to lmc_mw_infall_galpy_reverse_massive.py, but
+including dynamical friction adopting a simplified formula.
 
 
 '''
@@ -30,7 +30,7 @@ z1_0 = -3.4977E-08
 vx1_0 = -7.5039E-10												# velocities (km/s):
 vy1_0 = -3.8106E-09
 vz1_0 = 6.4645E-10
-Dynamical_Friction1 = funcs.dyn_friction_maxwell(pot=Potential1,eps=1.)	# dynamical friction function
+Dynamical_Friction1 = funcs.dyn_friction_simpl()				# dynamical friction function
 
 # Large Magellanic Clouds
 Mass2 = 1.0e10													# total mass (Msun)
@@ -42,11 +42,3 @@ vx2_0 = 4.7124E+01												# velocities (km/s):
 vy2_0 = 2.4655E+02
 vz2_0 = -3.4774E+01
 
-
-# test area
-# import math
-# r0 = [30.,0.5,1.]
-# sigma2 = funcs.NFW_VelDisp(rho01,rs1)
-# print(math.sqrt(sigma2(*r0)))
-# 
-# exit()
