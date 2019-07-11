@@ -126,7 +126,7 @@ class Orbit():
 
 
 	def energy_pot(self):
-		'''relative potential energy'''
+		'''total potential energy'''
 		_r = self.pos()
 		return self.mred()*(self.b1.potential(*_r)+self.b2.potential(*_r))
 
@@ -860,6 +860,8 @@ class Orbit():
 			print("\n{:>45} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
 			print("{:>45} {:8.3E} %.\n".format("Angular momentum conservation to better than",1.e2*lCons))
 
+			if eCons_t > 1. or lCons_t > 1:
+				print("\nWARNING: Possible merger scenario! Inspect orbit carefully.\n")
 
 			print("\nOutput written to file {} with timestep frequency {}\n".format(filename, output_freq))
 
