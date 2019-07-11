@@ -1,5 +1,6 @@
 '''
 Author:	Thorsten Tepper Garcia
+Date:	11/07/2019
 
 This set of parameters produces a well-behaved two-body system, with a stable, nearly
 circular, slowly precessing orbit characterised by the following parameters:
@@ -12,13 +13,19 @@ circular, slowly precessing orbit characterised by the following parameters:
           Initial radial vel. (v_rad_0):         0.0000
    Rel. specific ang. mom. vec. (h_vec): (-0.000,1638.247,0.000)
                            [normalised]: (-0.000,1.000,0.000)
+                         [along z-axis]: (0.000,0.000,1638.247)
             Rel. specific ang. mom. (h):      1638.2472
 
-             Rel. semi-latus rectum (p):         9.2000
-       Rel. eccentricity vector (e_vec): (0.000,0.000,0.000)
-                  Rel. eccentricity (e):         0.0000
-                Rel. semimajor axis (a):         9.2000
-                Rel. semiminor axis (b):         9.2000
+                       Eccentricity (e):         0.0000
+                  Semi-latus rectum (p):         9.2000
+                     Semimajor axis (a):         9.2000
+                     Semiminor axis (b):         9.2000
+       Orbital inclination (psi_0; deg):        90.0000
+                 Ascending node (n_vec): (-1638.247,-0.000,0.000)
+      Long. of asc. node (Omega_0; deg):       180.0000
+            Eccentricity vector (e_vec): (0.000,0.000,0.000)
+             Apsidal angle (phi_0; deg):         0.0000
+   Argument of periapsis (omega_0; deg):       180.0000
                    Rel. pericentre (rp):         9.2000
                 Vel. at pericentre (vp):       178.0703
                     Rel. apocentre (ra):         9.2000
@@ -26,18 +33,13 @@ circular, slowly precessing orbit characterised by the following parameters:
                 Rel. orbital period (T):         0.3246
         Approx. orbit circumference (u):        57.8053
         Approx. pericentric period (Tp):         0.3246
-         Approx. apocentric period (Ta):         0.3246
-             Apsidal angle (phi_0; deg):         0.0000
-       Orbital inclination (psi_0; deg):        90.0000
-
-              Rel. potential energy (T):    -4.1075E+05
+              Rel. potential energy (V):    -4.1075E+05
                 Rel. kinetic energy (T):     1.5855E+05
-                  Rel. total energy (T):    -2.5220E+05
+                  Rel. total energy (E):    -2.5220E+05
 
 
            Energy conservation to better than 3.973E-10 %.
  Angular momentum conservation to better than 3.397E-10 %.
-
 
 A series of relevant plots for this system can be produced using:
 
@@ -68,7 +70,7 @@ delta_t = 1.0e-4												# integration time step
 # Body 1
 Mass1 = 1.0e11													# total mass (Msun)
 rs1 = 5.e0														# Plummer scale radius
-Potential1 = funcs.Plummer_Potential(amp=pc.Grav*Mass1,a=rs1)	# potential (km/s)^2
+Potential1 = funcs.Plummer_Potential(mass=Mass1,a=rs1)			# potential (km/s)^2
 x1_0 = -1														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.

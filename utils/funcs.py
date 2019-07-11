@@ -170,27 +170,28 @@ def Kepler_Mass(mass = None):
 # PLUMMER (1911) MODEL
 
 # Plummer potential
-def Plummer_Potential(amp = None, a = None):
-	'''Implements  a wrapper for the Plummer (1911) potential
-	where amp = G*M. Reduces to Kepler potential for a=0.'''
-	if amp is None:
-		raise ValueError("amp is a required argument in Plummer_Potential")
-	elif amp <= 0:
-		raise ValueError("amp must be positive in Plummer_Potential")
+def Plummer_Potential(mass = None, a = None):
+	'''Implements  a wrapper for the Plummer (1911) potential.
+	Reduces to Kepler potential for a=0.'''
+	if mass is None:
+		raise ValueError("mass is a required argument in Plummer_Potential")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Plummer_Potential")
 	elif a is None:
 		raise ValueError("a is a required argument in Plummer_Potential")
 	elif a < 0:
 		raise ValueError("a must be non-negative in Plummer_Potential")
 	else:
 		def Plummer_Pot(*r):
+			_amp = Grav*mass
 			_r2 = norm2(*r)
 			_r = math.sqrt(_r2+a**2)
 			if _r > 0:
-				return -1. * (amp / _r)
+				return -1. * (_amp / _r)
 			else:
 				raise ValueError("Zero or negative radius in Plummer_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
-		Plummer_Pot._amp = amp
+		Plummer_Pot._mass = mass
 		Plummer_Pot._a = a
 		return Plummer_Pot
 
@@ -234,20 +235,21 @@ def Plummer_Mass(mass = None, a = None):
 
 # Plumer velocity dispersion
 # See https://en.wikipedia.org/wiki/Plummer_model
-def Plummer_VelDisp(amp = None, a = None):
+def Plummer_VelDisp(mass = None, a = None):
 	'''Returns the 1D Plummer velocity dispersion'''
-	if amp is None:
-		raise ValueError("amp is a required argument in Plummer_VelDisp")
-	elif amp <= 0:
-		raise ValueError("amp must be positive in Plummer_VelDisp")
+	if mass is None:
+		raise ValueError("mass is a required argument in Plummer_VelDisp")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Plummer_VelDisp")
 	elif a is None:
 		raise ValueError("a is a required argument in Plummer_VelDisp")
 	elif a < 0:
 		raise ValueError("a must be non-negative in Plummer_VelDisp")
 	else:
 		def Plummer_veldisp(*r):
+			_amp = Grav*mass
 			_r = norm(*r)
-			return amp / (6. * math.sqrt(_r**2+a**2))
+			return _amp / (6. * math.sqrt(_r**2+a**2))
 		return Plummer_veldisp
 
 
@@ -531,9 +533,9 @@ def dyn_friction_maxwell(pot = None, eps = None):
 		# for optimization)
 		pot_name = pot.__name__
 		if pot_name == "Plummer_Pot":
-			_amp = pot.__getattribute__('_amp')
+			_mass = pot.__getattribute__('_mass')
 			_a = pot.__getattribute__('_a')
-			vel_disp = Plummer_VelDisp(_amp, _a)
+			vel_disp = Plummer_VelDisp(_mass, _a)
 		elif pot_name == "NFW_Pot":
 			_rho0 = pot.__getattribute__('_rho0')
 			_rs = pot.__getattribute__('_rs')
