@@ -5,7 +5,7 @@ Date:	03/07/2019
 
 # 'Infinity' (in units of length, e.g. kpc)
 # Required as an integration limit
-Infinity = 1.e6
+Infinity = 1.e3
 
 # from astropy import constants
 # 
