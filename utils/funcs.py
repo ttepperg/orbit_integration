@@ -27,13 +27,13 @@ def norm(*r):
 def cross_prod(r = None, v = None):
 	'''Cross product between vectors r and v, i.e. r x v = - v x r'''
 	if r is None:
-		raise ValueError("r is a required parameter in cross_prod.")
+		raise ValueError("r is a required parameter in cross_prod")
 	elif v is None:
-		raise ValueError("v is a required parameter in cross_prod.")
+		raise ValueError("v is a required parameter in cross_prod")
 	elif len(r) != len(v):
-		raise ValueError("r and v must have the same length in cross_prod.")
+		raise ValueError("r and v must have the same length in cross_prod")
 	elif len(r) < 2:
-		raise ValueError("cannot calculate the cross product in less than 2D in cross_prod.")
+		raise ValueError("cannot calculate the cross product in less than 2D in cross_prod")
 	else:
 		lx = 0.
 		ly = 0.
@@ -47,13 +47,13 @@ def cross_prod(r = None, v = None):
 def dot_prod(r = None, v = None):
 	'''Dot product between vectors r and v, i.e. r . v = v . r'''
 	if r is None:
-		raise ValueError("r is a required parameter in dot_prod.")
+		raise ValueError("r is a required parameter in dot_prod")
 	elif v is None:
-		raise ValueError("v is a required parameter in dot_prod.")
+		raise ValueError("v is a required parameter in dot_prod")
 	elif len(r) != len(v):
-		raise ValueError("r and v must have the same length in dot_prod.")
+		raise ValueError("r and v must have the same length in dot_prod")
 	elif len(r) < 1:
-		raise ValueError("cannot calculate the dot product in less than 1D in dot_prod.")
+		raise ValueError("cannot calculate the dot product in less than 1D in dot_prod")
 	else:
 		dp = 0.
 		for i in range(len(r)):
@@ -72,13 +72,13 @@ def rodrigues_rot(vec = None, axis = None, incl = None):
 	
 	'''
 	if vec is None:
-		raise ValueError("vec is a required parameter in rodrigues_rot.")
+		raise ValueError("vec is a required parameter in rodrigues_rot")
 	elif axis is None:
-		raise ValueError("axis is a required parameter in rodrigues_rot.")
+		raise ValueError("axis is a required parameter in rodrigues_rot")
 	elif incl is None:
-		raise ValueError("incl is a required parameter in rodrigues_rot.")
+		raise ValueError("incl is a required parameter in rodrigues_rot")
 	elif len(vec) != len(axis):
-		raise ValueError("vec and axis must have the same length in rodrigues_rot.")
+		raise ValueError("vec and axis must have the same length in rodrigues_rot")
 	else:
 		# ensure axis vector is normalised
 		k_norm = norm(*axis)
@@ -102,9 +102,9 @@ def grad(*r, func = None):
 	Grad func is calculated using a central finite difference
 	scheme of order 4 and constant step of size 1.e-4.'''
 	if func is None:
-		raise ValueError("func is a required parameter in grad.")
+		raise ValueError("func is a required parameter in grad")
 	elif len(r) < 1:
-		raise ValueError("r must have dimensionality of at least 1 in grad, but is {}.".format(len(r)))
+		raise ValueError("r must have dimensionality of at least 1 in grad, but is {}".format(len(r)))
 	else:
 		grad_func = []
 		for i in range(len(r)):
@@ -119,14 +119,14 @@ def grad_r(*r, func = None):
 	Grad func is calculated using a central finite difference
 	scheme of order 4 and constant step of size 1.e-4.'''
 	if func is None:
-		raise ValueError("func is a required parameter in grad.")
+		raise ValueError("func is a required parameter in grad")
 	elif len(r) < 1:
-		raise ValueError("r must have dimensionality of at least 1 in grad, but is {}.".format(len(r)))
+		raise ValueError("r must have dimensionality of at least 1 in grad, but is {}".format(len(r)))
 	else:
 		grad_func = grad(*r,func=func)
 		_r = norm(*r)
 		if _r <= 0:
-			raise ValueError("r must be have a positive magnitude in grad_r.")
+			raise ValueError("r must be have a positive magnitude in grad_r")
 		else:
 			u = [x/_r for x in r]
 			return dot_prod(u,grad_func)
@@ -134,12 +134,15 @@ def grad_r(*r, func = None):
 
 # POTENTIALS AND CORRESPONDING MASS PROFILES
 
+# KEPLER MODEL
+
+# Kepler potential
 def Kepler_Potential(amp = None):
 	'''Implements a wrapper for the Kepler potential where amp = G*M.'''
 	if amp is None:
-		raise ValueError("amp is a required argument in Kepler_Potential.")
+		raise ValueError("amp is a required argument in Kepler_Potential")
 	elif amp <= 0:
-		raise ValueError("amp must be positive in Kepler_Potential.")
+		raise ValueError("amp must be positive in Kepler_Potential")
 	else:
 		def Kepler_Pot(*r):
 			_amp = amp
@@ -147,15 +150,16 @@ def Kepler_Potential(amp = None):
 			if _r > 0:
 				return -1. * (_amp / _r)
 			else:
-				raise ValueError("Zero or negative radius in Kepler_Potential.")
+				raise ValueError("Zero or negative radius in Kepler_Potential")
 		return Kepler_Pot
+
 
 # Kepler mass
 # Note that this function is trivial, but is included here
 # and used in the code for completeness and self-consistency.
 def Kepler_Mass(mass = None):
 	if mass is None:
-		raise ValueError("mass is a required parameter in Kepler_Mass.")
+		raise ValueError("mass is a required parameter in Kepler_Mass")
 	else:
 		def Kepler_M(*r):
 			return mass
@@ -170,13 +174,13 @@ def Plummer_Potential(amp = None, a = None):
 	'''Implements  a wrapper for the Plummer (1911) potential
 	where amp = G*M. Reduces to Kepler potential for a=0.'''
 	if amp is None:
-		raise ValueError("amp is a required argument in Plummer_Potential.")
+		raise ValueError("amp is a required argument in Plummer_Potential")
 	elif amp <= 0:
-		raise ValueError("amp must be positive in Plummer_Potential.")
+		raise ValueError("amp must be positive in Plummer_Potential")
 	elif a is None:
-		raise ValueError("a is a required argument in Plummer_Potential.")
+		raise ValueError("a is a required argument in Plummer_Potential")
 	elif a < 0:
-		raise ValueError("a must be non-negative in Plummer_Potential.")
+		raise ValueError("a must be non-negative in Plummer_Potential")
 	else:
 		def Plummer_Pot(*r):
 			_r2 = norm2(*r)
@@ -184,10 +188,28 @@ def Plummer_Potential(amp = None, a = None):
 			if _r > 0:
 				return -1. * (amp / _r)
 			else:
-				raise ValueError("Zero or negative radius in Plummer_Potential.")
+				raise ValueError("Zero or negative radius in Plummer_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
+		Plummer_Pot._amp = amp
 		Plummer_Pot._a = a
 		return Plummer_Pot
+
+
+# Plummer density profile
+def Plummer_Density(mass = None, a = None):
+	'''Returns the Plummer density at r'''
+	if mass is None:
+		raise ValueError("mass is a required parameter in Plummer_Density")
+	elif a is None:
+		raise ValueError("a is a required parameter in Plummer_Density")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Plummer_Density")
+	else:
+		def Plummer_dens(*r):
+			_amp = 3.*mass*a**2 / (4.*math.pi)
+			_r = norm(*r)
+			return _amp / (a**2 + _r**2)**(2.5)
+		return Plummer_dens
 
 
 # Plummer cumulative mass
@@ -200,14 +222,33 @@ def Plummer_Mass(mass = None, a = None):
 		raise ValueError("a must be non-negative in Plummer_Mass")
 	else:
 		def Plummer_M(*r):
-			amp = mass
+			_amp = mass
 			_r2 = norm2(*r)
 			_r = norm(*r)
 			if _r > 0:
-				return amp * _r**3 / (_r2+a**2)**1.5
+				return _amp * _r**3 / (_r2+a**2)**1.5
 			else:
-				raise ValueError("Zero or negative radius in Plummer_Mass.")
+				raise ValueError("Zero or negative radius in Plummer_Mass")
 		return Plummer_M
+
+
+# Plumer velocity dispersion
+# See https://en.wikipedia.org/wiki/Plummer_model
+def Plummer_VelDisp(amp = None, a = None):
+	'''Returns the 1D Plummer velocity dispersion'''
+	if amp is None:
+		raise ValueError("amp is a required argument in Plummer_VelDisp")
+	elif amp <= 0:
+		raise ValueError("amp must be positive in Plummer_VelDisp")
+	elif a is None:
+		raise ValueError("a is a required argument in Plummer_VelDisp")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Plummer_VelDisp")
+	else:
+		def Plummer_veldisp(*r):
+			_r = norm(*r)
+			return amp / (6. * math.sqrt(_r**2+a**2))
+		return Plummer_veldisp
 
 
 
@@ -217,22 +258,22 @@ def Plummer_Mass(mass = None, a = None):
 def NFW_Potential(rho0 = None, rs = None):
 	'''Implements  a wrapper for the NFW (1997) potential'''
 	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Potential.")
+		raise ValueError("rho0 is a required argument in NFW_Potential")
 	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Potential.")
+		raise ValueError("rho0 must be positive in NFW_Potential")
 	elif rs is None:
-		raise ValueError("rs is a required argument in NFW_Potential.")
+		raise ValueError("rs is a required argument in NFW_Potential")
 	elif rs <= 0:
-		raise ValueError("rs must be positive in NFW_Potential.")
+		raise ValueError("rs must be positive in NFW_Potential")
 	else:
 
 		def NFW_Pot(*r):
-			amp = -4. * math.pi * Grav * rho0 * rs**3
+			_amp = -4. * math.pi * Grav * rho0 * rs**3
 			_r = norm(*r)
 			if _r > 0:
-				return math.log(1.+_r/rs)*amp/_r
+				return math.log(1.+_r/rs)*_amp/_r
 			else:
-				raise ValueError("Zero or negative radius in NFW_Potential.")
+				raise ValueError("Zero or negative radius in NFW_Potential")
 
 		# private attributes (= parent func. params) to allow for access from outside
 		NFW_Pot._rs = rs
@@ -244,13 +285,13 @@ def NFW_Potential(rho0 = None, rs = None):
 def NFW_Density(rho0 = None, rs = None):
 	'''Returns the NFW density at r'''
 	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Density.")
+		raise ValueError("rho0 is a required argument in NFW_Density")
 	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Density.")
+		raise ValueError("rho0 must be positive in NFW_Density")
 	elif rs is None:
-		raise ValueError("rs is a required argument in NFW_Density.")
+		raise ValueError("rs is a required argument in NFW_Density")
 	elif rs <= 0:
-		raise ValueError("rs must be positive in NFW_Density.")
+		raise ValueError("rs must be positive in NFW_Density")
 	else:
 		def NFW_dens(*r):
 			_r = norm(*r)
@@ -263,55 +304,56 @@ def NFW_Density(rho0 = None, rs = None):
 def NFW_Mass(rho0 = None, rs = None):
 	'''Returns the cumulative NFW mass at r'''
 	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Mass.")
+		raise ValueError("rho0 is a required argument in NFW_Mass")
 	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Mass.")
+		raise ValueError("rho0 must be positive in NFW_Mass")
 	elif rs is None:
-		raise ValueError("rs is a required argument in NFW_Mass.")
+		raise ValueError("rs is a required argument in NFW_Mass")
 	elif rs <= 0:
-		raise ValueError("rs must be positive in NFW_Mass.")
+		raise ValueError("rs must be positive in NFW_Mass")
 	else:
 		def NFW_M(*r):
-			amp = 4. * math.pi * rho0 * rs**3
+			_amp = 4. * math.pi * rho0 * rs**3
 			_r = norm(*r)
-			return amp * (math.log(1.+_r/rs) - _r/(_r+rs))
+			return _amp * (math.log(1.+_r/rs) - _r/(_r+rs))
 		return NFW_M
+
 
 # NFW circular velocity
 def NFW_Vcirc(rho0 = None, rs = None):
 	'''Returns the spherical NFW circular velocity at r'''
 	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Vcirc.")
+		raise ValueError("rho0 is a required argument in NFW_Vcirc")
 	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Vcirc.")
+		raise ValueError("rho0 must be positive in NFW_Vcirc")
 	elif rs is None:
-		raise ValueError("rs is a required argument in NFW_Vcirc.")
+		raise ValueError("rs is a required argument in NFW_Vcirc")
 	elif rs <= 0:
-		raise ValueError("rs must be positive in NFW_Vcirc.")
+		raise ValueError("rs must be positive in NFW_Vcirc")
 	else:
 		def NFW_Vc(*r):
 			_r = norm(*r)
 			if _r > 0:
 				return math.sqrt((1./_r)*Grav*NFW_Mass(rho0,rs)(*r))
 			else:
-				raise ValueError("Zero or negative radius in NFW_Vc.")
-
+				raise ValueError("Zero or negative radius in NFW_Vc")
 		return NFW_Vc
+
 
 # NFW maximum circular velocity
 def NFW_Vmax(rho0 = None, rs = None):
 	'''Returns the (approximate) maximum spherical NFW circular
 	velocity roughly reached at 2.16*rs.'''
 	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Vmax.")
+		raise ValueError("rho0 is a required argument in NFW_Vmax")
 	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Vmax.")
+		raise ValueError("rho0 must be positive in NFW_Vmax")
 	elif rs is None:
-		raise ValueError("rs is a required argument in NFW_Vmax.")
+		raise ValueError("rs is a required argument in NFW_Vmax")
 	elif rs <= 0:
-		raise ValueError("rs must be positive in NFW_Vmax.")
+		raise ValueError("rs must be positive in NFW_Vmax")
 	else:
-		return NFW_Vcirc(rho0,rs)(2.16*rs)
+		return NFW_Vcirc(rho0,rs)(2.16258*rs)
 
 
 def NFW_VelDisp(rho0 = None, rs = None):
@@ -320,21 +362,21 @@ def NFW_VelDisp(rho0 = None, rs = None):
 	their equation 6).
 	'''
 	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_VelDisp.")
+		raise ValueError("rho0 is a required argument in NFW_VelDisp")
 	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_VelDisp.")
+		raise ValueError("rho0 must be positive in NFW_VelDisp")
 	elif rs is None:
-		raise ValueError("rs is a required argument in NFW_VelDisp.")
+		raise ValueError("rs is a required argument in NFW_VelDisp")
 	elif rs <= 0:
-		raise ValueError("rs must be positive in NFW_VelDisp.")
+		raise ValueError("rs must be positive in NFW_VelDisp")
 	else:
 		def NFW_veldisp(*r):
 			_r = norm(*r)
-			x = _r / rs
-			vmax = NFW_Vmax(rho0,rs)
-			return vmax * (1.4393*x**0.354/(1.+1.1756*x**0.725))
-
+			_x = _r / rs
+			_vmax = NFW_Vmax(rho0,rs)
+			return (_vmax * (1.4393*_x**0.354/(1.+1.1756*_x**0.725)))**2
 		return NFW_veldisp
+
 
 
 # HERNQUIST (1990) MODEL
@@ -355,14 +397,36 @@ def Hernquist_Potential(amp = None, a = None):
 			if _r > 0:
 				return -1. * (amp / (_r+a))
 			else:
-				raise ValueError("Zero or negative radius in Hernquist_Potential.")
+				raise ValueError("Zero or negative radius in Hernquist_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
+		Hernquist_Pot._amp = amp
 		Hernquist_Pot._a = a
 		return Hernquist_Pot
-	
+
+
+# Hernquist density profile
+def Hernquist_Density(mass = None, a = None):
+	'''Returns the Hernquist density at r.'''
+	if mass is None:
+		raise ValueError("mass is a required parameter in Hernquist_Mass")
+	elif a is None:
+		raise ValueError("a is a required parameter in Hernquist_Mass")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Hernquist_Mass")
+	else:
+		def Hernquist_dens(*r):
+			_r = norm(*r)
+			_amp = mass * a / (2.*math.pi)
+			if _r > 0:
+				return _amp / (_r * (_r + a)**3)
+			else:
+				raise ValueError("Zero or negative radius in Hernquist_Density")
+		return Hernquist_dens
+
 
 # Hernquist cumulative mass
 def Hernquist_Mass(mass = None, a = None):
+	'''Returns the cumulative Hernquist mass at r.'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Hernquist_Mass")
 	elif a is None:
@@ -376,9 +440,40 @@ def Hernquist_Mass(mass = None, a = None):
 			if _r > 0:
 				return mass * _r2 / (_r+a)**2
 			else:
-				raise ValueError("Zero or negative radius in Hernquist_Mass.")
+				raise ValueError("Zero or negative radius in Hernquist_Mass")
 		return Hernquist_M
 
+
+# Hernquist velocity dispersion
+def Hernquist_VelDisp(amp = None, a = None):
+	'''Returns the 1D Hernquist velocity dispersion,
+	as given by Hernqquist (1990, his equation 10)
+	See http://adsabs.harvard.edu/abs/1990ApJ...356..359H
+	'''
+	if amp is None:
+		raise ValueError("amp is a required parameter in Hernquist_VelDisp")
+	elif a is None:
+		raise ValueError("a is a required parameter in Hernquist_VelDisp")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Hernquist_VelDisp")
+	else:
+		def Hernquist_veldisp(*r):
+			_fact = amp/(12.*a)
+			_r = norm(*r)
+			if _r > 0:
+				_rpa = _r + a
+				_roa = _r / a
+				_term1 = 12.*_r*_rpa**3*math.log(_rpa/_r)/a**4
+				_term2 = _r/_rpa
+				_term3 = 25. + _roa*(52 + _roa*(42. + _roa*12.))
+				if _term1 - _term2*_term3 >= 0:
+					return _fact*(_term1 - _term2*_term3)
+				else:
+					raise ValueError("Negative velocity dispersion in Hernquist_VelDisp")
+			else:
+				raise ValueError("Zero or negative radius in Hernquist_Mass")
+		return Hernquist_veldisp
+			
 
 
 # FIELDS AND FORCES
@@ -396,15 +491,15 @@ def dyn_friction_simpl():
 	'''
 	def dynfric_simpl(r = None, v = None, mass = None, rho = None):
 		if r is None:
-			raise ValueError("r is a required parameter in dyn_friction_simpl.")
+			raise ValueError("r is a required parameter in dyn_friction_simpl")
 		elif v is None:
-			raise ValueError("v is a required parameter in dyn_friction_simpl.")
+			raise ValueError("v is a required parameter in dyn_friction_simpl")
 		elif mass is None:
-			raise ValueError("mass is a required parameter in dyn_friction_simpl.")
+			raise ValueError("mass is a required parameter in dyn_friction_simpl")
 		elif rho is None:
-			raise ValueError("rho is a required parameter in dyn_friction_simpl.")
+			raise ValueError("rho is a required parameter in dyn_friction_simpl")
 		elif len(r) != len(v):
-			raise ValueError("r and v must have the same dimensionality in dyn_friction_simpl.")
+			raise ValueError("r and v must have the same dimensionality in dyn_friction_simpl")
 		else:
 			const = -4. * math.pi # arbitrary
 			amp = const * Grav**2 * mass
@@ -429,47 +524,54 @@ def dyn_friction_maxwell(pot = None, eps = None):
 	- it is not yet clear which velocity dispersion is required (1D or 3D)
 	'''
 	if eps is None:
-		raise ValueError("eps is a required parameter in dyn_friction_maxwell.")
+		raise ValueError("eps is a required parameter in dyn_friction_maxwell")
 	else:
 		# set velocity dispersion function appropriate for input potential
+		# (consider moving the following block out of the function declaration
+		# for optimization)
 		pot_name = pot.__name__
-		print(pot)
-		print(pot_name)
-		if pot_name == "NFW_Pot":
+		if pot_name == "Plummer_Pot":
+			_amp = pot.__getattribute__('_amp')
+			_a = pot.__getattribute__('_a')
+			vel_disp = Plummer_VelDisp(_amp, _a)
+		elif pot_name == "NFW_Pot":
 			_rho0 = pot.__getattribute__('_rho0')
 			_rs = pot.__getattribute__('_rs')
 			vel_disp = NFW_VelDisp(_rho0,_rs)
+		elif pot_name == "Hernquist_Pot":
+			_amp = pot.__getattribute__('_amp')
+			_a = pot.__getattribute__('_a')
+			vel_disp = NFW_VelDisp(_amp,_a)
 		else:
 			raise ValueError("Velocity dispersion not available for potential {}".format(pot_name))
 
 		def dynfric_maxwell(r = None, v = None, mass = None, rho = None):
 			if r is None:
-				raise ValueError("r is a required parameter in dyn_friction_maxwell.")
+				raise ValueError("r is a required parameter in dyn_friction_maxwell")
 			elif v is None:
-				raise ValueError("v is a required parameter in dyn_friction_maxwell.")
+				raise ValueError("v is a required parameter in dyn_friction_maxwell")
 			elif mass is None:
-				raise ValueError("mass is a required parameter in dyn_friction_maxwell.")
+				raise ValueError("mass is a required parameter in dyn_friction_maxwell")
 			elif rho is None:
-				raise ValueError("rho is a required parameter in dyn_friction_maxwell.")
+				raise ValueError("rho is a required parameter in dyn_friction_maxwell")
 			elif len(r) != len(v):
-				raise ValueError("r and v must have the same dimensionality in dyn_friction_maxwell.")
+				raise ValueError("r and v must have the same dimensionality in dyn_friction_maxwell")
 			else:
 				const = -4. * math.pi
 				_log_lambda = couloumb_log(*r,epsilon = eps)
 				_v = norm(*v)
 				if _v > 0:
 					amp = const * Grav**2 * mass * _log_lambda * rho(*r) / _v**3
-					sigma = vel_disp(*r)
-# 					sigma = vel_disp_1d_jeans(*r,rho=rho,pot=pot)	# too slow
+					sigma = math.sqrt(vel_disp(*r))
 					if sigma > 0:
 						_X = _v / (math.sqrt(2.) * sigma)
 						erfX = math.erf(_X)
 						XexpX2 = 2.*_X*math.exp(-1.*_X**2)/math.sqrt(math.pi)
 						return amp * (erfX - XexpX2)
 					else:
-						raise ValueError("Vanishing velocity dispersion in dyn_friction_maxwell.")
+						raise ValueError("Vanishing velocity dispersion in dyn_friction_maxwell")
 				else:
-					raise ValueError("v must be positive in dyn_friction_maxwell.")
+					raise ValueError("v must be positive in dyn_friction_maxwell")
 		return dynfric_maxwell
 
 
@@ -490,16 +592,16 @@ def vel_disp_1d_jeans(*r, rho = None, pot = None):
 	4 with constant step size
 	'''
 	if rho is None:
-		raise ValueError("rho is a required parameter in vel_disp_1d_jeans.")
+		raise ValueError("rho is a required parameter in vel_disp_1d_jeans")
 	elif pot is None:
-		raise ValueError("pot is a required parameter in vel_disp_1d_jeans.")
+		raise ValueError("pot is a required parameter in vel_disp_1d_jeans")
 	elif len(r) < 1:
 		raise \
 		ValueError("r must be at least of dimension 1 in vel_disp_1d_jeans, but is {}".format(len(r)))
 	else:
 		_r = norm(*r)
 		if _r >= Infinity:
-			raise ValueError("Upper integration limit ('infinity') exceeded in vel_disp_1d_jeans.")
+			raise ValueError("Upper integration limit ('infinity') exceeded in vel_disp_1d_jeans")
 		else:
 			def integrand(x,*y):
 				dpotdr = grad_r(x,func=pot)
@@ -509,7 +611,7 @@ def vel_disp_1d_jeans(*r, rho = None, pot = None):
 			_h = (Infinity-_r) / _steps
 			ics = [_r, 0.]
 			_, int = ode_rk4(dydx=[integrand], order=1, initVal=ics, steps=_steps, stepSize=_h)
-			return math.sqrt(int[0][_steps]/rho(*r))
+			return int[0][_steps]/rho(*r)
 
 
 
@@ -519,14 +621,14 @@ def couloumb_log(*r, epsilon = None):
 	equation 5), appropriate for N-body systems.
 	'''
 	if epsilon is None:
-		raise ValueError("epsilon is a required parameter in couloumb_log.")
+		raise ValueError("epsilon is a required parameter in couloumb_log")
 	elif epsilon <= 0:
-		raise ValueError("epsilon must be positive in couloumb_log.")
+		raise ValueError("epsilon must be positive in couloumb_log")
 	else:
 		_r = norm(*r)
 		denom = 1.4 * epsilon
 		if _r <= 0:
-			raise ValueError("r must be positive in couloumb_log.")
+			raise ValueError("r must be positive in couloumb_log")
 		elif _r < denom:	# avoid dynamical friction 'acceleration'
 			return 0.
 		else:
@@ -539,9 +641,9 @@ def grav_field(*r, pot = None):
 	potential Phi. Grad Phi is calculated using a central finite difference
 	scheme of order 4 and constant step of size 1.e-4.'''
 	if pot is None:
-		raise ValueError("pot is a required parameter in grav_field.")
+		raise ValueError("pot is a required parameter in grav_field")
 	elif len(r) < 1:
-		raise ValueError("expected at least one element in r, got {} in grav_field.".format(len(r)))
+		raise ValueError("expected at least one element in r, got {} in grav_field".format(len(r)))
 	else:
 		return [ 1.*f for f in grad(*r,func=pot)]
 
@@ -549,15 +651,15 @@ def grav_field(*r, pot = None):
 def v_circ(*r, amp = None):
 	'''Returns the circular velocity at r for a Kepler potential'''
 	if amp is None:
-		raise ValueError("amp is a required parameter in v_circ.")
+		raise ValueError("amp is a required parameter in v_circ")
 	elif len(r) < 1:
-		raise ValueError("expected at least one element in r, got {} in v_circ.".format(len(r)))
+		raise ValueError("expected at least one element in r, got {} in v_circ".format(len(r)))
 	else:
 		_r = norm(*r)
 		if _r > 0:
 			return math.sqrt(amp / _r)
 		else:
-			raise ValueError("Zero or negative r in v_circ.")
+			raise ValueError("Zero or negative r in v_circ")
 
 
 def v_circ_gen(*r, pot = None):
@@ -566,9 +668,9 @@ def v_circ_gen(*r, pot = None):
 	Grad Phi is calculated using a central finite difference
 	scheme of order 4 and constant step of size 1.e-4.'''
 	if pot is None:
-		raise ValueError("pot is a required parameter in v_circ_gen.")
+		raise ValueError("pot is a required parameter in v_circ_gen")
 	elif len(r) < 1:
-		raise ValueError("expected at least one element in r, got {} in v_circ_gen.".format(len(r)))
+		raise ValueError("expected at least one element in r, got {} in v_circ_gen".format(len(r)))
 	else:
 		r_dot_grad_pot = 0.
 		for i in range(len(r)):
@@ -582,9 +684,9 @@ def v_circ_gen(*r, pot = None):
 def ePot(*r,pot = None):
 	'''Specific potential energy'''
 	if pot is None:
-		raise ValueError("pot is a required parameter in ePot.")
+		raise ValueError("pot is a required parameter in ePot")
 	elif len(r) < 1:
-		raise ValueError("expected at least one element in r, got {} in ePot.".format(len(r)))
+		raise ValueError("expected at least one element in r, got {} in ePot".format(len(r)))
 	else:
 		return pot(*r)
 
@@ -592,7 +694,7 @@ def ePot(*r,pot = None):
 def eKin(*v):
 	'''Specific kinetic energy'''
 	if len(v) < 1:
-		raise ValueError("expected at least one element in v, got {} in eKin.".format(len(v)))
+		raise ValueError("expected at least one element in v, got {} in eKin".format(len(v)))
 	else:
 		return 0.5 * norm2(*v)
 
@@ -606,7 +708,7 @@ def vis_viva(*r, amp = None, a = None):
 	if 2*a > _r:
 		return math.sqrt(amp*(2./_r - 1./a))
 	else:
-		raise ValueError("Undefined velocity in vis-viva; set a > r/2.")
+		raise ValueError("Undefined velocity in vis-viva; set a > r/2")
 
 
 # Semimajor axis from vis-viva
@@ -614,11 +716,11 @@ def semimajor_from_vis(r = None,v = None, amp = None):
 	'''Returns from vis-viva equation; only valid for elliptic orbits.
 	Superseded by function semimajor().'''
 	if r is None:
-		raise ValueError("r is a required parameter in semimajor_from_vis.")
+		raise ValueError("r is a required parameter in semimajor_from_vis")
 	elif v is None:
-		raise ValueError("v is a required parameter in semimajor_from_vis.")
+		raise ValueError("v is a required parameter in semimajor_from_vis")
 	elif amp is None:
-		raise ValueError("amp is a required parameter in semimajor_from_vis.")
+		raise ValueError("amp is a required parameter in semimajor_from_vis")
 	else:
 		v2 = v**2
 		k1 = 2./r
@@ -626,5 +728,5 @@ def semimajor_from_vis(r = None,v = None, amp = None):
 		if k1 != k2:
 			return 1./(k1 - k2)
 		else:
-			print("seminajor axis undefined in semimajor_from_vis.")
+			print("seminajor axis undefined in semimajor_from_vis")
 			return float('NaN')
