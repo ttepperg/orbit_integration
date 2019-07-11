@@ -341,7 +341,9 @@ assumptions:
 
 	Notes:
 		- Dynamical friction is a *dissipative* force! Energy and angular momentum are
-		not longer conserved when DF is switched on
+		not longer conserved when DF is switched on. Beware that energy or angular
+		momentum changes of over 100% are non-physical and indicate a merger scenario.
+		Make sure to inspect the orbit carefully.
 
 		- Point-like masses cannot exert dynamical friction, by definition
 
