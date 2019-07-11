@@ -322,35 +322,34 @@ symmetric potentials.
 4) Dynamical friction (deceleration). It is calculated adopting a number of simplifying
 assumptions:
 
-	1 - The object exerting dynamical friction is approximated by a matter density
-	field (host) composed of particles with mass m
+	1 - The object (host) exerting dynamical friction is approximated by a matter density
+	field composed of particles with mass m
 
 	2 - The particle's velocity distribution is Maxwellian
 
-	3 - The mass of the object experiencing dynamical friction is M >> m
+	3 - The mass of the object (satellite) experiencing dynamical friction is M >> m
 
 	4 - The Couloumb logarithm is calculated using the parametrization by
 	Hashimoto et al. (2003, https://iopscience.iop.org/article/10.1086/344260/pdf,
 	their equation 5)
 
-	5 - The velocity dispersion is calculated using (approximate) analytic expresions
-	specific for each case (host potential) rather than from the spherically
-	symmetric Jeans (1915) equation, whose integration is expensive. So far, only
-	an NFW potential is supported.
+	5 - The velocity dispersion within the host is calculated using (approximate)
+	analytic expressions specific for each case (host potential) rather than from the
+	spherically symmetric Jeans (1915) equation, whose integration is expensive.
 
 
 	Notes:
 		- Dynamical friction is a *dissipative* force! Energy and angular momentum are
 		not longer conserved when DF is switched on. Beware that energy or angular
-		momentum changes of over 100% are non-physical and indicate a merger scenario.
+		momentum changes over 100% may be non-physical and indicate a merger scenario.
 		Make sure to inspect the orbit carefully.
 
 		- Point-like masses cannot exert dynamical friction, by definition
 
-		- Not two bodies can exert dynamical friction on one another; the less extended
-		always experiences DF from the more extended one
+		- Not two bodies can exert dynamical friction on one another at the same time;
+		the less extended is assumed to always experiencing DF from the more extended one
 
-		- It might be worth exploring the effect or relaxing assumption 2 and use
+		- It might be worth exploring the effect or relaxing assumption 2 above and use
 		instead the true velocity distribution for a given density field (i.e. profile).
 			- Hashimoto et al. (2003) approximate the density field by a King profile;
 			its velocity distribution is a truncated Maxwellian, thus very close to the
