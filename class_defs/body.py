@@ -9,7 +9,7 @@ import config.phys_consts as pc
 
 class Body():
 	"""General body class representing a body"""
-	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None):
+	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None, df = None):
 		"""
 		NAME:
 
@@ -28,6 +28,8 @@ class Body():
 			r_vec - initial position vector of body (list)
 
 			v_vec - initial velocity vector of body (list)
+			
+			df = dynamical friction switch (boolean)
 
 		OUTPUT:
 
@@ -68,20 +70,41 @@ class Body():
 				self.potential = pot
 
 			# set cumulative mass function self-consistently
-			if self.potential.__name__ == "Kepler_Pot": 
+			pot_name = self.potential.__name__
+			if pot_name == "Kepler_Pot": 
 				self.mass_cum = funcs.Kepler_Mass(mass)
-			elif self.potential.__name__ == "Plummer_Pot":
+			elif pot_name == "Plummer_Pot":
 				_a = self.potential.__getattribute__('_a')
 				self.mass_cum = funcs.Plummer_Mass(mass,_a)
-			elif self.potential.__name__ == "Hernquist_Pot":
+			elif pot_name == "Hernquist_Pot":
 				_a = self.potential.__getattribute__('_a')
 				self.mass_cum = funcs.Hernquist_Mass(mass,_a)
-			elif self.potential.__name__ == "NFW_Pot":
+			elif pot_name == "NFW_Pot":
 				_rho0 = self.potential.__getattribute__('_rho0')
 				_rs = self.potential.__getattribute__('_rs')
 				self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
 			else:
-				raise ValueError("No cumulative mass function defined for Body instance.")
+				raise ValueError("No cumulative mass function available for Body instance with pot = {}.".\
+				format(pot_name))
+
+			# set density profile required for dynamical friction calculation
+			# self-consistently
+			self.dynamical_friction = df
+			if self.dynamical_friction is not None:
+				if pot_name == "Plummer_Pot":
+					_a = self.potential.__getattribute__('_a')
+					self.dens = funcs.Plummer_Density(mass,_a)
+				elif pot_name == "Hernquist_Pot":
+					_a = self.potential.__getattribute__('_a')
+					self.dens = funcs.Hernquist_Density(mass,_a)
+				elif pot_name == "NFW_Pot":
+					_rho0 = self.potential.__getattribute__('_rho0')
+					_rs = self.potential.__getattribute__('_rs')
+					self.dens = funcs.NFW_Density(_rho0,_rs)
+				else:
+					raise ValueError("No density profile available for Body instance with pot = {}.".\
+					format(pot_name))
+
 
 	def pos_rel(self,b):
 		'''Relative position vector of Body instance relative to another Body instance'''
