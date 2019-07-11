@@ -550,6 +550,9 @@ def dyn_friction_maxwell(pot = None, eps = None):
 		else:
 			raise ValueError("Velocity dispersion not available for potential {}".format(pot_name))
 
+		# IMPORTANT:
+		# (consider setting rho self-consistently from pot and remove as input parameter)
+
 		def dynfric_maxwell(r = None, v = None, mass = None, rho = None):
 			if r is None:
 				raise ValueError("r is a required parameter in dyn_friction_maxwell")
