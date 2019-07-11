@@ -32,7 +32,7 @@ Approach / Steps:
 4.2	- 3D -> DONE.
 
 5   - Two masses orbiting around each other, with one of them not being point-like (3D only)
-5.1 - Requires implementing numerical differentiation -> DONE
+		Requires implementing numerical differentiation -> DONE
 		Implemented a forward finite difference scheme (orders 2 and 3)
 		Implemented a central finite difference scheme (order 2 and 4)
 		A CFD scheme of order 4 conserves angular momentum to machine precision (for a Kepler potential)
@@ -40,9 +40,14 @@ Approach / Steps:
 
 	  IMPORTANT NOTE: The conserved quantities are:
 	  - relative specific angular momentum
-	  - relative specific potential energy
+	  - total potential energy
 	  - relative specific kinetic energy
 
+6   - Two extended masses orbiting around each other (3D only)
 
-6   - Two masses orbiting around each other in 3D, with at least one of them not being point-like,
-	  with the less extended experiencing dynamical friction by the more extended.
+7   - Two masses orbiting around each other in 3D, with at least one of them not being point-like,
+	  with the less extended experiencing dynamical friction by the more extended. -> TESTING
+
+7   - Two extended masses orbiting around each other in 3D,  with the less extended experiencing
+	  dynamical friction by the more extended. -> TESTING
+
