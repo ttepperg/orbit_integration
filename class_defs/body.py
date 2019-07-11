@@ -72,13 +72,13 @@ class Body():
 			# set cumulative mass function self-consistently
 			pot_name = self.potential.__name__
 			if pot_name == "Kepler_Pot": 
-				self.mass_cum = funcs.Kepler_Mass(mass)
+				self.mass_cum = funcs.Kepler_Mass(self.mass)
 			elif pot_name == "Plummer_Pot":
 				_a = self.potential.__getattribute__('_a')
-				self.mass_cum = funcs.Plummer_Mass(mass,_a)
+				self.mass_cum = funcs.Plummer_Mass(self.mass,_a)
 			elif pot_name == "Hernquist_Pot":
 				_a = self.potential.__getattribute__('_a')
-				self.mass_cum = funcs.Hernquist_Mass(mass,_a)
+				self.mass_cum = funcs.Hernquist_Mass(self.mass,_a)
 			elif pot_name == "NFW_Pot":
 				_rho0 = self.potential.__getattribute__('_rho0')
 				_rs = self.potential.__getattribute__('_rs')
