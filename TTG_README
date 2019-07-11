@@ -45,9 +45,9 @@ Approach / Steps:
 
 6   - Two extended masses orbiting around each other (3D only)
 
-7   - Two masses orbiting around each other in 3D, with at least one of them not being point-like,
-	  with the less extended experiencing dynamical friction by the more extended. -> TESTING
+7   - Two masses orbiting around each other in 3D, one extended and the other point-like,
+	  with the latter experiencing dynamical friction by the former. -> TESTING
 
 7   - Two extended masses orbiting around each other in 3D,  with the less extended experiencing
-	  dynamical friction by the more extended. -> TESTING
+	  dynamical friction by the more extended.
 
