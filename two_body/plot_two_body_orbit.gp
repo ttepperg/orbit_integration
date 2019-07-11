@@ -28,13 +28,15 @@
 # Plot full data (no evolution) projected onto 2D
 # $> gnuplot e 'ffw=1; dataFile="./output/filename.dat"; plotRelOrbit = "T"; projPlane = "xz"' plot_orbit_two_body.gp
 
-# the mandatory input parameters and their possible values are:
+
+# The mandatory input parameters and their possible values are:
 #
 # dataFile - full path to input data file (string)
 # timeStep - value of integration time step (float)
 # timeFreq - value of time step output frequency (int)
 #
-# the optional input parameters and their possible values are:
+#
+# The optional input parameters and their possible values are:
 # 
 # plotRelOrbit - T / F (string); T means that the relative orbit is plotted; otherwise the
 #				 individual orbit of each body are plotted
