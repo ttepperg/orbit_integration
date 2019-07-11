@@ -384,24 +384,27 @@ def NFW_VelDisp(rho0 = None, rs = None):
 # HERNQUIST (1990) MODEL
 
 # Hernquist potential
-def Hernquist_Potential(amp = None, a = None):
-	'''Implements a wrapper for the Hernquist (1990) potential
-	where amp = G*M. Reduces to Kepler potential for a=0.'''
-	if amp is None:
-		raise ValueError("amp is a required parameter in Hernquist_Potential")
+def Hernquist_Potential(mass = None, a = None):
+	'''Implements a wrapper for the Hernquist (1990) potential.
+	Reduces to Kepler potential for a=0.'''
+	if mass is None:
+		raise ValueError("mass is a required parameter in Hernquist_Potential")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Hernquist_Potential")
 	elif a is None:
 		raise ValueError("a is a required parameter in Hernquist_Potential")
 	elif a < 0:
 		raise ValueError("a must be non-negative in Hernquist_Potential")
 	else:
 		def Hernquist_Pot(*r):
+			_amp = Grav*mass
 			_r = norm(*r)
 			if _r > 0:
-				return -1. * (amp / (_r+a))
+				return -1. * (_amp / (_r+a))
 			else:
 				raise ValueError("Zero or negative radius in Hernquist_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
-		Hernquist_Pot._amp = amp
+		Hernquist_Pot._mass = mass
 		Hernquist_Pot._a = a
 		return Hernquist_Pot
 
@@ -447,20 +450,20 @@ def Hernquist_Mass(mass = None, a = None):
 
 
 # Hernquist velocity dispersion
-def Hernquist_VelDisp(amp = None, a = None):
+def Hernquist_VelDisp(mass = None, a = None):
 	'''Returns the 1D Hernquist velocity dispersion,
 	as given by Hernqquist (1990, his equation 10)
 	See http://adsabs.harvard.edu/abs/1990ApJ...356..359H
 	'''
-	if amp is None:
-		raise ValueError("amp is a required parameter in Hernquist_VelDisp")
+	if mass is None:
+		raise ValueError("mass is a required parameter in Hernquist_VelDisp")
 	elif a is None:
 		raise ValueError("a is a required parameter in Hernquist_VelDisp")
 	elif a < 0:
 		raise ValueError("a must be non-negative in Hernquist_VelDisp")
 	else:
 		def Hernquist_veldisp(*r):
-			_fact = amp/(12.*a)
+			_amp = Grav*mass/(12.*a)
 			_r = norm(*r)
 			if _r > 0:
 				_rpa = _r + a
@@ -469,7 +472,7 @@ def Hernquist_VelDisp(amp = None, a = None):
 				_term2 = _r/_rpa
 				_term3 = 25. + _roa*(52 + _roa*(42. + _roa*12.))
 				if _term1 - _term2*_term3 >= 0:
-					return _fact*(_term1 - _term2*_term3)
+					return _amp*(_term1 - _term2*_term3)
 				else:
 					raise ValueError("Negative velocity dispersion in Hernquist_VelDisp")
 			else:
@@ -541,9 +544,9 @@ def dyn_friction_maxwell(pot = None, eps = None):
 			_rs = pot.__getattribute__('_rs')
 			vel_disp = NFW_VelDisp(_rho0,_rs)
 		elif pot_name == "Hernquist_Pot":
-			_amp = pot.__getattribute__('_amp')
+			_mass = pot.__getattribute__('_mass')
 			_a = pot.__getattribute__('_a')
-			vel_disp = NFW_VelDisp(_amp,_a)
+			vel_disp = Hernquist_VelDisp(_mass,_a)
 		else:
 			raise ValueError("Velocity dispersion not available for potential {}".format(pot_name))
 

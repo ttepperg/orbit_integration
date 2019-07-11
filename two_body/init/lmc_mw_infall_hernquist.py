@@ -25,7 +25,7 @@ delta_t = 1.0e-3												# integration time step
 # Milky Way
 Mass1 = 1.5e12
 rs = 4.0e1														# NFW scale radius (kpc)
-Potential1 = funcs.Hernquist_Potential(amp=pc.Grav*Mass1,a=rs)	# potential (km/s)^2
+Potential1 = funcs.Hernquist_Potential(mass=Mass1,a=rs)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.

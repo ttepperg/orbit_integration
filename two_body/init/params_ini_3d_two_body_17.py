@@ -1,6 +1,6 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	04/07/2019
+Date:	11/07/2019
 
 This set of parameters produces a well-behaved two-body system, with a stable, nearly perfect
 circular orbit characterised by the following parameters:
@@ -16,13 +16,16 @@ circular orbit characterised by the following parameters:
                          [along z-axis]: (0.000,0.000,-1.728)
             Rel. specific ang. mom. (h):         1.7282
 
-             Rel. semi-latus rectum (p):         1.0000
-       Rel. eccentricity vector (e_vec): (-0.000,0.000,0.000)
-                  Rel. eccentricity (e):         0.0000
-                Rel. semimajor axis (a):         1.0000
-                Rel. semiminor axis (b):         1.0000
-             Apsidal angle (phi_0; deg):       180.0000
+                       Eccentricity (e):         0.0000
+                  Semi-latus rectum (p):         1.0000
+                     Semimajor axis (a):         1.0000
+                     Semiminor axis (b):         1.0000
        Orbital inclination (psi_0; deg):       180.0000
+                 Ascending node (n_vec): (-0.000,0.000,0.000)
+      Long. of asc. node (Omega_0; deg):         0.0000
+            Eccentricity vector (e_vec): (-0.000,0.000,0.000)
+             Apsidal angle (phi_0; deg):         0.0000
+   Argument of periapsis (omega_0; deg):         0.0000
                    Rel. pericentre (rp):         1.0000
                 Vel. at pericentre (vp):         1.7282
                     Rel. apocentre (ra):         1.0000
@@ -30,11 +33,9 @@ circular orbit characterised by the following parameters:
                 Rel. orbital period (T):         3.6356
         Approx. orbit circumference (u):         6.2832
         Approx. pericentric period (Tp):         3.6356
-         Approx. apocentric period (Ta):         3.6356
-
-              Rel. potential energy (T):    -3.5841E+01
+              Rel. potential energy (V):    -3.5841E+01
                 Rel. kinetic energy (T):     1.4934E+01
-                  Rel. total energy (T):    -2.0907E+01
+                  Rel. total energy (E):    -2.0907E+01
 
 
            Energy conservation to better than 1.492E-10 %.
@@ -69,7 +70,7 @@ delta_t = 1.0e-3												# integration time step
 # Body 1
 Mass1 = 1.e06													# total mass (Msun)
 rs1=2.e-1
-Potential1 = funcs.Hernquist_Potential(amp=pc.Grav*Mass1,a=rs1)
+Potential1 = funcs.Hernquist_Potential(mass=Mass1,a=rs1)		# potential (km/s)^2
 Mass1_cum =  funcs.Hernquist_Mass(mass=Mass1,a=rs1)				# cumulative mass
 x1_0 = 0.
 y1_0 = 0.

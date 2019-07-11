@@ -75,10 +75,18 @@ class Body():
 				self.mass_cum = funcs.Kepler_Mass(self.mass)
 			elif pot_name == "Plummer_Pot":
 				_a = self.potential.__getattribute__('_a')
-				self.mass_cum = funcs.Plummer_Mass(self.mass,_a)
+				_mass = self.potential.__getattribute__('_mass')
+				if _mass != self.mass:
+					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
+				else:
+					self.mass_cum = funcs.Plummer_Mass(self.mass,_a)
 			elif pot_name == "Hernquist_Pot":
 				_a = self.potential.__getattribute__('_a')
-				self.mass_cum = funcs.Hernquist_Mass(self.mass,_a)
+				_mass = self.potential.__getattribute__('_mass')
+				if _mass != self.mass:
+					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
+				else:
+					self.mass_cum = funcs.Hernquist_Mass(self.mass,_a)
 			elif pot_name == "NFW_Pot":
 				_rho0 = self.potential.__getattribute__('_rho0')
 				_rs = self.potential.__getattribute__('_rs')
