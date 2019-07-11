@@ -46,23 +46,35 @@ except:
 
 # Body 1
 try:
-	Pot = ic.Potential1
+	Pot1 = ic.Potential1
 except:
-	Pot = None
+	Pot1 = None
+try:
+	DF1 = ic.Dynamical_Friction1
+except:
+	DF1 = None
 r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
 v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
-body1 = body.Body(mass=ic.Mass1,pot=Pot,r_vec=r10_vec,v_vec=v10_vec)
+body1 = body.Body(mass=ic.Mass1,pot=Pot1,r_vec=r10_vec,v_vec=v10_vec,df=DF1)
 
 # Body 2
 try:
-	Pot = ic.Potential2
+	Pot2 = ic.Potential2
 except:
-	Pot = None
+	Pot2 = None
+try:
+	DF2 = ic.Dynamical_Friction2
+except:
+	DF2 = None
 r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
 v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
-body2 = body.Body(mass=ic.Mass2,pot=Pot,r_vec=r20_vec,v_vec=v20_vec)
+body2 = body.Body(mass=ic.Mass2,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2)
 
-print("Done.")
+# sanity check
+if DF1 is not None and DF2 is not None:
+	raise ValueError("Both bodies cannot excert dynamical friction simultaneously")
+else:
+	print("Done.")
 
 
 # Initialise Orbit object

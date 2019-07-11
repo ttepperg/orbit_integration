@@ -501,47 +501,200 @@ class Orbit():
 			# Note: the array f = (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
 			# the shape of f is dictated by the module cen_diff_first
 			# Recall: Force field = - Grad Phi
-			def dvx1dt(t,*f):
-				_x12 = f[0]-f[6]
-				_y12 = f[2]-f[8]
-				_z12 = f[4]-f[10]
-				_rvec = [_x12,_y12,_z12]
-				return  -1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
+			
+			# 10/07/2019: testing the use of dynamical friction
+			# can only be exerted by one body onto the other!
+			if self.b1.dynamical_friction is not None:
 
-			def dvy1dt(t,*f):
-				_x12 = f[0]-f[6]
-				_y12 = f[2]-f[8]
-				_z12 = f[4]-f[10]
-				_rvec = [_x12,_y12,_z12]
-				return   -1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
+				def dvx1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
+					return force_grav
 
-			def dvz1dt(t,*f):
-				_x12 = f[0]-f[6]
-				_y12 = f[2]-f[8]
-				_z12 = f[4]-f[10]
-				_rvec = [_x12,_y12,_z12]
-				return   -1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
+				def dvy1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
+					return force_grav
 
-			def dvx2dt(t,*f):
-				_x21 = f[6]-f[0]
-				_y21 = f[8]-f[2]
-				_z21 = f[10]-f[4]
-				_rvec = [_x21,_y21,_z21]
-				return  -1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
+				def dvz1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
+					return force_grav
 
-			def dvy2dt(t,*f):
-				_x21 = f[6]-f[0]
-				_y21 = f[8]-f[2]
-				_z21 = f[10]-f[4]
-				_rvec = [_x21,_y21,_z21]
-				return  -1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
+				def dvx2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					_vx21 = f[7] - f[1]
+					_vy21 = f[9] - f[3]
+					_vz21 = f[11] - f[5]
+					_vvec = [_vx21,_vy21,_vz21]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
+					force_df = \
+						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens) * _vx21
+					return force_grav+force_df
 
-			def dvz2dt(t,*f):
-				_x21 = f[6]-f[0]
-				_y21 = f[8]-f[2]
-				_z21 = f[10]-f[4]
-				_rvec = [_x21,_y21,_z21]
-				return  -1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
+				def dvy2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					_vx21 = f[7] - f[1]
+					_vy21 = f[9] - f[3]
+					_vz21 = f[11] - f[5]
+					_vvec = [_vx21,_vy21,_vz21]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
+					force_df = \
+						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens) * _vy21
+					return force_grav+force_df
+
+				def dvz2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					_vx21 = f[7] - f[1]
+					_vy21 = f[9] - f[3]
+					_vz21 = f[11] - f[5]
+					_vvec = [_vx21,_vy21,_vz21]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
+					force_df = \
+						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens) * _vz21
+					return force_grav+force_df
+			
+			elif self.b2.dynamical_friction is not None:
+
+				def dvx1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					_vx12 = f[1]-f[7]
+					_vy12 = f[3]-f[9]
+					_vz12 = f[5]-f[11]
+					_vvec = [_vx12,_vy12,_vz12]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
+					force_df = \
+						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens) * _vx12
+					return force_grav+force_df
+
+				def dvy1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					_vx12 = f[1]-f[7]
+					_vy12 = f[3]-f[9]
+					_vz12 = f[5]-f[11]
+					_vvec = [_vx12,_vy12,_vz12]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
+					force_df = \
+						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens) * _vy12
+					return force_grav+force_df
+
+				def dvz1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					_vx12 = f[1]-f[7]
+					_vy12 = f[3]-f[9]
+					_vz12 = f[5]-f[11]
+					_vvec = [_vx12,_vy12,_vz12]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
+					force_df = \
+						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens) * _vz12
+					return force_grav+force_df
+
+				def dvx2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
+					return force_grav
+
+				def dvy2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
+					return force_grav
+
+				def dvz2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					force_grav = \
+						-1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
+					return force_grav
+			
+			else:	# no dynamical friction
+
+				def dvx1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					return  -1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
+
+				def dvy1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					return   -1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
+
+				def dvz1dt(t,*f):
+					_x12 = f[0]-f[6]
+					_y12 = f[2]-f[8]
+					_z12 = f[4]-f[10]
+					_rvec = [_x12,_y12,_z12]
+					return   -1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
+
+				def dvx2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					return  -1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
+
+				def dvy2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					return  -1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
+
+				def dvz2dt(t,*f):
+					_x21 = f[6]-f[0]
+					_y21 = f[8]-f[2]
+					_z21 = f[10]-f[4]
+					_rvec = [_x21,_y21,_z21]
+					return  -1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
 
 
 			# Set up time integrator
@@ -701,6 +854,9 @@ class Orbit():
 
 			f.close()
 
+			if self.b1.dynamical_friction is not None or self.b2.dynamical_friction is not None:
+				print("\n\nWARNING: Dynamical friction is switched on!")
+				print("Neither energy nor angular momentum will be conserved.")
 			print("\n{:>45} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
 			print("{:>45} {:8.3E} %.\n".format("Angular momentum conservation to better than",1.e2*lCons))
 
