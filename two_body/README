@@ -321,29 +321,48 @@ symmetric potentials.
 
 4) Dynamical friction (deceleration). It is calculated adopting a number of simplifying
 assumptions:
-	1 - The object exerting dynamical friction is approximated by a matter density field
-	with particles of mass m
-	2 - The particle's velocity distribution is Maxwellian
-	3 - The mass of the object experiencing dynamical friction is M >> m
-	4 - The Couloumb logarithm is calculated using the parametrization by
-	Hashimoto et al. (2003, their equation 5)
 
-Notes:
-	- Dynamical friction is a *dissipative* force! Energy and angular momentum are
-	not longer conserved when DF is switched on
-	- Point-like masses cannot exert dynamical friction, by definition
-	- Not two bodies can exert dynamical friction on one another; the less extended
-	always experiences DF from the more extended one
-	- It might be worth exploring the effect or relaxing assumption 2 and use
-	instead the true velocity distribution for a given density field (i.e. profile).
-		- Hashimoto et al. (2003) approximate the density field by a King profile;
-		its velocity distribution is a truncated Maxwellian, thus very close to the
-		assumption. However, most of the following work (see references below) used
-		different profiles (e.g. NFW, Hernquist) but still assumed a Maxwellian
-		velocity distribution.
-	- It may be worth exploring other parameterizations of the Couloumb logarithm;
-	  	- See https://galpy.readthedocs.io/en/v1.4.1/reference/potentialchandrasekhardynfric.html
-	- Different sources in the literature use different values of M:
-		- Besla et al. (2007, their equation 5) use the *total* mass; this is the most
-		common approach (see also Semczuk et al. 2018, their equation B3)(
-		- Dierickx & Loeb (2017a) use the mass within the object's tidal radius
+	1 - The object exerting dynamical friction is approximated by a matter density
+	field (host) composed of particles with mass m
+
+	2 - The particle's velocity distribution is Maxwellian
+
+	3 - The mass of the object experiencing dynamical friction is M >> m
+
+	4 - The Couloumb logarithm is calculated using the parametrization by
+	Hashimoto et al. (2003, https://iopscience.iop.org/article/10.1086/344260/pdf,
+	their equation 5)
+
+	5 - The velocity dispersion is calculated using (approximate) analytic expresions
+	specific for each case (host potential) rather than from the spherically
+	symmetric Jeans (1915) equation, whose integration is expensive. So far, only
+	an NFW potential is supported.
+
+
+	Notes:
+		- Dynamical friction is a *dissipative* force! Energy and angular momentum are
+		not longer conserved when DF is switched on
+
+		- Point-like masses cannot exert dynamical friction, by definition
+
+		- Not two bodies can exert dynamical friction on one another; the less extended
+		always experiences DF from the more extended one
+
+		- It might be worth exploring the effect or relaxing assumption 2 and use
+		instead the true velocity distribution for a given density field (i.e. profile).
+			- Hashimoto et al. (2003) approximate the density field by a King profile;
+			its velocity distribution is a truncated Maxwellian, thus very close to the
+			assumption. However, most of the following work (see references below) used
+			different profiles (e.g. NFW, Hernquist) but still assumed a Maxwellian
+			velocity distribution.
+
+		- It may be worth exploring other parameterizations of the Couloumb logarithm;
+			- See https://galpy.readthedocs.io/en/v1.4.1/reference/potentialchandrasekhardynfric.html
+			- See Zentner and Bullock (2003, https://iopscience.iop.org/article/10.1086/378797/pdf)
+
+		- Different sources in the literature use different values of M:
+			- Besla et al. (2007, https://iopscience.iop.org/article/10.1086/521385/pdf,
+			their equation 5) use the *total* mass; this is the most
+			common approach (see also Semczuk et al. 2018, their equation B3)
+			- Dierickx & Loeb (2017a, https://iopscience.iop.org/article/10.3847/1538-4357/836/1/92/pdf)
+			use the mass within the object's tidal radius
