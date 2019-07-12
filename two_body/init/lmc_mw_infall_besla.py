@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	27/06/2019
 
 This is just a test run.
 
@@ -31,7 +30,7 @@ vz1_0 = 0.
 
 # Large Magellanic Clouds
 Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
 x2_0 = -1.														# positions (kpc)
 y2_0 = -41.

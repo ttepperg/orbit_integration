@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	11/07/2019
 
 This set of parameters produces a well-behaved equal mass, two-body system, with a stable, inclined,
 higly precessing orbit characterised by the following parameters:
@@ -82,7 +81,7 @@ vz1_0 = 0.
 
 # Body 2
 Mass2 = 1.0e6													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 1.

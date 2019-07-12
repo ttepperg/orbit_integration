@@ -1,8 +1,7 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	27/06/2019
 
-This is just a test run.
+This is corresponds to the time-reversed version of lmc_mw_infall_besla.py
 
 '''
 
@@ -31,7 +30,7 @@ vz1_0 = 2.7000E-09
 
 # Large Magellanic Clouds
 Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
 x2_0 = -2.8085E+01												# positions (kpc)
 y2_0 = 3.3417E+01

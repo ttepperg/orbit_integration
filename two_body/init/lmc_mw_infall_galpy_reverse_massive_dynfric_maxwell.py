@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	10/07/2019
 
 This setup is in essence identical to lmc_mw_infall_galpy_reverse_massive_dynfric.py, but
 adopting Chandrasekhar's formula for the dynamical friction and a Maxwellian distribution.
@@ -34,7 +33,7 @@ Dynamical_Friction1 = funcs.dyn_friction_maxwell(pot=Potential1,eps=1.)	# dynami
 
 # Large Magellanic Clouds
 Mass2 = 1.0e10													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 x2_0 = -2.1025E+01												# positions (kpc)
 y2_0 = -4.6087E+01
 z2_0 = 6.6870E+01

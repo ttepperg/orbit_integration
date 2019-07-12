@@ -132,20 +132,21 @@ def grad_r(*r, func = None):
 			return dot_prod(u,grad_func)
 
 
+
 # POTENTIALS AND CORRESPONDING MASS PROFILES
 
 # KEPLER MODEL
 
 # Kepler potential
-def Kepler_Potential(amp = None):
+def Kepler_Potential(mass = None):
 	'''Implements a wrapper for the Kepler potential where amp = G*M.'''
-	if amp is None:
-		raise ValueError("amp is a required argument in Kepler_Potential")
-	elif amp <= 0:
-		raise ValueError("amp must be positive in Kepler_Potential")
+	if mass is None:
+		raise ValueError("mass is a required argument in Kepler_Potential")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Kepler_Potential")
 	else:
 		def Kepler_Pot(*r):
-			_amp = amp
+			_amp = Grav*mass
 			_r = norm(*r)
 			if _r > 0:
 				return -1. * (_amp / _r)

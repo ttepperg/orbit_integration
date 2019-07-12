@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	04/07/2019
 
 This set of parameters produces a well-behaved two-body system, with a stable,
 non-precessing inclined, elliptical orbit characterised by the following parameters:
@@ -68,7 +67,7 @@ delta_t = 1.0e-3												# integration time step
 
 # Body 1
 Mass1 = 1.0e6													# total mass (Msun)
-Potential1 = funcs.Kepler_Potential(amp=pc.Grav*Mass1)			# potential (km/s)^2
+Potential1 = funcs.Kepler_Potential(mass=Mass1)					# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = -1.
@@ -78,7 +77,7 @@ vz1_0 = 0.
 
 # Body 2
 Mass2 = 1.0e6													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 1.
 z2_0 = 0.

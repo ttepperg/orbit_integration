@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	27/06/2019
 
 This set of parameters is intended to reproduce the infall of the Large Magellanic Cloud (LMC)
 onto the Milky Way (MW), using backwards integration, i.e. inverting the sign of the
@@ -45,7 +44,7 @@ vz1_0 = 0.
 
 # Large Magellanic Clouds
 Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 x2_0 = -1.														# positions (kpc)
 y2_0 = -41.
 z2_0 = -28.

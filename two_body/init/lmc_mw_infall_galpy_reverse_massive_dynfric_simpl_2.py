@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	10/07/2019
 
 This setup is in essence identical to lmc_mw_infall_galpy_reverse_massive_dynfrict.py, but
 with the body indices swapped to check the invariance of the code with respect to
@@ -35,7 +34,7 @@ Dynamical_Friction2 = funcs.dyn_friction_simpl					# dynamical friction function
 
 # Large Magellanic Clouds
 Mass1 = 1.0e10													# total mass (Msun)
-Potential1 = funcs.Kepler_Potential(amp=pc.Grav*Mass1)			# potential (km/s)^2
+Potential1 = funcs.Kepler_Potential(mass=Mass1)					# potential (km/s)^2
 x1_0 = -2.1025E+01												# positions (kpc)
 y1_0 = -4.6087E+01
 z1_0 = 6.6870E+01

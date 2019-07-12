@@ -1,6 +1,5 @@
 '''
 Author:	Thorsten Tepper Garcia
-Date:	11/07/2019
 
 Experimental!
 
@@ -32,7 +31,7 @@ Dynamical_Friction1 = funcs.dyn_friction_maxwell(pot=Potential1,eps=1.)	# dynami
 
 # Large Magellanic Clouds
 Mass2 = 1.0e10													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(amp=pc.Grav*Mass2)			# potential (km/s)^2
+Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 x2_0 = -1.														# positions (kpc)
 y2_0 = -41.
 z2_0 = -28.
