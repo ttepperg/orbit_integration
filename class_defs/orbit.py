@@ -545,7 +545,8 @@ class Orbit():
 					force_grav = \
 						-1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
 					force_df = \
-						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens) * _vx21
+						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens, \
+							veldisp=self.b1.vel_disp) * _vx21
 					return force_grav+force_df
 
 				def dvy2dt(t,*f):
@@ -560,7 +561,8 @@ class Orbit():
 					force_grav = \
 						-1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
 					force_df = \
-						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens) * _vy21
+						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens, \
+							veldisp=self.b1.vel_disp) * _vy21
 					return force_grav+force_df
 
 				def dvz2dt(t,*f):
@@ -575,7 +577,8 @@ class Orbit():
 					force_grav = \
 						-1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
 					force_df = \
-						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens) * _vz21
+						self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass, rho=self.b1.dens, \
+							veldisp=self.b1.vel_disp) * _vz21
 					return force_grav+force_df
 			
 			elif self.b2.dynamical_friction is not None:
@@ -592,7 +595,8 @@ class Orbit():
 					force_grav = \
 						-1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
 					force_df = \
-						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens) * _vx12
+						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens, \
+							veldisp=self.b2.vel_disp) * _vx12
 					return force_grav+force_df
 
 				def dvy1dt(t,*f):
@@ -607,7 +611,8 @@ class Orbit():
 					force_grav = \
 						-1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
 					force_df = \
-						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens) * _vy12
+						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens, \
+							veldisp=self.b2.vel_disp) * _vy12
 					return force_grav+force_df
 
 				def dvz1dt(t,*f):
@@ -622,7 +627,8 @@ class Orbit():
 					force_grav = \
 						-1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
 					force_df = \
-						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens) * _vz12
+						self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass, rho=self.b2.dens, \
+							veldisp=self.b2.vel_disp) * _vz12
 					return force_grav+force_df
 
 				def dvx2dt(t,*f):

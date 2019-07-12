@@ -493,9 +493,10 @@ def dyn_friction_simpl():
 	v - velocity vector
 	mass - mass M
 	rho - density field (function of r)
+	veldisp - unused parameter; introduced for consistency with other dyn.frict.funcs.
 	See https://en.wikipedia.org/wiki/Dynamical_friction
 	'''
-	def dynfric_simpl(r = None, v = None, mass = None, rho = None):
+	def dynfric_simpl(r = None, v = None, mass = None, rho = None, veldisp = None):
 		if r is None:
 			raise ValueError("r is a required parameter in dyn_friction_simpl")
 		elif v is None:
@@ -515,7 +516,7 @@ def dyn_friction_simpl():
 	return dynfric_simpl
 
 
-def dyn_friction_maxwell(pot = None, eps = None):
+def dyn_friction_maxwell(eps = None):
 	'''Calcualates the negative acceleration (or deceleration) of an object of
 	mass M due to dynamical friction exerted by a surrounding, uniform density
 	field of matter (host) composed of particles of mass m using the Chandrasekhar
@@ -524,37 +525,15 @@ def dyn_friction_maxwell(pot = None, eps = None):
 	2 - The velocity of the matter particles obeys a Maxwellian distribution.
 	See https://en.wikipedia.org/wiki/Dynamical_friction
 	Notes:
-	- pot is the potential of the host
-	- eps is the 'softenint length' of the satellite and is a tunable
-	parameter (see Hashimoto et al. 2003)
+	- eps is the 'softening length' of the satellite and is a tunable
+	parameter (see e.g. Hashimoto et al. 2003)
 	- it is not yet clear which velocity dispersion is required (1D or 3D)
 	'''
 	if eps is None:
 		raise ValueError("eps is a required parameter in dyn_friction_maxwell")
 	else:
-		# set velocity dispersion function appropriate for input potential
-		# (consider moving the following block out of the function declaration
-		# for optimization)
-		pot_name = pot.__name__
-		if pot_name == "Plummer_Pot":
-			_mass = pot.__getattribute__('_mass')
-			_a = pot.__getattribute__('_a')
-			vel_disp = Plummer_VelDisp(_mass, _a)
-		elif pot_name == "NFW_Pot":
-			_rho0 = pot.__getattribute__('_rho0')
-			_rs = pot.__getattribute__('_rs')
-			vel_disp = NFW_VelDisp(_rho0,_rs)
-		elif pot_name == "Hernquist_Pot":
-			_mass = pot.__getattribute__('_mass')
-			_a = pot.__getattribute__('_a')
-			vel_disp = Hernquist_VelDisp(_mass,_a)
-		else:
-			raise ValueError("Velocity dispersion not available for potential {}".format(pot_name))
 
-		# IMPORTANT:
-		# (consider setting rho self-consistently from pot and remove as input parameter)
-
-		def dynfric_maxwell(r = None, v = None, mass = None, rho = None):
+		def dynfric_maxwell(r = None, v = None, mass = None, rho = None, veldisp = None):
 			if r is None:
 				raise ValueError("r is a required parameter in dyn_friction_maxwell")
 			elif v is None:
@@ -563,15 +542,18 @@ def dyn_friction_maxwell(pot = None, eps = None):
 				raise ValueError("mass is a required parameter in dyn_friction_maxwell")
 			elif rho is None:
 				raise ValueError("rho is a required parameter in dyn_friction_maxwell")
+			elif veldisp is None:
+				raise ValueError("veldisp is a required parameter in dyn_friction_maxwell")
 			elif len(r) != len(v):
 				raise ValueError("r and v must have the same dimensionality in dyn_friction_maxwell")
 			else:
 				const = -4. * math.pi
-				_log_lambda = couloumb_log(*r,epsilon = eps)
+				_log_lambda = couloumb_log_hfm03(*r,epsilon = eps)
 				_v = norm(*v)
 				if _v > 0:
 					amp = const * Grav**2 * mass * _log_lambda * rho(*r) / _v**3
-					sigma = math.sqrt(vel_disp(*r))
+# 					sigma = math.sqrt(vel_disp(*r))
+					sigma = math.sqrt(veldisp(*r))
 					if sigma > 0:
 						_X = _v / (math.sqrt(2.) * sigma)
 						erfX = math.erf(_X)
@@ -624,20 +606,20 @@ def vel_disp_1d_jeans(*r, rho = None, pot = None):
 
 
 
-def couloumb_log(*r, epsilon = None):
+def couloumb_log_hfm03(*r, epsilon = None):
 	'''Returns the Couloumb logarithm used to calculate the dynamical friction
 	deceleration, using the parametrization by Hashimoto et al. (2003, their
 	equation 5), appropriate for N-body systems.
 	'''
 	if epsilon is None:
-		raise ValueError("epsilon is a required parameter in couloumb_log")
+		raise ValueError("epsilon is a required parameter in couloumb_log_hfm03")
 	elif epsilon <= 0:
-		raise ValueError("epsilon must be positive in couloumb_log")
+		raise ValueError("epsilon must be positive in couloumb_log_hfm03")
 	else:
 		_r = norm(*r)
 		denom = 1.4 * epsilon
 		if _r <= 0:
-			raise ValueError("r must be positive in couloumb_log")
+			raise ValueError("r must be positive in couloumb_log_hfm03")
 		elif _r < denom:	# avoid dynamical friction 'acceleration'
 			return 0.
 		else:

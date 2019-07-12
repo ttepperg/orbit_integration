@@ -100,17 +100,23 @@ class Body():
 			self.dynamical_friction = df
 			if self.dynamical_friction is not None:
 				if pot_name == "Plummer_Pot":
+					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
 					self.dens = funcs.Plummer_Density(mass,_a)
+					self.vel_disp = funcs.Plummer_VelDisp(_mass, _a)
 				elif pot_name == "Hernquist_Pot":
+					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
 					self.dens = funcs.Hernquist_Density(mass,_a)
+					self.vel_disp = funcs.Hernquist_VelDisp(_mass,_a)
 				elif pot_name == "NFW_Pot":
 					_rho0 = self.potential.__getattribute__('_rho0')
 					_rs = self.potential.__getattribute__('_rs')
 					self.dens = funcs.NFW_Density(_rho0,_rs)
+					self.vel_disp = funcs.NFW_VelDisp(_rho0,_rs)
 				else:
-					raise ValueError("No density profile available for Body instance with pot = {}.".\
+					raise \
+						ValueError("No density profile and velocity dispersion available for Body instance with pot = {}.".\
 					format(pot_name))
 
 
