@@ -19,7 +19,7 @@ from utils import io
 from class_defs import orbit
 
 
-# Collect input argument and set initial conditions
+# Gather initial conditions
 ics = io.get_input()
 
 # Initialise Orbit object
