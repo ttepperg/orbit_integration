@@ -6,7 +6,6 @@ with massive LMC.
 
 '''
 
-import config.phys_consts as pc
 from utils import funcs
 
 

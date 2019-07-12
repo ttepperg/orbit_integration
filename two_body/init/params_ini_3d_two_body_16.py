@@ -57,7 +57,6 @@ pauseStep = 0.001
 
 '''
 
-import config.phys_consts as pc
 from utils import funcs
 
 

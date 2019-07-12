@@ -9,7 +9,6 @@ the effect of dynamical friction of the MW onto the LMC.
 
 '''
 
-import config.phys_consts as pc
 from utils import funcs
 
 
@@ -27,7 +26,6 @@ z1_0 = 0.
 vx1_0 = 0.														# velocities (km/s):
 vy1_0 = 0.
 vz1_0 = 0.
-Dynamical_Friction1 = funcs.dyn_friction_maxwell(pot=Potential1,eps=1.)	# dynamical friction function
 
 # Large Magellanic Clouds
 Mass2 = 1.0e10													# total mass (Msun)
@@ -39,10 +37,8 @@ vx2_0 = 79.														# velocities (km/s):
 vy2_0 = 227.
 vz2_0 = -208.
 
-# test area
-# import math
-# r0 = [30.,0.5,1.]
-# sigma2 = funcs.Plummer_VelDisp(mass=Mass1,a=rs)
-# print(math.sqrt(sigma2(*r0)))
-# 
-# exit()
+
+# Dynamical friction settings
+soft_length2 = 1.0													# softening length of satellite
+Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
+

@@ -13,7 +13,6 @@ Dynamical friction by the MW is not included.
 
 '''
 
-import config.phys_consts as pc
 from utils import funcs
 
 

@@ -30,7 +30,7 @@ z2_0 = -3.4977E-08
 vx2_0 = -7.5039E-10												# velocities (km/s):
 vy2_0 = -3.8106E-09
 vz2_0 = 6.4645E-10
-Dynamical_Friction2 = funcs.dyn_friction_simpl					# dynamical friction function
+Dynamical_Friction2 = funcs.dyn_friction_simpl()				# dynamical friction function
 
 # Large Magellanic Clouds
 Mass1 = 1.0e10													# total mass (Msun)
