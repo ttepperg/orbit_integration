@@ -9,6 +9,28 @@ import importlib									# needed to import ICs' as module
 from class_defs import body
 
 def get_input():
+		"""
+		NAME:
+
+			get_input
+
+		PURPOSE:
+
+			Gather initial conditions for and initialize an body instances
+
+		INPUT:
+
+			None
+
+		OUTPUT:
+
+			ics - Object with initial conditons parameters
+
+		HISTORY:
+
+			2019-07-11 - Written - TTG
+
+		"""
 	if len(sys.argv) < 2:
 		print("\nUSAGE:")
 		print("{} <input parameter file>\n".format(sys.argv[0]))
