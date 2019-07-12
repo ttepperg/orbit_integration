@@ -5,7 +5,6 @@ Date:	26/06/2019
 
 import math
 import sys
-sys.path.insert(0,"../.")
 from config.phys_consts import Grav, Infinity
 from num_diff.central_diff import cen_diff_first
 sys.path.insert(0,'../../.')

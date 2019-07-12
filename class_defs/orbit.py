@@ -4,7 +4,6 @@ Author:	Thorsten Tepper Garcia
 
 import math
 import sys
-sys.path.insert(0,"../.")							# include top directory in module search path
 from utils import funcs
 import config.phys_consts as pc
 # from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme

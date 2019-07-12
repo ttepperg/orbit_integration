@@ -3,7 +3,6 @@ Author:	Thorsten Tepper Garcia
 '''
 
 import sys
-sys.path.insert(0,"../.")							# include top directory in module search path
 from utils import funcs
 import config.phys_consts as pc
 
