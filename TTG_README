@@ -43,11 +43,11 @@ Approach / Steps:
 	  - total potential energy
 	  - relative specific kinetic energy
 
-6   - Two extended masses orbiting around each other (3D only)
+6   - Two extended masses orbiting around each other (3D only) -> DONE
 
 7   - Two masses orbiting around each other in 3D, one extended and the other point-like,
 	  with the latter experiencing dynamical friction by the former. -> TESTING
 
-7   - Two extended masses orbiting around each other in 3D,  with the less extended experiencing
+8   - Two extended masses orbiting around each other in 3D,  with the less extended experiencing
 	  dynamical friction by the more extended.
 
