@@ -173,7 +173,10 @@ state vectors, i.e. the initial position r0 and velocities v0 for each body.
 
 The initial and final times, as well as the timestep for the integration of
 the orbit can (and preferentially should) be specified. These default to 0.,
-10., and 1.e-4, in time units (see Section UNITS).
+10., and 1.e-4, in time units (see Section UNITS). The final time may be
+negative; in this case, the orbit integration is performed backwards in time,
+such that the initial conditions in fact corresponds to the final (present-day)
+state of the system.
 
 In addition to the total mass, the potential for each body may be specified.
 Currently, only a number of spherically symmetric potentials are implemented:
@@ -237,6 +240,9 @@ The latter can be directly compared to the set of primed coordinates as a check
 of the numerical result against the expected analytic solution, keeping in
 mind that for non-Keplerian potentials the analytic solution merely corresponds
 to an osculating orbit consistent with the initial conditions.
+In the case of backwards integration, the (osculating) orbital parameters
+will corresponds to the final (present-day) state, rather than to the inital
+state of the orbital evolution.
 
 
 # VISUALISATION
@@ -294,15 +300,15 @@ momentum, but not the conservation of energy (which seems to depend on the
 time integration scheme only; why?).
 
 
-2) Only a central, Kepler (i.e. point-mass) potential yields conic
+
+2) Closed orbits. Only a central, Kepler (i.e. point-mass) potential yields conic
 orbits; in particular, if the eccentricity is less than unity, it leads
 to *closed* orbits. In this case, the orbit can be described by a
 unique set of orbital parameters (eccentricity, semi-major axis, period,
 etc.) The code calculates a range of orbital parameters at runtime and
 prints them to stdout.
 
-
-3) Extended, spherically symmetric bodies yield gravitational forces as
+Extended, spherically symmetric bodies yield gravitational forces as
 though their masses were concentrated at their respective centres (Newton's
 shell theorem; https://en.wikipedia.org/wiki/Shell_theorem). This implies
 that the gravitational force between an extended body and a point-like mass
@@ -318,6 +324,12 @@ imply e < 1, unless e = 0 (i.e. circular orbits). With the notable exception of
 the case e=0, the orbital parameters set by the initial conditions correspond,
 at best, to *osculating* parameters in this case. The same is true for non-spherically
 symmetric potentials.
+
+
+3) Backwards integration. When integrating an orbit backwards in time, beware that
+the (osculating) orbital parameters correspond to the final (present-day) state, as
+these are in fact set by the initial conditions.
+
 
 4) Dynamical friction (deceleration). It is calculated adopting a number of simplifying
 assumptions:

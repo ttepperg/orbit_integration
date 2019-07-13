@@ -483,7 +483,11 @@ class Orbit():
 		else:
 
 			# Set up time integrator
-			
+			backwards_switch = 1
+			if time_end < 0:
+				backwards_switch = -1
+				time_end = backwards_switch * time_end
+				
 			# number of time steps
 			_N = math.ceil((time_end - time_start) / time_step)
 
@@ -491,16 +495,22 @@ class Orbit():
 			# note: the shape of _ics is dictated by module ode_leap
 			_ics = \
 				[time_start, \
-				self.b1.x, self.b1.vx, self.b1.y, self.b1.vy, self.b1.z, self.b1.vz, \
-				self.b2.x, self.b2.vx, self.b2.y, self.b2.vy, self.b2.z, self.b2.vz]
+				self.b1.x, backwards_switch * self.b1.vx, \
+				self.b1.y, backwards_switch * self.b1.vy, \
+				self.b1.z, backwards_switch * self.b1.vz, \
+				self.b2.x, backwards_switch * self.b2.vx, \
+				self.b2.y, backwards_switch * self.b2.vy, \
+				self.b2.z, backwards_switch * self.b2.vz]
 
 			# accelerations
 			# note: the shape of _F is dictated by module ode_leap
 			_F = [*self.set_accelerations()]
 
-
-			print("\nOrbit integration:")
-			print("\tTime range [t0,t1] = [{},{}]".format(time_start,time_end))
+			print("\nOrbit integration{}".format(" (backwards):" if backwards_switch < 0 else ":"))
+			if backwards_switch > 0:
+				print("\tTime range [t0,t1] = [{},{}]".format(time_start,time_end))
+			else:
+				print("\tTime range [t0,t1] = [{},{}]".format(backwards_switch*time_end,time_start))
 			print("\tTime steps {};  Step size: {:8.2E}".format(_N,time_step))
 			print("\tMaximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
 
@@ -510,6 +520,16 @@ class Orbit():
 			# 		each EoM[i] is 'function' of time, i.e. an array where each item corresponds to a
 			# 		given integration time, i.e. EoM[i][t]
 			time, EoM = ode_leap(dr2dt2 = _F, rank = 12, initCond = _ics, steps = _N, stepSize = time_step)
+			
+			# invert time arrow and velocities after backwards integration
+			if backwards_switch < 1:
+				for i in range(len(time)):
+					time[i] = backwards_switch * time[i]
+					for j in range(1,len(EoM),2):
+						EoM[j][i] = backwards_switch * EoM[j][i]
+				time.reverse()
+				for j in range(len(EoM)):
+						EoM[j].reverse()
 
 			return time, EoM
 
@@ -545,6 +565,10 @@ class Orbit():
 		HISTORY:
 
 			2019-07-11 - Written - TTG
+		
+		NOTES:
+		
+			Could be integrated instead into the Body class (TTG)
 
 		"""
 		# Central finite difference scheme parameters:
