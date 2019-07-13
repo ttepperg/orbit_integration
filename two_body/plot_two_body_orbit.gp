@@ -98,6 +98,12 @@ unit(s) = sprintf(" [%s]",s)
 max(a,b) = a>b ? a : b
 min(a,b) = a<b ? a : b
 
+# Colours
+body1Colour = "black"
+body2Colour = "red"
+
+
+
 set macros
 
 # define indices based on datafile column content
@@ -367,16 +373,18 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 set terminal x11 0 persist title "Energy" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
 set ylabel "|{/Symbol D} E(t)/E(0) | (%)"
+set grid
 pl dataFile u @plotColsEnergy w l not
-
+unset grid
 
 #----------------------------------------------------------------------------------------
 # Angular momentum conservation
 set terminal x11 1 persist title "Angular momentum" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
 set ylabel "|{/Symbol D} h(t)/h(0)| (%)"
+set grid
 pl dataFile u @plotColsAngMom w l not
-
+unset grid
 
 #----------------------------------------------------------------------------------------
 # Orbital history (Relative distance and relative speed)
@@ -386,10 +394,12 @@ set ylabel "Distance".unit(lengthUnitName)
 set ytics nomirror
 set y2label "Speed".unit(velUnitName) rotate by -90
 set y2tics nomirror
+set grid
 pl dataFile u @plotColsRelDist w l t "Relative distance", \
 '' u @plotColsRelSpeed axes x1y2 w l lw 2 t "Relative speed"
 unset y2label
 unset y2tics
+unset grid
 set ytics mirror
 
 
@@ -488,7 +498,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
-				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
 				dataFile u @plotColsRelOrbit_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
 				'' u @plotColsRelOrbit_line w l lw 2 t "rel. orbit", \
 				'' u @plotColsRelVel w vectors t "rel. vel"; \
@@ -502,7 +512,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
-				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
 				dataFile u @plotColsRelOrbit_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
 				'' u @plotColsRelOrbit_line w l lw 2 t "rel. orbit", \
 				'' u @plotColsRelVel w vectors t "rel. vel"; \
@@ -523,10 +533,10 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
-				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
 				'' u @plotColsOrbit1_line w l t "orbit 1", \
 				'' u @plotColsVel1 w vectors t "vel 1", \
-				'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb body2Colour t "body 2", \
 				'' u @plotColsOrbit2_line w l t "orbit 2", \
 				'' u @plotColsVel2 w vectors t "vel 2"; \
 				pause pauseStep \
@@ -539,10 +549,10 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
-				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
 				'' u @plotColsOrbit1_line w l t "orbit 1", \
 				'' u @plotColsVel1 w vectors t "vel 1", \
-				'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2_dot w p pt 7 ps 2 lc rgb body2Colour t "body 2", \
 				'' u @plotColsOrbit2_line w l t "orbit 2", \
 				'' u @plotColsVel2 w vectors t "vel 2"; \
 				pause pauseStep \
@@ -619,7 +629,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
-				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
 				dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
 				'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
 				'' u @plotColsRelVelProj w vectors t "rel. vel", \
@@ -635,7 +645,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
-				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb "black" t "body 1", \
+				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
 				dataFile u @plotColsRelOrbitProj_dot w p pt 7 ps 2 lc rgb "red"  t "body 2", \
 				'' u @plotColsRelOrbitProj_line w l lw 2 t "rel. orbit", \
 				'' u @plotColsRelVelProj w vectors t "rel. vel", \
@@ -656,10 +666,10 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
-				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
 				'' u @plotColsOrbit1Proj_line w l t "orbit 1", \
 				'' u @plotColsVel1Proj w vectors t "vel 1", \
-				'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb body2Colour t "body 2", \
 				'' u @plotColsOrbit2Proj_line w l t "orbit 2", \
 				'' u @plotColsVel2Proj w vectors t "vel 2" \
 			} # do
@@ -672,10 +682,10 @@ if(!exists("projPlane")||(projPlane ne "op")){
 				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
-				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb "black" t "body 1", \
+				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
 				'' u @plotColsOrbit1Proj_line w l t "orbit 1", \
 				'' u @plotColsVel1Proj w vectors t "vel 1", \
-				'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb "red" t "body 2", \
+				'' u @plotColsOrbit2Proj_dot w p pt 7 ps 2 lc rgb body2Colour t "body 2", \
 				'' u @plotColsOrbit2Proj_line w l t "orbit 2", \
 				'' u @plotColsVel2Proj w vectors t "vel 2"; \
 				pause pauseStep \
