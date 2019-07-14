@@ -66,13 +66,23 @@ See Section INPUT below.
 
 # TIME INTEGRATION
 
-The system of equations is numerically integrated using a 2nd order
-leapfrog (kick-drift-kick) method (see https://en.wikipedia.org/wiki/Leapfrog_integration).
+The system of equations is numerically integrated using a 2nd order leapfrog
+(kick-drift-kick) scheme (https://en.wikipedia.org/wiki/Leapfrog_integration),
+also know as Velocity Verlet algorithm (https://en.wikipedia.org/wiki/Verlet_integration).
 This scheme is symplectic and thus features desired properties such as time
-reversibility, conservation of the relative total energy to any desired
-accuracy -- even over significant integration times --, if the time step is
-chosen small enough, and conservation of the specific angular momentum
-generally to machine precision.
+reversibility; an error scaling of order (time step)^4 and (time step)^2
+in the position and in the velocity, respectively, over a single step, and of order
+T^2 (time step)^2 in both over cumulative (significant) integration times T, i.e. after
+a large number of integration steps. Also, the error in the energy is bound, with the
+energy oscillating around its true value, and featuring conservation of the specific
+angular momentum and linear momentum generally to machine precision -- if the time step
+is small enough (see below).
+
+In the presence of dissipative forces (e.g. dynamical friction), the error scaling in
+position and velocity is of order (time step)^3 and (time step), respectively, on a
+single step (see http://physics.bu.edu/py502/lectures3/cmotion.pdf). An alternative
+form of the method is preferred in the presence of dissipative forces but it is not
+yet implemented here.
 
 Beware that the scheme may lead to orbit precession if the integration step is
 not small enough. As a general rule of thumb, the time step delta_t should
