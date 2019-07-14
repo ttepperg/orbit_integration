@@ -3,12 +3,8 @@ Author:	Thorsten Tepper Garcia
 
 Experimental!
 
-This set of parameters is used to mimick the infall of the Large Magellanic Cloud (LMC)
-onto the Milky Way (MW).
-
-The MW is approximated by a static Plummer DM halo; the LMC by a massive point-like object.
-
-Dynamical friction by the MW is not included.
+This is essentially identical to lmc_mw_infall_plummer.py but includes
+the effect of dynamical friction of the MW onto the LMC.
 
 
 '''
@@ -21,7 +17,7 @@ t_1 = -1.02e1													# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Milky Way
-Mass1 = 5.e11
+Mass1 = 1.5e12
 rs = 1.6e1														# NFW scale radius (kpc)
 Potential1 = funcs.Plummer_Potential(mass=Mass1,a=rs)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
@@ -40,4 +36,9 @@ z2_0 = -28.
 vx2_0 = 79.														# velocities (km/s):
 vy2_0 = 227.
 vz2_0 = -208.
+
+
+# Dynamical friction settings
+soft_length2 = 5.0													# softening length of satellite
+Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
