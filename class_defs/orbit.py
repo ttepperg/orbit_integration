@@ -489,7 +489,8 @@ class Orbit():
 				time_end = backwards_switch * time_end
 				
 			# number of time steps
-			_N = math.ceil((time_end - time_start) / time_step)
+			_T = (time_end - time_start)
+			_N = math.ceil( _T / time_step)
 
 			# initial conditions
 			# note: the shape of _ics is dictated by module ode_leap
@@ -512,7 +513,10 @@ class Orbit():
 			else:
 				print("\tTime range [t0,t1] = [{},{}]".format(backwards_switch*time_end,time_start))
 			print("\tTime steps {};  Step size: {:8.2E}".format(_N,time_step))
+			print("\nThe following are only valid in the absence of dissipative forces (e.g. dynamical friction):")
 			print("\tMaximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
+			# see http://physics.bu.edu/py502/lectures3/cmotion.pdf:
+			print("\tExpected accumulated error in x and v of order {:8.2E}".format((_T * time_step)**2))
 
 			# Integrate system
 			# Note: x1 = EoM[0], vx1 = EoM[1], y1 = EoM[2], vy1 = EoM[3], z1 = EoM[4], vz1 = EoM[5],
