@@ -81,12 +81,12 @@ both over cumulative (significant) integration times T, i.e. after
 a large number of integration steps. The error in the energy is bound, with the
 energy oscillating around its true value.
 
-In the presence of dissipative forces (e.g. dynamical friction), the error scaling in
-position and velocity is of order (time step)^3 and (time step), respectively, on a
-single step (see http://physics.bu.edu/py502/lectures3/cmotion.pdf). An alternative
-form of the method is preferred in the presence of dissipative forces but it is not
-yet implemented here, such as the Euler-Richardson method (see:
-http://www.physics.udel.edu/~bnikolic/teaching/phys660/numerical_ode/node4.html).
+In the presence of dissipative forces (e.g. dynamical friction), the leapfrog method
+scheme is characterized by error scaling in position and velocity is of order
+(time step)^3 and (time step), respectively, on a single step (see
+http://physics.bu.edu/py502/lectures3/cmotion.pdf). An alternative form of the method
+is preferred in the presence of dissipative forces but it is not yet implemented here,
+such as the Euler-Richardson method (see e.g. http://www.physics.udel.edu/~bnikolic/teaching/phys660/numerical_ode/node4.html).
 
 Beware that the scheme may lead to orbit precession if the integration step is
 not small enough. As a general rule of thumb, the time step delta_t should
@@ -253,10 +253,13 @@ using the orbital parameters self-consistently calculated within the code.
 The latter can be directly compared to the set of primed coordinates as a check
 of the numerical result against the expected analytic solution, keeping in
 mind that for non-Keplerian potentials the analytic solution merely corresponds
-to an osculating orbit consistent with the initial conditions.
-In the case of backwards integration, the (osculating) orbital parameters
-will corresponds to the final (present-day) state, rather than to the inital
-state of the orbital evolution.
+to an osculating orbit consistent with the initial conditions. In the case of
+backwards integration, the (osculating) orbital parameters will corresponds to
+the final (present-day) state, rather than to the initial state of the orbital
+evolution.
+
+Note that the ordering of the output data always follows the time arrow, i.e.
+from the earliest time to the latest time.
 
 
 # VISUALISATION
@@ -312,7 +315,6 @@ Also, the spatial step and the order of accuracy used when calculating
 numerical derivatives of the potential affect the conservation of angular
 momentum, but not the conservation of energy (which seems to depend on the
 time integration scheme only; why?).
-
 
 
 2) Closed orbits. Only a central, Kepler (i.e. point-mass) potential yields conic
