@@ -62,9 +62,9 @@ class Body():
 			self.speed = funcs.norm(*self.vel)
 
 			if pot is None:
-				print("\nWARNING: No potential specified for Body object.")
-				print("Assuming a Kepler (point-like) potential.\n")
-				self.potential = funcs.Kepler_Potential(mass=self.mass)
+				raise AttributeError("No potential specified for Body object.")
+# 				print("Assuming a Kepler (point-like) potential.\n")
+# 				self.potential = funcs.Kepler_Potential(mass=self.mass)
 			else:
 				self.potential = pot
 
