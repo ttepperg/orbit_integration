@@ -59,7 +59,6 @@ delta_t = 1.0e-3												# integration time step
 # Body 1
 Mass1 = 1.0e1													# total mass (Msun)
 Potential1 = funcs.Kepler_Potential(mass=Mass1)					# potential (km/s)^2
-Mass1_cum = funcs.Kepler_Mass(Mass1)							# 'cumulative' mass, trivially equal to Mass1
 x1_0 = -0.01													# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -70,7 +69,6 @@ vz1_0 = 0.
 # Body 2
 Mass2 = 1.0e1													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
-Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass1
 x2_0 = 0.01														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.

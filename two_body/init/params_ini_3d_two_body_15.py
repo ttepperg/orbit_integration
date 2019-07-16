@@ -86,7 +86,6 @@ vz1_0 = 0.
 # Body 2
 Mass2 = 1.0e1													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
-Mass2_cum = funcs.Kepler_Mass(Mass2)							# 'cumulative' mass, trivially equal to Mass2
 x2_0 = 5.0467E-01												# positions (kpc)
 y2_0 = -6.2483E-01
 z2_0 = 8.9603E-13

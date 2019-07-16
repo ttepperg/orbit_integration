@@ -92,6 +92,7 @@ vx2_0 = 0.														# velocities (km/s):
 vy2_0 = 0.
 vz2_0 = 0.
 
+
 # redefine velocities to obtain a circular orbit
 # assumption: centre of mass at rest
 from math import sqrt
