@@ -28,7 +28,7 @@ described by a Kepler potential (i.e. Phi1 = - G M2 / r). The latter assumption 
 relaxed in future versions of the code. Note that the 'total' mass M1 may be subject to
 definition, e.g. in the case of a NFW potential for which the mass diverges with radius.
 
-Both Phi1 and Phi2 are assumed to be central potentials that depend on the distance
+Both Phi1 and Phi2 are taken to be central potentials that depend on the distance
 bwetween the bodies only.
 
 Even though the equation of motion is of second order (m=2) in dt,
@@ -203,9 +203,12 @@ Currently, only a number of spherically symmetric potentials are implemented:
 
 - Navarro, Frenk, and White (1997) potential (see https://en.wikipedia.org/wiki/Navarro–Frenk–White_profile)
 
-If not specified, the potential defaults to the Kepler potential.
+The potential needs to be explicitly set; otherwise an error is raised.
+
 Potentials other than the Kepler potential require the value of an additional
-parameter, i.e. the scale radius.
+parameter, i.e. the scale radius. If the potential is not Keplerian, and the
+required parameters are not explicitly set, an error is raised.
+
 Note that the mass of the NFW profile diverges with radius. Therefore, for
 this particular model instead of the total mass, it is necessary to specify
 the central density of the body, in addition the value of the concentration,
