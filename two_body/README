@@ -291,6 +291,18 @@ parameters -- is included as  to allow for a check of the numerical result.
 Beware that in the case of non-closed orbits, the analytic result will merely
 agree with a fragment of the orbit only (osculating orbits).
 
+In addition, the script provides a visualisation of the evolution of the total
+energy and the relative specific angular momentum. The maximum error in either
+quantity is dumped to stdout at runtime, along with the theoretically expected
+error (to order of magnitude), and can be used as a check for the performance
+of the code. Beware that in the presence of dissipative forces (e.g. dynamical
+friction) neither the energy nor the angular momentum are conserved. Also,
+when using backwards integration, the bounds on the error in energy and angular
+momentum printed to stdout will differ from the bounds shown in the evolution
+as the reference values are not the same. The code uses the actual initial
+values, whereas the visualisation script uses the values on the first row of
+the output file, which in turn corresponds to the values at the time in the past.
+
 The script requires some settings. These can be accomplished by directly editing
 the script's header to set e.g. the physical units, or via input arguments.
 Some of the latter are optional and set to reasonable defaults. Other are mandatory,
