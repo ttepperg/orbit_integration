@@ -171,7 +171,7 @@ def Kepler_Mass(mass = None):
 
 # Plummer potential
 def Plummer_Potential(mass = None, a = None):
-	'''Implements  a wrapper for the Plummer (1911) potential.
+	'''Implements a wrapper for the Plummer (1911) potential.
 	Reduces to Kepler potential for a=0.'''
 	if mass is None:
 		raise ValueError("mass is a required argument in Plummer_Potential")
@@ -258,7 +258,7 @@ def Plummer_VelDisp(mass = None, a = None):
 
 # NFW potential
 def NFW_Potential(rho0 = None, rs = None):
-	'''Implements  a wrapper for the NFW (1997) potential'''
+	'''Implements a wrapper for the NFW (1997) potential'''
 	if rho0 is None:
 		raise ValueError("rho0 is a required argument in NFW_Potential")
 	elif rho0 <= 0:
@@ -358,6 +358,7 @@ def NFW_Vmax(rho0 = None, rs = None):
 		return NFW_Vcirc(rho0,rs)(2.16258*rs)
 
 
+# NFW velocity dispersion
 def NFW_VelDisp(rho0 = None, rs = None):
 	'''Returns the approximate 1D NFW velocity dispersion.
 	The approximation is taken from Zentner and Bullock (2003,
@@ -411,7 +412,7 @@ def Hernquist_Potential(mass = None, a = None):
 
 # Hernquist density profile
 def Hernquist_Density(mass = None, a = None):
-	'''Returns the Hernquist density at r.'''
+	'''Returns the Hernquist density at r'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Hernquist_Mass")
 	elif a is None:
@@ -431,7 +432,7 @@ def Hernquist_Density(mass = None, a = None):
 
 # Hernquist cumulative mass
 def Hernquist_Mass(mass = None, a = None):
-	'''Returns the cumulative Hernquist mass at r.'''
+	'''Returns the cumulative Hernquist mass at r'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Hernquist_Mass")
 	elif a is None:
@@ -479,6 +480,128 @@ def Hernquist_VelDisp(mass = None, a = None):
 				raise ValueError("Zero or negative radius in Hernquist_Mass")
 		return Hernquist_veldisp
 			
+
+
+
+# PSEUDO-ISOTHERMAL SPHERE (PITS)
+# Used in e.g.:
+# Jiang & Binney (2000, https://ui.adsabs.harvard.edu/abs/2000MNRAS.314..468J/abstract) -> with exp. tapper
+# Kormendy & Freeman (2016, https://ui.adsabs.harvard.edu/abs/2016ApJ...817...84K/abstract)
+
+# PITS potential
+def PITS_Potential(rho0 = None, a = None):
+	'''Implements a wrapper for the PITS potential'''
+	if rho0 is None:
+		raise ValueError("rho0 is a required argument in PITS_Potential")
+	elif rho0 <= 0:
+		raise ValueError("rho0 must be positive in PITS_Potential")
+	elif a is None:
+		raise ValueError("a is a required argument in PITS_Potential")
+	elif a <= 0:
+		raise ValueError("a must be positive in PITS_Potential")
+	else:
+
+		def PITS_Pot(*r):
+			_amp = 4. * math.pi * Grav * rho0 * a**2
+			_r = norm(*r)
+			if _r > 0:
+				_x = _r / a
+				return _amp * ( 0.5 * math.log(1.+_x**2) + math.atan(_x)/_x )
+			else:
+				raise ValueError("Zero or negative radius in PITS_Potential")
+
+		# private attributes (= parent func. params) to allow for access from outside
+		PITS_Pot._a = a
+		PITS_Pot._rho0 = rho0
+		return PITS_Pot
+
+
+# PITS density profile
+def PITS_Density(rho0 = None, a = None):
+	'''Returns the PITS density at r'''
+	if rho0 is None:
+		raise ValueError("rho0 is a required argument in PITS_Density")
+	elif rho0 <= 0:
+		raise ValueError("rho0 must be positive in PITS_Density")
+	elif a is None:
+		raise ValueError("a is a required argument in PITS_Density")
+	elif a <= 0:
+		raise ValueError("a must be positive in PITS_Density")
+	else:
+		def PITS_dens(*r):
+			_r2 = norm2(*r)
+			_x2 = _r2 / a**2
+			return rho0 / (1. + _x2)
+		return PITS_dens
+
+
+# PITS cumulative mass
+def PITS_Mass(rho0 = None, a = None):
+	'''Returns the cumulative PITS mass at r'''
+	if rho0 is None:
+		raise ValueError("rho0 is a required argument in PITS_Mass")
+	elif rho0 <= 0:
+		raise ValueError("rho0 must be positive in PITS_Mass")
+	elif a is None:
+		raise ValueError("a is a required argument in PITS_Mass")
+	elif a <= 0:
+		raise ValueError("a must be positive in PITS_Mass")
+	else:
+		def PITS_M(*r):
+			_amp = 4. * math.pi * rho0 * a**3
+			_r = norm(*r)
+			_x = _r / a
+			return _amp * (_x - math.atan(_x))
+		return PITS_M
+
+
+# PITS asymptotic circular velocity (V_infinity)
+# See de Blok (2010), their equation 1 and below:
+# https://ui.adsabs.harvard.edu/abs/2010AdAst2010E...5D/abstract)
+def PITS_Vinf(rho0 = None, a = None):
+	'''Returns the asymptotic PITS circular velocity'''
+	if rho0 is None:
+		raise ValueError("rho0 is a required argument in PITS_Vinf")
+	elif rho0 <= 0:
+		raise ValueError("rho0 must be positive in PITS_Vinf")
+	elif a is None:
+		raise ValueError("a is a required argument in PITS_Vinf")
+	elif a <= 0:
+		raise ValueError("a must be positive in PITS_Vinf")
+	else:
+		return math.sqrt(4. * math.pi * Grav * rho0 * a**2)
+
+
+# PITS velocity dispersion
+def PITS_VelDisp(rho0 = None, a = None):
+	'''Returns the 1D PITS velocity dispersion.
+	The result is taken from Kormendy & Freeman (2016, their
+	equation 4). Beware that they may have adopted a different
+	convention for v_inf as we do here (see Kormendy & Freeman (2016,
+	https://ui.adsabs.harvard.edu/abs/2016ApJ...817...84K/abstract;
+	their equation 1 and bottom of page.
+	'''
+	if rho0 is None:
+		raise ValueError("rho0 is a required argument in PITS_VelDisp")
+	elif rho0 <= 0:
+		raise ValueError("rho0 must be positive in PITS_VelDisp")
+	elif a is None:
+		raise ValueError("a is a required argument in PITS_VelDisp")
+	elif a <= 0:
+		raise ValueError("a must be positive in PITS_VelDisp")
+	else:
+		def PITS_veldisp(*r):
+			_r = norm(*r)
+			if _r > 0:
+				_x = _r / a
+				_atanx = math.atan(_x)
+				_vinf2 = (PITS_Vinf(rho0,a))**2
+				return _vinf2 * (1.+_x**2) * (0.125*math.pi**2 - _atanx / _x - 0.5 * _atanx**2)
+			else:
+				raise ValueError("Zero or negative radius in PITS_VelDisp")
+		return PITS_veldisp
+
+
 
 
 # FIELDS AND FORCES
@@ -551,7 +674,7 @@ def dyn_friction_maxwell(eps = None):
 				_v = norm(*v)
 				if _v > 0:
 					amp = const * Grav**2 * mass * _log_lambda * rho(*r) / _v**3
-# 					sigma = math.sqrt(vel_disp(*r))
+# 					sigma = math.sqrt(vel_disp_1d_jeans(*r))	# too expensive!
 					sigma = math.sqrt(veldisp(*r))
 					if sigma > 0:
 						_X = _v / (math.sqrt(2.) * sigma)

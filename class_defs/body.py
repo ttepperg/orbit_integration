@@ -88,6 +88,10 @@ class Body():
 				_rho0 = self.potential.__getattribute__('_rho0')
 				_rs = self.potential.__getattribute__('_rs')
 				self.mass_cum = funcs.NFW_Mass(_rho0,_rs)
+			elif pot_name == "PITS_Pot":
+				_rho0 = self.potential.__getattribute__('_rho0')
+				_a = self.potential.__getattribute__('_a')
+				self.mass_cum = funcs.PITS_Mass(_rho0,_a)
 			else:
 				raise ValueError("No cumulative mass function available for Body instance with pot = {}.".\
 				format(pot_name))
@@ -111,6 +115,11 @@ class Body():
 					_rs = self.potential.__getattribute__('_rs')
 					self.dens = funcs.NFW_Density(_rho0,_rs)
 					self.vel_disp = funcs.NFW_VelDisp(_rho0,_rs)
+				elif pot_name == "PITS_Pot":
+					_rho0 = self.potential.__getattribute__('_rho0')
+					_a = self.potential.__getattribute__('_a')
+					self.dens = funcs.PITS_Density(_rho0,_a)
+					self.vel_disp = funcs.PITS_VelDisp(_rho0,_a)
 				else:
 					raise \
 						ValueError("No density profile and velocity dispersion available for Body instance with pot = {}.".\
