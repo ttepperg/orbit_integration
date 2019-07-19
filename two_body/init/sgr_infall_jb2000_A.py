@@ -23,9 +23,12 @@ t_1 = 1.135e1													# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Milky Way
-Mass1 = 2.5e12													# total mass (Msun)
-rs1 = 3.e1														# Plummer scale radius
-Potential1 = funcs.Plummer_Potential(mass=Mass1,a=rs1)			# potential (km/s)^2
+rho01 = 2.e8
+a1 = 1.e0														# PITS scale radius
+Potential1 = funcs.PITS_Potential(rho0=rho01,a=a1)				# potential (km/s)^2
+Mass1_cum = funcs.PITS_Mass(rho0=rho01,a=a1)					# mass function
+rt1 = [0.,0.,1000.]												# truncation radius
+Mass1 = Mass1_cum(*rt1)											# total mass (Msun)
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -34,9 +37,12 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Sagittarius dwarf
-Mass2 = 1.0e10													# total mass (Msun)
-rs2 = 1.e-2														# Plummer scale radius
-Potential2 = funcs.Plummer_Potential(mass=Mass2,a=rs2)			# potential (km/s)^2
+rho02 = 1.2e8
+a2 = 1.e0														# PITS scale radius
+Potential2 = funcs.PITS_Potential(rho0=rho02,a=a2)				# potential (km/s)^2
+Mass2_cum = funcs.PITS_Mass(rho0=rho02,a=a2)					# mass function
+rt2 = [0.,0.,70.]												# truncation radius
+Mass2 = Mass2_cum(*rt2)											# total mass (Msun)
 x2_0 = 0.														# positions (kpc)
 y2_0 = 0.
 z2_0 = -250.
@@ -46,9 +52,17 @@ vz2_0 = 0.
 
 
 # Dynamical friction settings
-soft_length2 = 1.0													# softening length of Sgr
+soft_length2 = 2.0e1												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
 
 # Info
-# print("Virial radius (kpc): {}".format(Rvir1))
+# print("Mass of MW [Msun]: {:E}".format(Mass1))
+# print("Mass of Sgr [Msun]: {:E}".format(Mass2))
+# 
+# # Check
+# import math
+# sigma2 = funcs.PITS_VelDisp(rho01,a1)
+# print(math.sqrt(sigma2(*rt2)))
+# print(funcs.PITS_Vinf(rho01,a1))
+# exit()
