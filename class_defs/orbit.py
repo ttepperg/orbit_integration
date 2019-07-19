@@ -853,9 +853,13 @@ class Orbit():
 
 			# The following are required to calculate the conservation of energy and
 			# angular momentum:
-			ePot0 = self.energy_pot()	# Initial relative energies
+			ePot0 = self.energy_pot()			# Initial relative energies
 			eKin0 = self.energy_kin()
-			Ltot0 = self.ang_mom()		# Initial relative angular momentum
+			Ltot_vec0 = self.ang_mom_vec()		# Initial relative angular momentum (vector)
+			Ltot0 = self.ang_mom()				# Initial relative angular momentum (magnitude)
+			x_axis = [1.,0.,0.]					# used to check direction of L
+			y_axis = [0.,1.,0.]					# used to check direction of L
+			z_axis = [0.,0.,1.]					# used to check direction of L
 
 			f = open(filename, 'at')	# append orbital evolution
 
@@ -878,6 +882,10 @@ class Orbit():
 			mred = self.mred()
 			eCons = 0.
 			lCons = 0.
+			lvecCons = 0.
+			cos_ax0 = funcs.dot_prod(x_axis,Ltot_vec0) / Ltot0
+			cos_ay0 = funcs.dot_prod(y_axis,Ltot_vec0) / Ltot0
+			cos_az0 = funcs.dot_prod(z_axis,Ltot_vec0) / Ltot0
 			time_steps = len(time_list)
 
 			for t in range(0,time_steps,output_freq):
@@ -892,7 +900,8 @@ class Orbit():
 				v2 = [vx2,vy2,vz2]
 				r_rel = [x2-x1,y2-y1,z2-z1]
 				v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
-				Ltot = funcs.norm(*funcs.cross_prod(r_rel,v_rel))				# spec.rel.ang.mom. (divided by Mred)
+				Ltot_vec = funcs.cross_prod(r_rel,v_rel)						# spec.rel.ang.mom. (divided by Mred)
+				Ltot = funcs.norm(*Ltot_vec)
 				ePot = \
 					mred * (self.b1.potential(*r_rel)+self.b2.potential(*r_rel))# rel. potential energy (?)
 				eKin = mred * funcs.eKin(*v_rel)								# rel. kin. energy
@@ -918,14 +927,33 @@ class Orbit():
 				lCons_t = abs((Ltot/Ltot0)-1.)
 				if lCons_t > lCons:
 					lCons = lCons_t
+				cos_ax = funcs.dot_prod(x_axis,Ltot_vec) / Ltot
+				cos_ay = funcs.dot_prod(y_axis,Ltot_vec) / Ltot
+				cos_az = funcs.dot_prod(z_axis,Ltot_vec) / Ltot
+				if abs(cos_ax0) > 0.:
+					lvecConsx_t = abs(cos_ax/cos_ax0-1.)
+				else:
+					lvecConsx_t = 0.
+				if abs(cos_ay0) > 0.:
+					lvecConsy_t = abs(cos_ay/cos_ay0-1.)
+				else:
+					lvecConsy_t = 0.
+				if abs(cos_az0) > 0.:
+					lvecConsz_t = abs(cos_az/cos_az0-1.)
+				else:
+					lvecConsz_t = 0.
+				lvecCons_t = max(lvecConsx_t,max(lvecConsy_t,lvecConsz_t))
+				if lvecCons_t > lvecCons:
+					lvecCons = lvecCons_t 
 
 			f.close()
 
 			if self.b1.dynamical_friction is not None or self.b2.dynamical_friction is not None:
 				print("\n\nWARNING: Dynamical friction is switched on!")
 				print("Neither energy nor angular momentum will be conserved.")
-			print("\n{:>45} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
-			print("{:>45} {:8.3E} %.\n".format("Angular momentum conservation to better than",1.e2*lCons))
+			print("\n{:>60} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
+			print("{:>60} {:8.3E} %.".format("Angular momentum conservation (magnitude) to better than",1.e2*lCons))
+			print("{:>60} {:8.3E} %.\n".format("Angular momentum conservation (direction) to better than",1.e2*lvecCons))
 
 			if eCons_t > 1. or lCons_t > 1:
 				print("\nWARNING: Possible merger scenario! Inspect orbit carefully.\n")
