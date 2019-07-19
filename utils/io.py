@@ -49,6 +49,18 @@ def get_input():
 
 		# Body 1
 		try:
+			ic.Mass1
+		except:
+			raise ValueError("Body mass is a required input parameter")
+		try:
+			r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
+		except:
+			raise ValueError("Body coordinates are a required input parameter")
+		try:
+			v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
+		except:
+			raise ValueError("Body velocity is a required input parameter")
+		try:
 			Pot1 = ic.Potential1
 		except:
 			Pot1 = None
@@ -56,11 +68,21 @@ def get_input():
 			DF1 = ic.Dynamical_Friction1
 		except:
 			DF1 = None
-		r10_vec = [ic.x1_0,ic.y1_0,ic.z1_0]
-		v10_vec = [ic.vx1_0,ic.vy1_0,ic.vz1_0]
 		ic.body1 = body.Body(mass=ic.Mass1,pot=Pot1,r_vec=r10_vec,v_vec=v10_vec,df=DF1)
 
 		# Body 2
+		try:
+			ic.Mass2
+		except:
+			raise ValueError("Body mass is a required input parameter")
+		try:
+			r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
+		except:
+			raise ValueError("Body coordinates are a required input parameter")
+		try:
+			v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
+		except:
+			raise ValueError("Body velocity is a required input parameter")
 		try:
 			Pot2 = ic.Potential2
 		except:
@@ -69,8 +91,6 @@ def get_input():
 			DF2 = ic.Dynamical_Friction2
 		except:
 			DF2 = None
-		r20_vec = [ic.x2_0,ic.y2_0,ic.z2_0]
-		v20_vec = [ic.vx2_0,ic.vy2_0,ic.vz2_0]
 		ic.body2 = body.Body(mass=ic.Mass2,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2)
 
 		# sanity check
