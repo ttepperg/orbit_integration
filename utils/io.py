@@ -68,7 +68,11 @@ def get_input():
 			DF1 = ic.Dynamical_Friction1
 		except:
 			DF1 = None
-		ic.body1 = body.Body(mass=ic.Mass1,pot=Pot1,r_vec=r10_vec,v_vec=v10_vec,df=DF1)
+		try:
+			mass1_evol = ics.Mass1_evol
+		except:
+			mass1_evol = None
+		ic.body1 = body.Body(mass=ic.Mass1,pot=Pot1,r_vec=r10_vec,v_vec=v10_vec,df=DF1,massevol=mass1_evol)
 
 		# Body 2
 		try:
@@ -91,7 +95,11 @@ def get_input():
 			DF2 = ic.Dynamical_Friction2
 		except:
 			DF2 = None
-		ic.body2 = body.Body(mass=ic.Mass2,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2)
+		try:
+			mass2_evol = ics.Mass2_evol
+		except:
+			mass2_evol = None
+		ic.body2 = body.Body(mass=ic.Mass2,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2,massevol=mass2_evol)
 
 		# sanity check
 		if DF1 is not None and DF2 is not None:

@@ -8,7 +8,7 @@ import config.phys_consts as pc
 
 class Body():
 	"""General body class representing a body"""
-	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None, df = None):
+	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None, df = None, massevol = None):
 		"""
 		NAME:
 
@@ -28,7 +28,9 @@ class Body():
 
 			v_vec - initial velocity vector of body (list)
 			
-			df = dynamical friction switch (boolean)
+			df - dynamical friction function
+
+			massevol - mass evolution function (if df is switched on)
 
 		OUTPUT:
 
@@ -123,7 +125,15 @@ class Body():
 				else:
 					raise \
 						ValueError("No density profile and velocity dispersion available for Body instance with pot = {}.".\
-					format(pot_name))
+						format(pot_name))
+
+			# set mass evolution function (if not set by user)
+			# only relevant for dynamical friction calculation
+			self.mass_evol = massevol
+			if self.mass_evol is None:
+				def mass_evol(t,*r):
+					return self.mass
+				self.mass_evol = mass_evol
 
 
 	def pos_rel(self,b):
