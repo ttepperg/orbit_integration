@@ -131,9 +131,9 @@ class Body():
 			# only relevant for dynamical friction calculation
 			self.mass_evol = massevol
 			if self.mass_evol is None:
-				def mass_evol(t,*r):
+				def _mass_evol(t,*r):
 					return self.mass
-				self.mass_evol = mass_evol
+				self.mass_evol = _mass_evol
 
 
 	def pos_rel(self,b):
