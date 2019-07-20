@@ -606,9 +606,10 @@ def PITS_VelDisp(rho0 = None, a = None):
 
 # FIELDS AND FORCES
 
-def tidal_radius(*r, m1 = None, m2 = None):
-	'''Returns the tidal radius of a body b2 described by its mass m2,
-	orbiting around a central mass m1.
+def tidal_radius(*r, m1_func = None, m2_func = None):
+	'''Returns the tidal radius of a body b2 -- described by its mass
+	distribution m2_func -- orbiting at a distance r from a central mass b1,
+	described by its mass distribution m1_func.
 	It requires a root finding algorithm as the tidal radius is implicitly
 	defined through a relation between the cumulative masses of the bodies
 	which depend on the bodys' relative position and the tidal radius.
@@ -617,24 +618,39 @@ def tidal_radius(*r, m1 = None, m2 = None):
 	Note that their equations differ by a numerical factor of order 1.
 	IMPORTANT: Spherically symmetry of the masses is assumed!
 	'''
-	if m1 is None:
-		raise ValueError("m1 is a required parameter in tidal_radius")
-	elif m2 is None:
-		raise ValueError("m2 is a required parameter in tidal_radius")
+	if m1_func is None:
+		raise ValueError("m1_func is a required parameter in tidal_radius")
+	elif m2_func is None:
+		raise ValueError("m2_func is a required parameter in tidal_radius")
 	elif len(r) < 1:
 		raise ValueError("r must have dimension >= 1 in tidal_radius, but has {}".format(len(r)))
 	else:
 		_r = norm(*r)
 		def func(rt):
 			_rt = [rt,0.,0.]
-			return rt**3 * m1(*r) - _r**3 * m2(*_rt)
+			return rt**3 * m1_func(*r) - _r**3 * m2_func(*_rt)
 		return brent_root(f = func, x0 = 0., x1 = _r, max_iter=50, tolerance=1.e-5)
 
 
-def mass_bound():
-	'''Returns the mass of an object within its tidal radius at a distance r from
-	another object.'''
-	
+def mass_bound(m1_func = None, m2_func = None):
+	'''Returns the mass of an object b2 -- described by its mass
+	distribution m2_func -- within its tidal radius orbiting at a distance
+	r from another object b1, described by its mass distribution m1_func.
+	IMPORTANT: Spherically symmetry of the masses is assumed!
+	'''
+	if m1_func is None:
+		raise ValueError("m1_func is a required parameter in mass_bound")
+	elif m2_func is None:
+		raise ValueError("m2_func is a required parameter in mass_bound")
+	else:
+		# it should be a generic function of t and r
+		def _mass_b(t,*r):
+			_rt = [tidal_radius(*r,m1_func=m1_func,m2_func=m2_func)]
+			mb = m2_func(*_rt)
+			return mb
+		return _mass_b
+ 
+
 
 def dyn_friction_simpl():
 	'''Calcualates the *magnitude* of the deceleration experienced by an object of

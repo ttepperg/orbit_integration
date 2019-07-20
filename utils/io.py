@@ -63,7 +63,7 @@ def get_input():
 		try:
 			Pot1 = ic.Potential1
 		except:
-			Pot1 = None
+			raise ValueError("Body potential is a required input parameter")
 		try:
 			DF1 = ic.Dynamical_Friction1
 		except:
@@ -90,17 +90,18 @@ def get_input():
 		try:
 			Pot2 = ic.Potential2
 		except:
-			Pot2 = None
+			raise ValueError("Body potential is a required input parameter")
 		try:
 			DF2 = ic.Dynamical_Friction2
 		except:
 			DF2 = None
 		try:
-			mass2_evol = ics.Mass2_evol
+			mass2_evol = ic.Mass2_evol
 		except:
 			mass2_evol = None
 		ic.body2 = body.Body(mass=ic.Mass2,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2,massevol=mass2_evol)
 
+		
 		# sanity check
 		if DF1 is not None and DF2 is not None:
 			raise ValueError("Both bodies cannot excert dynamical friction simultaneously")

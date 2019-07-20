@@ -128,12 +128,19 @@ class Body():
 						format(pot_name))
 
 			# set mass evolution function (if not set by user)
-			# only relevant for dynamical friction calculation
-			self.mass_evol = massevol
-			if self.mass_evol is None:
+			# only relevant for dynamical friction calculation (for now)
+			# IMPORTANT: mass evolution = mass loss (for now)
+			if massevol is None:			# no mass evolution
 				def _mass_evol(t,*r):
 					return self.mass
-				self.mass_evol = _mass_evol
+			else:							# mass evolution as set by input param.
+				def _mass_evol(t,*r):
+					mb = massevol(t,*r)
+					if mb < self.mass:		# mass evolution = mass loss
+						self.mass = mb
+					return self.mass
+			self.mass_evol = _mass_evol
+
 
 
 	def pos_rel(self,b):
