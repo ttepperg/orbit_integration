@@ -959,6 +959,8 @@ class Orbit():
 				print("\nWARNING: Possible merger scenario! Inspect orbit carefully.\n")
 
 			print("\nOutput written to file {} with timestep frequency {}\n".format(filename, output_freq))
+			
+			return
 
 
 
