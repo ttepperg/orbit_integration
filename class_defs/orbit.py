@@ -125,15 +125,15 @@ class Orbit():
 
 
 	def energy_pot(self):
-		'''total potential energy'''
+		'''specific potential energy'''
 		_r = self.pos()
-		return self.mred()*(self.b1.potential(*_r)+self.b2.potential(*_r))
+		return (self.b1.potential(*_r)+self.b2.potential(*_r))
 
 
 	def energy_kin(self):
-		'''relative kinetic energy'''
+		'''specific relative kinetic energy'''
 		_v = self.speed()
-		return 0.5*self.mred()*_v**2
+		return 0.5*_v**2
 
 
 	def energy_tot(self):
@@ -879,7 +879,6 @@ class Orbit():
 					"y2_proj", units.LENGTH_UNIT_STR, "vy2_proj", units.VEL_UNIT_STR, \
 					"KeplerOrbitAna_X", units.LENGTH_UNIT_STR, "KeplerOrbitAna_Y", units.LENGTH_UNIT_STR))
 
-			mred = self.mred()
 			eCons = 0.
 			lCons = 0.
 			lvecCons = 0.
@@ -902,9 +901,8 @@ class Orbit():
 				v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
 				Ltot_vec = funcs.cross_prod(r_rel,v_rel)						# spec.rel.ang.mom. (divided by Mred)
 				Ltot = funcs.norm(*Ltot_vec)
-				ePot = \
-					mred * (self.b1.potential(*r_rel)+self.b2.potential(*r_rel))# rel. potential energy (?)
-				eKin = mred * funcs.eKin(*v_rel)								# rel. kin. energy
+				ePot = (self.b1.potential(*r_rel)+self.b2.potential(*r_rel))	# rel. potential energy (?)
+				eKin = funcs.eKin(*v_rel)										# rel. kin. energy
 				r1_rot = self.orbital_plane(r1)									# rotate vectors onto orbital plane
 				v1_rot = self.orbital_plane(v1)
 				r2_rot = self.orbital_plane(r2)
