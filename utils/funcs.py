@@ -9,7 +9,7 @@ from config.phys_consts import Grav, Infinity
 from num_diff.central_diff import cen_diff_first
 sys.path.insert(0,'../../.')
 from ode_int.rk4 import ode_rk4
-
+from roots.brent import brent_root
 
 # METRICS AND TRANSFORMATIONS
 
@@ -606,6 +606,36 @@ def PITS_VelDisp(rho0 = None, a = None):
 
 # FIELDS AND FORCES
 
+def tidal_radius(*r, m1 = None, m2 = None):
+	'''Returns the tidal radius of a body b2 described by its mass m2,
+	orbiting around a central mass m1.
+	It requires a root finding algorithm as the tidal radius is implicitly
+	defined through a relation between the cumulative masses of the bodies
+	which depend on the bodys' relative position and the tidal radius.
+	See Jiang & Loeb (2000, their equation 5)
+	See Dierickx & Loeb (2017a, their equation 8)
+	Note that their equations differ by a numerical factor of order 1.
+	IMPORTANT: Spherically symmetry of the masses is assumed!
+	'''
+	if m1 is None:
+		raise ValueError("m1 is a required parameter in tidal_radius")
+	elif m2 is None:
+		raise ValueError("m2 is a required parameter in tidal_radius")
+	elif len(r) < 1:
+		raise ValueError("r must have dimension >= 1 in tidal_radius, but has {}".format(len(r)))
+	else:
+		_r = norm(*r)
+		def func(rt):
+			_rt = [rt,0.,0.]
+			return rt**3 * m1(*r) - _r**3 * m2(*_rt)
+		return brent_root(f = func, x0 = 0., x1 = _r, max_iter=50, tolerance=1.e-5)
+
+
+def mass_bound():
+	'''Returns the mass of an object within its tidal radius at a distance r from
+	another object.'''
+	
+
 def dyn_friction_simpl():
 	'''Calcualates the *magnitude* of the deceleration experienced by an object of
 	mass M due to dynamical friction exerted by a surrounding, uniform density
@@ -688,7 +718,6 @@ def dyn_friction_maxwell(eps = None):
 		return dynfric_maxwell
 
 
-
 def vel_disp_1d_jeans(*r, rho = None, pot = None):
 	'''
 	WARNING: This routine is computationally expensive.
@@ -727,7 +756,6 @@ def vel_disp_1d_jeans(*r, rho = None, pot = None):
 			return int[0][_steps]/rho(*r)
 
 
-
 def couloumb_log_hfm03(*r, epsilon = None):
 	'''Returns the Couloumb logarithm used to calculate the dynamical friction
 	deceleration, using the parametrization by Hashimoto et al. (2003, their
@@ -746,7 +774,6 @@ def couloumb_log_hfm03(*r, epsilon = None):
 			return 0.
 		else:
 			return math.log(_r / denom)
-
 
 
 def grav_field(*r, pot = None):
