@@ -277,7 +277,7 @@ class Orbit():
 
 
 	def apsidal_angle(self):
-		'''Calcualates the angle between the periapsis -- given by
+		'''Calculates the angle between the periapsis -- given by
 		the eccentricity vector -- and the x-axis on the orbital plane.'''
 		_evec = self.eccentricity_vec()
 		_evecrot = self.orbital_plane(_evec)
@@ -311,7 +311,7 @@ class Orbit():
 			else:
 				return 2.*math.pi - math.acos(_n[0])
 		else:
-# 			print("\nWARNING: longitude of ascending node undefined. Set to 0 by convention.")
+			print("\nWARNING: longitude of ascending node undefined. Set to 0 by convention.")
 			return 0.
 
 
@@ -390,12 +390,12 @@ class Orbit():
 			file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Initial radial vel. (v_rad_0):",self.v_rad()), \
 			file = fileout)
-		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Rel. specific ang. mom. vec. (h_vec):",*self.ang_mom_vec()), \
-			file = fileout)
-		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"[normalised]:",*self.ang_mom_vec_norm()), \
-			file = fileout)
-		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"[along z-axis]:",*self.orbital_plane(self.ang_mom_vec())), \
-			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Rel. specific ang. mom. vec. (h_vec):", \
+			*self.ang_mom_vec()), file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"[normalised]:", \
+			*self.ang_mom_vec_norm()), file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"[along z-axis]:", \
+			*self.orbital_plane(self.ang_mom_vec())), file = fileout)
 		print("{}{:>40}{:15.4f}\n".format(first_chr,"Rel. specific ang. mom. (h):",self.ang_mom()), \
 			file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Eccentricity (e):",self.eccentricity()), \
@@ -408,16 +408,16 @@ class Orbit():
 			file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Orbital inclination (psi_0; deg):",math.degrees(_incl)), \
 			file = fileout)
-		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Ascending node (n_vec):",*self.asc_node_vec()), \
-			file = fileout)
-		print("{}{:>40}{:15.4f}".format(first_chr,"Long. of asc. node (Omega_0; deg):",math.degrees(self.long_asc_node())), \
-			file = fileout)
-		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Eccentricity vector (e_vec):",*self.eccentricity_vec()), \
-			file = fileout)
-		print("{}{:>40}{:15.4f}".format(first_chr,"Apsidal angle (phi_0; deg):",math.degrees(self.apsidal_angle())), \
-			file = fileout)
-		print("{}{:>40}{:15.4f}".format(first_chr,"Argument of periapsis (omega_0; deg):",math.degrees(self.arg_periapsis())), \
-			file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Ascending node (n_vec):", \
+			*self.asc_node_vec()), file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Long. of asc. node (Omega_0; deg):", \
+			math.degrees(self.long_asc_node())), file = fileout)
+		print("{}{:>40} ({:5.3f},{:5.3f},{:5.3f})".format(first_chr,"Eccentricity vector (e_vec):", \
+			*self.eccentricity_vec()), file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Apsidal angle (phi_0; deg):", \
+			math.degrees(self.apsidal_angle())), file = fileout)
+		print("{}{:>40}{:15.4f}".format(first_chr,"Argument of periapsis (omega_0; deg):", \
+			math.degrees(self.arg_periapsis())), file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Rel. pericentre (rp):",self.pericenter()), \
 			file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Vel. at pericentre (vp):",self.v_peri()), \
@@ -433,11 +433,11 @@ class Orbit():
 			file = fileout)
 			print("{}{:>40}{:15.4f}".format(first_chr,"Approx. pericentric period (Tp):",_orbital_period_peri), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}".format(first_chr,"Rel. potential energy (V):",self.energy_pot()), \
+		print("{}{:>40}{:15.4E}".format(first_chr,"Rel. specific potential energy (V):",self.energy_pot()), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}".format(first_chr,"Rel. kinetic energy (T):",self.energy_kin()), \
+		print("{}{:>40}{:15.4E}".format(first_chr,"Rel. specific kinetic energy (T):",self.energy_kin()), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}\n".format(first_chr,"Rel. total energy (E):",self.energy_tot()), \
+		print("{}{:>40}{:15.4E}\n".format(first_chr,"Rel. specific total energy (E):",self.energy_tot()), \
 			file = fileout)
 		
 		if filename is not None:

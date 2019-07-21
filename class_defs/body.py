@@ -133,10 +133,10 @@ class Body():
 			if massevol is None:			# no mass evolution
 				def _mass_evol(t,*r):
 					return self.mass
-			else:							# mass evolution as set by input param.
-				def _mass_evol(t,*r):
+			else:							# mass evolution as set by input paramameter
+				def _mass_evol(t,*r):		# for now: mass evolution = mass loss
 					mb = massevol(t,*r)
-					if mb < self.mass:		# mass evolution = mass loss
+					if mb < self.mass:
 						self.mass = mb
 					return self.mass
 			self.mass_evol = _mass_evol
