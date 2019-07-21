@@ -3,10 +3,11 @@ Author:	Thorsten Tepper Garcia
 
 This is setting is an attempt to reproduce model A of Jiang & Binney (2000), with
 the following differences:
-- MW mass profile (see their equation 2); which affects dynamical friction
-- Sgr mass profile
-- Absence of Galactic disc (see their equation 1a,b)
-- Absence of mass loss experienced by Sgr due to tidal stripping (see their equation 4a,b)
+
+- Both the MW and Sgr are free to move
+- Our MW and Sgr mass profiles do not have a tapper function (see their equation 2), which
+  slightly changes the potential
+- Absence of dilution factor in mass loss experienced by Sgr due to tidal stripping (see their equation 4a,b)
 - Differences in the calculation of the dynamical friction:
 	- Variable Coloumb logarithm  (they adopt a constant value Log L = 8.5)
 
@@ -54,7 +55,7 @@ vz2_0 = 0.
 # Dynamical friction settings
 soft_length2 = 2.0e1												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
-
+Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
 
 # Info
 # print("Mass of MW [Msun]: {:E}".format(Mass1))
