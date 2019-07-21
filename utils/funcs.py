@@ -626,10 +626,10 @@ def tidal_radius(*r, m1_func = None, m2_func = None):
 		raise ValueError("r must have dimension >= 1 in tidal_radius, but has {}".format(len(r)))
 	else:
 		_r = norm(*r)
-		def func(rt):
-			_rt = [rt,0.,0.]
-			return rt**3 * m1_func(*r) - _r**3 * m2_func(*_rt)
-		return brent_root(f = func, x0 = 0., x1 = _r, max_iter=50, tolerance=1.e-5)
+		def func(_rt):
+			_rrel = max(1.e-10,abs(_r - _rt))
+			return 2*_rt**3 * m1_func(_rrel) - _rrel**3 * m2_func(_rt)
+		return brent_root(f = func, x0 = 1.e-10, x1 = _r, max_iter=50, tolerance=1.e-5)
 
 
 def mass_bound(m1_func = None, m2_func = None):
