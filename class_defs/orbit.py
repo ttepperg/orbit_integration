@@ -960,7 +960,7 @@ class Orbit():
 			
 			# mass evolution (if set)
 			print("M1 final bound mass: {:E}".format(self.b1.mass))
-			print("M2 final bound mass: {:E}".format(self.b2.mass))
+			print("M2 final bound mass: {:E}\n".format(self.b2.mass))
 
 
 			return
