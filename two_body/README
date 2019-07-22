@@ -61,7 +61,10 @@ Note that a 2D system can be simulated equally well with this code by simply
 setting all z-components to 0 initially.
 
 Currently, only a number of spherically symmetric potentials are implemented.
-See Section INPUT below.
+The effect of dynamical friction is implemented but its optional. Similarly,
+mass loss due to tidal stripping can be switched on if required. Obviously,
+these should be used in the case of extended bodies only.
+See Section INPUT below for more information.
 
 
 # TIME INTEGRATION
@@ -101,6 +104,14 @@ Also, orbit precession may naturally result from central potentials other than
 point-like masses (Bertrand's Theorem; https://en.wikipedia.org/wiki/Bertrand%27s_theorem)
 and it thus does not necessarily indicate an error in the integration scheme (see
 Section 'IMPORTANT REMARKS' below).
+
+As an alternative to the leapfrog method, the Euler-Richardson is implemented.
+This method presumably shows a better performance in the presence of velocity-dependent
+forces (e.g. dynamical friction). However, some preliminary tests show no obvious
+improvement with respect to the leapfrog method in the presence of dynamical friction,
+but they do show a less satisfactory performance in terms of conservation laws in
+standard test cases without dissipative forces.
+
 
 
 # SPATIAL DERIVATIVES
@@ -197,11 +208,14 @@ Currently, only a number of spherically symmetric potentials are implemented:
 
 - Kepler (or point-like) potential
 
-- Plummer (1911) potential (see https://en.wikipedia.org/wiki/Plummer_model)
+- Plummer (1911) potential
+ (see https://en.wikipedia.org/wiki/Plummer_model)
 
-- Hernquist (1990) potential (see http://adsabs.harvard.edu/abs/1990ApJ...356..359H)
+- Hernquist (1990) potential
+ (see http://adsabs.harvard.edu/abs/1990ApJ...356..359H)
 
-- Navarro, Frenk, and White (1997) potential (see https://en.wikipedia.org/wiki/Navarro–Frenk–White_profile)
+- Navarro, Frenk, and White (1997) potential
+ (see https://en.wikipedia.org/wiki/Navarro–Frenk–White_profile)
 
 The potential needs to be explicitly set; otherwise an error is raised.
 
@@ -215,10 +229,14 @@ the central density of the body, in addition the value of the concentration,
 as well as its extension (typically the virial radius) from which the total mass
 is calculated.
 
-Note that providing the state vectos r0 and v0 for each body is the preferred
-method to specify the initial conditions of the system. However, some methods
-are available to impose certain conditions on the orbit, e.g. a circular orbit
-*within* the input parameter file.
+The effect of dynamical friction is implemented but is optional. If desired,
+it needs to be specified in the input parameter file. In dynamical friction
+is switched on, mass loss due to tidal stripping may be switched on as well.
+
+It is worth emphasising that providing the state vectos r0 and v0 for each
+body is the preferred method to specify the initial conditions of the system.
+However, some methods are available to impose certain conditions on the orbit,
+e.g. a circular orbit *within* the input parameter file.
 
 The corresponding orbital parameters (e.g. eccentricity, orbital period,
 etc.) are then calculated from the initial orbital state vectors at runtime
@@ -226,7 +244,9 @@ and written to stodut, as well as in the form of a header in the output file
 (see Section OUTPUT).
 
 The parameter file needs to be present in the directory 'init'. There, a few
-example parameter files are provided, for guidance.
+example parameter files are provided, for guidance. These show, e.g. how
+to set up different potentials, how to switch on dynamical friction and
+optionally mass loss due to tidal stripping.
 
 
 # OUTPUT
@@ -311,6 +331,7 @@ values are printed to stdout by the python code at runtime.
 
 Please consult the script's header for additional information on these
 input arguments and their default values.
+
 
 
 # IMPORTANT REMARKS
