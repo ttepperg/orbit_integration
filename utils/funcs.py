@@ -615,7 +615,9 @@ def tidal_radius(*r, m1_func = None, m2_func = None):
 	which depend on the bodys' relative position and the tidal radius.
 	See Klypin et al. (1999a, their equation 6) or
 	Nichols & Bland-Hawthorn (2009, their equation 12)
-	IMPORTANT: Spherically symmetry of the masses is assumed!
+	IMPORTANT: The following assumptions are made:
+	- both masses are spherically symmetric
+	- the tidal radius is not expected to be smaller than 1.e-5*r
 	'''
 	if m1_func is None:
 		raise ValueError("m1_func is a required parameter in tidal_radius_approx")
@@ -630,7 +632,7 @@ def tidal_radius(*r, m1_func = None, m2_func = None):
 		def func(_rt):
 			m2 = m2_func(_rt)
 			return _rt**3*(2.-(_r/m1)*dMdr)*m1 - _r**3*m2
-		return brent_root(f = func, x0 = 1.e-5, x1 = _r, max_iter=50, tolerance=1.e-5)
+		return brent_root(f = func, x0 = 1.e-5*_r, x1 = _r, max_iter=50, tolerance=1.e-5)
 
 
 def tidal_radius_approx(*r, m1_func = None, m2_func = None):
@@ -643,7 +645,9 @@ def tidal_radius_approx(*r, m1_func = None, m2_func = None):
 	See Jiang & Loeb (2000, their equation 5)
 	See Dierickx & Loeb (2017a, their equation 8)
 	Note that their equations differ by a numerical factor of order 1.
-	IMPORTANT: Spherically symmetry of the masses is assumed!
+	IMPORTANT: The following assumptions are made:
+	- both masses are spherically symmetric
+	- the tidal radius is not expected to be smaller than 1.e-5*r
 	'''
 	if m1_func is None:
 		raise ValueError("m1_func is a required parameter in tidal_radius_approx")
@@ -654,9 +658,9 @@ def tidal_radius_approx(*r, m1_func = None, m2_func = None):
 	else:
 		_r = norm(*r)
 		def func(_rt):
-			_rrel = max(1.e-5,abs(_r - _rt))
+			_rrel = max(1.e-5*_r,abs(_r - _rt))
 			return 2.*_rt**3 * m1_func(_rrel) - _rrel**3 * m2_func(_rt)
-		return brent_root(f = func, x0 = 1.e-5, x1 = _r, max_iter=50, tolerance=1.e-5)
+		return brent_root(f = func, x0 = 1.e-5*_r, x1 = _r, max_iter=50, tolerance=1.e-5)
 
 
 def mass_bound(m1_func = None, m2_func = None):
@@ -672,7 +676,6 @@ def mass_bound(m1_func = None, m2_func = None):
 	else:
 		# it must be a generic function of t and r
 		def _mass_b(t,*r):
-# 			_rt = [tidal_radius_approx(*r,m1_func=m1_func,m2_func=m2_func)]
 			_rt = [tidal_radius(*r,m1_func=m1_func,m2_func=m2_func)]
 			mb = m2_func(*_rt)
 			return mb
