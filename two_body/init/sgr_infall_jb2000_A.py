@@ -55,6 +55,8 @@ vz2_0 = 0.
 # Dynamical friction settings
 soft_length2 = 2.0e1												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
+
+# Mass loss
 Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
 
 # Info
