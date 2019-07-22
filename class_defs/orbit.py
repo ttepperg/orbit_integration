@@ -958,9 +958,34 @@ class Orbit():
 
 			print("\nOutput written to file {} with timestep frequency {}\n".format(filename, output_freq))
 			
+			# Improve on this output; e.g. make it dependent on whether mass
+			# evolution was explicitly set by input parameter.
 			# mass evolution (if set)
 			print("M1 final bound mass: {:E}".format(self.b1.mass))
 			print("M2 final bound mass: {:E}\n".format(self.b2.mass))
+
+
+			# Improve on this output
+			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
+					state_vector[0][0], state_vector[1][0], state_vector[2][0], state_vector[3][0], \
+					state_vector[4][0], state_vector[5][0], state_vector[6][0], state_vector[7][0], \
+					state_vector[8][0], state_vector[9][0], state_vector[10][0], state_vector[11][0]
+			r_ini = [x2-x1,y2-y1,z2-z1]
+			v_ini = [vx2-vx1,vy2-vy1,vz2-vz1]
+			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
+					state_vector[0][time_steps-1], state_vector[1][time_steps-1], \
+					state_vector[2][time_steps-1], state_vector[3][time_steps-1], \
+					state_vector[4][time_steps-1], state_vector[5][time_steps-1], \
+					state_vector[6][time_steps-1], state_vector[7][time_steps-1], \
+					state_vector[8][time_steps-1], state_vector[9][time_steps-1], \
+					state_vector[10][time_steps-1], state_vector[11][time_steps-1]
+			r_end = [x2-x1,y2-y1,z2-z1]
+			v_end = [vx2-vx1,vy2-vy1,vz2-vz1]
+			print("Initial relative position: {}".format(r_ini))
+			print("Initial relative velocity: {}".format(v_ini))
+			print("Final relative position: {}".format(r_end))
+			print("Final relative velocity: {}\n".format(v_end))
+
 
 
 			return
