@@ -6,9 +6,8 @@ import math
 import sys
 from utils import funcs
 import config.phys_consts as pc
-# from num_diff.forward_diff import fwd_diff_first	# forward finite difference scheme
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
-from ode_int.leapfrog import ode_leap
+from ode_int.leapfrog import ode_leap					# leapfrog time integrator (recommended)
 from config import units
 
 
@@ -505,7 +504,7 @@ class Orbit():
 
 			# accelerations:
 			# dynamical friction is turned into a repulsive force when backwards_switch < 0
-			# note: the shape of _F is dictated by module ode_leap
+			# note: the shape of _F is dictated by time integration module (ode_leap or ode_eulric)
 			_F = [*self.set_accelerations(backwards_switch)]
 
 			print("\nOrbit integration{}".format(" (backwards):" if backwards_switch < 0 else ":"))
@@ -525,6 +524,7 @@ class Orbit():
 			# 		each EoM[i] is 'function' of time, i.e. an array where each item corresponds to a
 			# 		given integration time, i.e. EoM[i][t]
 			time, EoM = ode_leap(dr2dt2 = _F, rank = 12, initCond = _ics, steps = _N, stepSize = time_step)
+
 			
 			# invert time arrow and velocities after backwards integration
 			if backwards_switch < 1:
