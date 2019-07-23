@@ -7,7 +7,9 @@ import sys
 from utils import funcs
 import config.phys_consts as pc
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
+																	# alternative: forward finite difference scheme
 from ode_int.leapfrog import ode_leap					# leapfrog time integrator (recommended)
+																	# alternative: euler-richardson
 from config import units
 
 
@@ -826,9 +828,9 @@ class Orbit():
 
 			filename - full path to output file
 			time_list - list of integration time steps (with length = time_steps)
-			state_vector - interleaved list if state vectors for each body
-						   (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2) for each time step
-
+			state_vector - interleaved list if state vectors for each body:
+				  					(x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+				  				for each time step
 		OUTPUT:
           
 			None
@@ -836,6 +838,7 @@ class Orbit():
 		HISTORY:
 
 			2019-07-09 - Written - TTG
+			2019-07-23 - Move cons.laws to independent routine - TTG
 
 		"""
 		if time_list is None:
@@ -851,17 +854,8 @@ class Orbit():
 			# include initial orbital parameters in header of output file
 			self.orbit_info(filename)
 
-			# The following are required to calculate the conservation of energy and
-			# angular momentum:
-			ePot0 = self.energy_pot()			# Initial relative energies
-			eKin0 = self.energy_kin()
-			Ltot_vec0 = self.ang_mom_vec()		# Initial relative angular momentum (vector)
-			Ltot0 = self.ang_mom()				# Initial relative angular momentum (magnitude)
-			x_axis = [1.,0.,0.]					# used to check direction of L
-			y_axis = [0.,1.,0.]					# used to check direction of L
-			z_axis = [0.,0.,1.]					# used to check direction of L
-
-			f = open(filename, 'at')	# append orbital evolution
+			# append orbital evolution to file
+			f = open(filename, 'at')
 
 			f.write(("{:<9}{:<6}{:8} {:<14}"+"{:6} {:<9}"*2+"{:4} {:<9}"*22+"\n").\
 				format("# time", units.TIME_UNIT_STR, \
@@ -877,14 +871,9 @@ class Orbit():
 					"y1_proj", units.LENGTH_UNIT_STR, "vy1_proj", units.VEL_UNIT_STR, \
 					"x2_proj", units.LENGTH_UNIT_STR, "vx2_proj", units.VEL_UNIT_STR, \
 					"y2_proj", units.LENGTH_UNIT_STR, "vy2_proj", units.VEL_UNIT_STR, \
-					"KeplerOrbitAna_X", units.LENGTH_UNIT_STR, "KeplerOrbitAna_Y", units.LENGTH_UNIT_STR))
+					"KeplerOrbitAna_X", units.LENGTH_UNIT_STR, \
+					"KeplerOrbitAna_Y", units.LENGTH_UNIT_STR))
 
-			eCons = 0.
-			lCons = 0.
-			lvecCons = 0.
-			cos_ax0 = funcs.dot_prod(x_axis,Ltot_vec0) / Ltot0
-			cos_ay0 = funcs.dot_prod(y_axis,Ltot_vec0) / Ltot0
-			cos_az0 = funcs.dot_prod(z_axis,Ltot_vec0) / Ltot0
 			time_steps = len(time_list)
 
 			for t in range(0,time_steps,output_freq):
@@ -899,29 +888,179 @@ class Orbit():
 				v2 = [vx2,vy2,vz2]
 				r_rel = [x2-x1,y2-y1,z2-z1]
 				v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
-				Ltot_vec = funcs.cross_prod(r_rel,v_rel)						# spec.rel.ang.mom. (divided by Mred)
+				Ltot_vec = funcs.cross_prod(r_rel,v_rel)		# rel. spec. ang. mom. (divided by Mred)
 				Ltot = funcs.norm(*Ltot_vec)
-				ePot = (self.b1.potential(*r_rel)+self.b2.potential(*r_rel))	# rel. potential energy (?)
-				eKin = funcs.eKin(*v_rel)										# rel. kin. energy
-				r1_rot = self.orbital_plane(r1)									# rotate vectors onto orbital plane
+				ePot = \
+					(self.b1.potential(*r_rel) + \
+					self.b2.potential(*r_rel))						# rel. spec. potential energy (?)
+				eKin = funcs.eKin(*v_rel)							# rel. spec. kin. energy
+				r1_rot = self.orbital_plane(r1)					# rotate vectors onto orbital plane
 				v1_rot = self.orbital_plane(v1)
 				r2_rot = self.orbital_plane(r2)
 				v2_rot = self.orbital_plane(v2)
-				x1_rot,y1_rot,_ = r1_rot										# ignore z-comps. because they are 0.
+				x1_rot,y1_rot,_ = r1_rot							# ignore z-comps. because they are 0.
 				vx1_rot,vy1_rot,_ = v1_rot
 				x2_rot,y2_rot,_ = r2_rot
 				vx2_rot,vy2_rot,_ = v2_rot
 
 				f.write(("{:<15.8f}{:<23.10E}"+"{:<16.8E}"*2+"{:<14.4E}"*22+"\n").\
 					format(time_list[t]*units.TIME.value, Ltot, ePot, eKin, \
-						x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2, \
-						x1_rot, vx1_rot, y1_rot, vy1_rot, x2_rot, vx2_rot, y2_rot, vy2_rot, \
-						*self.kepler_orbit_cartesian(t*2.*math.pi/time_steps)))
+								x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2, \
+								x1_rot, vx1_rot, y1_rot, vy1_rot, x2_rot, vx2_rot, y2_rot, vy2_rot, \
+								*self.kepler_orbit_cartesian(t*2.*math.pi/time_steps)\
+							)\
+						 )
+
+			f.close()
+
+			print("\nOutput written to file {} with timestep frequency {}\n".\
+				format(filename, output_freq))
+
+			# conservation laws
+			self.conservation(time=time_list,sv=state_vector)
 			
+			# Improve on this output; e.g. make it dependent on whether mass
+			# evolution was explicitly set by input parameter.
+			# mass evolution (if set)
+			self.ini_end_out(sv = state_vector)
+
+			return 0
+
+
+	def ini_end_out(self,sv = None):
+		"""
+		NAME:
+
+			ini_end_out
+
+		PURPOSE:
+
+			Dump to stodut some useful information of the initial
+			and final state vectors and masses. The latter is only
+			relevant if some form of mass evolution has been switched
+			on
+
+
+		INPUT:
+
+			sv - interleaved list if state vectors for each body:
+				  	(x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+				  for each time step
+
+		OUTPUT:
+          
+			None
+
+		HISTORY:
+
+			2019-07-23 - Written - TTG
+
+		"""
+		if sv is None:
+			raise ValueError("sv is a required parameter in ini_end_out")
+		else:
+			# set index for initial and final time steps
+			t_ini = 0
+			t_end = len(sv[0])-1
+			print("\tM1 final bound mass: {:E}".format(self.b1.mass))
+			print("\tM2 final bound mass: {:E}\n".format(self.b2.mass))
+			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
+					sv[0][t_ini], sv[1][t_ini], sv[2][t_ini], sv[3][t_ini], \
+					sv[4][t_ini], sv[5][t_ini], sv[6][t_ini], sv[7][t_ini], \
+					sv[8][t_ini], sv[9][t_ini], sv[10][t_ini], sv[11][t_ini]
+			r_ini = [x2-x1,y2-y1,z2-z1]
+			v_ini = [vx2-vx1,vy2-vy1,vz2-vz1]
+			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
+					sv[0][t_end], sv[1][t_end], sv[2][t_end], sv[3][t_end], \
+					sv[4][t_end], sv[5][t_end], sv[6][t_end], sv[7][t_end], \
+					sv[8][t_end], sv[9][t_end], sv[10][t_end], sv[11][t_end]
+			r_end = [x2-x1,y2-y1,z2-z1]
+			v_end = [vx2-vx1,vy2-vy1,vz2-vz1]
+			print("\tInitial relative position: ({:.3f},{:.3f},{:.3f})".format(*r_ini))
+			print("\tInitial relative distance: {:.3f}".format(funcs.norm(*r_ini)))
+			print("\tInitial relative velocity: ({:.3f},{:.3f},{:.3f})".format(*v_ini))
+			print("\tInitial relative speed: {:.3f}".format(funcs.norm(*v_ini)))
+			print("\tFinal relative position:({:.3f},{:.3f},{:.3f})".format(*r_end))
+			print("\tFinal relative distance: {:.3f}".format(funcs.norm(*r_end)))
+			print("\tFinal relative velocity: ({:.3f},{:.3f},{:.3f})".format(*v_end))
+			print("\tFinal relative speed: {:.3f}\n".format(funcs.norm(*v_end)))
+			return 0
+
+
+
+	def conservation(self, time = None, sv = None):
+		"""
+		NAME:
+
+			conservation
+
+		PURPOSE:
+
+			Calculate the state of conservation laws, i.e. the change in the
+			total relative specific energy, and the angular momentum vector (both
+			its direction and magnitude)
+
+
+		INPUT:
+
+			time - list of integration time steps (with length = time_steps)
+			sv - interleaved list if state vectors for each body:
+				 	(x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
+				  for each time step
+
+		OUTPUT:
+          
+			None
+
+		HISTORY:
+
+			2019-07-23 - Written - TTG
+
+		"""
+		if time is None:
+			raise ValueError("time is a required parameter in write_table")
+		elif sv is None:
+			raise ValueError("sv is a required parameter in write_table")
+		else:
+
+			# Initial (reference) values
+			ePot0 = self.energy_pot()
+			eKin0 = self.energy_kin()
+			Ltot_vec0 = self.ang_mom_vec()
+			Ltot0 = self.ang_mom()
+			x_axis = [1.,0.,0.]						# used to check direction of L
+			y_axis = [0.,1.,0.]						# used to check direction of L
+			z_axis = [0.,0.,1.]						# used to check direction of L
+
+			eTot_Cons, lCons, lvecCons = 0., 0., 0.
+			cos_ax0 = funcs.dot_prod(x_axis,Ltot_vec0) / Ltot0
+			cos_ay0 = funcs.dot_prod(y_axis,Ltot_vec0) / Ltot0
+			cos_az0 = funcs.dot_prod(z_axis,Ltot_vec0) / Ltot0
+			time_steps = len(time)
+
+			for t in range(0,time_steps):
+
+				x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
+					sv[0][t], sv[1][t], sv[2][t], sv[3][t], \
+					sv[4][t], sv[5][t], sv[6][t], sv[7][t], \
+					sv[8][t], sv[9][t], sv[10][t], sv[11][t]
+				r1 = [x1,y1,z1]
+				v1 = [vx1,vy1,vz1]
+				r2 = [x2,y2,z2]
+				v2 = [vx2,vy2,vz2]
+				r_rel = [x2-x1,y2-y1,z2-z1]
+				v_rel = [vx2-vx1,vy2-vy1,vz2-vz1]
+				Ltot_vec = funcs.cross_prod(r_rel,v_rel)		# rel. spec. ang. mom. (divided by Mred)
+				Ltot = funcs.norm(*Ltot_vec)
+				ePot = \
+					(self.b1.potential(*r_rel) + \
+					self.b2.potential(*r_rel))						# rel. spec. potential energy (?)
+				eKin = funcs.eKin(*v_rel)							# rel. spec. kin. energy
+
 				# Calculate state of conservation laws
-				eCons_t = abs((ePot+eKin)/(ePot0+eKin0)-1.)
-				if eCons_t > eCons:
-					eCons = eCons_t
+				eTot_t = abs((ePot+eKin)/(ePot0+eKin0)-1.)
+				if eTot_t > eTot_Cons:
+					eTot_Cons = eTot_t
 				lCons_t = abs((Ltot/Ltot0)-1.)
 				if lCons_t > lCons:
 					lCons = lCons_t
@@ -944,51 +1083,18 @@ class Orbit():
 				if lvecCons_t > lvecCons:
 					lvecCons = lvecCons_t 
 
-			f.close()
-
 			if self.b1.dynamical_friction is not None or self.b2.dynamical_friction is not None:
 				print("\n\nWARNING: Dynamical friction is switched on!")
 				print("Neither energy nor angular momentum will be conserved.")
-			print("\n{:>60} {:8.3E} %.".format("Energy conservation to better than",1.e2*eCons))
-			print("{:>60} {:8.3E} %.".format("Angular momentum conservation (magnitude) to better than",1.e2*lCons))
-			print("{:>60} {:8.3E} %.\n".format("Angular momentum conservation (direction) to better than",1.e2*lvecCons))
+			print("\n{:>60} {:8.3E} %.".\
+				format("Energy conservation to better than",1.e2*eTot_Cons))
+			print("{:>60} {:8.3E} %.".\
+				format("Angular momentum conservation (magnitude) to better than",1.e2*lCons))
+			print("{:>60} {:8.3E} %.\n".\
+				format("Angular momentum conservation (direction) to better than",1.e2*lvecCons))
 
-			if eCons_t > 1. or lCons_t > 1:
-				print("\nWARNING: Possible merger scenario! Inspect orbit carefully.\n")
+			if eTot_t > 1. or lCons_t > 1:
+				print("\tWARNING: Possible merger scenario! Inspect orbit carefully.\n")
 
-			print("\nOutput written to file {} with timestep frequency {}\n".format(filename, output_freq))
-			
-			# Improve on this output; e.g. make it dependent on whether mass
-			# evolution was explicitly set by input parameter.
-			# mass evolution (if set)
-			print("M1 final bound mass: {:E}".format(self.b1.mass))
-			print("M2 final bound mass: {:E}\n".format(self.b2.mass))
-
-
-			# Improve on this output
-			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
-					state_vector[0][0], state_vector[1][0], state_vector[2][0], state_vector[3][0], \
-					state_vector[4][0], state_vector[5][0], state_vector[6][0], state_vector[7][0], \
-					state_vector[8][0], state_vector[9][0], state_vector[10][0], state_vector[11][0]
-			r_ini = [x2-x1,y2-y1,z2-z1]
-			v_ini = [vx2-vx1,vy2-vy1,vz2-vz1]
-			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
-					state_vector[0][time_steps-1], state_vector[1][time_steps-1], \
-					state_vector[2][time_steps-1], state_vector[3][time_steps-1], \
-					state_vector[4][time_steps-1], state_vector[5][time_steps-1], \
-					state_vector[6][time_steps-1], state_vector[7][time_steps-1], \
-					state_vector[8][time_steps-1], state_vector[9][time_steps-1], \
-					state_vector[10][time_steps-1], state_vector[11][time_steps-1]
-			r_end = [x2-x1,y2-y1,z2-z1]
-			v_end = [vx2-vx1,vy2-vy1,vz2-vz1]
-			print("Initial relative position: {}".format(r_ini))
-			print("Initial relative velocity: {}".format(v_ini))
-			print("Final relative position: {}".format(r_end))
-			print("Final relative velocity: {}\n".format(v_end))
-
-
-
-			return
-
-
+			return 0
 
