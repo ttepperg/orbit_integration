@@ -2,8 +2,9 @@
 Author:	Thorsten Tepper Garcia
 
 This is setting is an attempt to model the infall of the Sagittarius
-dwarf galaxy onto the Milky Way. The data for the initial conditons
-is taken from Dierickx & Loeb (2017a).
+dwarf galaxy onto the Milky Way. The observed data used as initial conditons
+correspond to the values quoted by Dierickx & Loeb (2017a).
+We also adopt their mass models for each galaxy.
 
 '''
 
