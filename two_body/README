@@ -214,10 +214,15 @@ Currently, only a number of spherically symmetric potentials are implemented:
 - Hernquist (1990) potential
  (see http://adsabs.harvard.edu/abs/1990ApJ...356..359H)
 
-- Navarro, Frenk, and White (1997) potential
+- Navarro, Frenk, and White (1997; NFW) potential
  (see https://en.wikipedia.org/wiki/Navarro–Frenk–White_profile)
+ 
+- Pseudo Isothermal Sphere (PITS) potential 
 
 The potential needs to be explicitly set; otherwise an error is raised.
+All the potentials other than the PITS potential are negative everywhere,
+and then to 0 at infinity. The PITS potential is positive everywhere and
+diverges at infinity.
 
 Potentials other than the Kepler potential require the value of an additional
 parameter, i.e. the scale radius. If the potential is not Keplerian, and the
@@ -283,6 +288,17 @@ evolution.
 
 Note that the ordering of the output data always follows the time arrow, i.e.
 from the earliest time to the latest time.
+
+Beware that if the level of energy conservation dumped to stdout may differ
+from system (as in computer) to system. Also, it may differ from (i.e. it may be
+better than) the values displayed graphically. If so, this is most likely due to
+round-off of the numbers when writing the table. In this case, the precision
+of the format string may be increased, although in reality it is not an issue
+as these may be differences at the > 7th decimal place (in percent).
+It is also important to bear in mind that, in the presence of dissipative
+forces, energy changes may exceed the (perhaps naively) expected limit of
+100%, because the potential energy (with except of the PITS potential) becomes
+increasingly negative (and may not have a lower bound) as the body sinks.
 
 
 # VISUALISATION
