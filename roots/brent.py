@@ -33,8 +33,8 @@ def brent_root(f = None, x0 = None, x1 = None, max_iter=50, tolerance=1e-5):
           
 
 	HISTORY:
-
-		2019-07-20 - Modified - TTG
+		Unknown - Written - Nick Ryan
+		2019-07-20 - Adapted - TTG
 
 	"""
 	if f is None:
