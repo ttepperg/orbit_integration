@@ -124,10 +124,10 @@ class Body():
 					self.vel_disp = funcs.PITS_VelDisp(_rho0,_a)
 				else:
 					raise \
-						ValueError("No density profile and velocity dispersion available for Body instance with pot = {}.".\
+					ValueError("No density profile / velocity dispersion available for Body instance with pot = {}.".\
 						format(pot_name))
 
-			# set mass evolution function (if not set by user)
+			# set mass evolution function (if not set by input parameter)
 			# only relevant for dynamical friction calculation (for now)
 			# IMPORTANT: mass evolution = mass loss (for now)
 			if massevol is None:			# no mass evolution
