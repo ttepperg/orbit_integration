@@ -796,7 +796,6 @@ class Orbit():
 		return dvx1dt, dvy1dt, dvz1dt, dvx2dt, dvy2dt, dvz2dt
 
 
-
 	def write_table(self, time_list = None, state_vector = None, filename = None, output_freq = None):
 		"""
 		NAME:
@@ -913,7 +912,7 @@ class Orbit():
 
 			f.close()
 
-			print("\nOutput written to file {} with timestep frequency {}\n".\
+			print("\nOutput written to file:\n\t{}\nwith timestep frequency {}\n".\
 				format(filename, output_freq))
 
 			# conservation laws
