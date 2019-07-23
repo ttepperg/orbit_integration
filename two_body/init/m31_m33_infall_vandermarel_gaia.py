@@ -16,32 +16,18 @@ The Galactocentric velocity of M31 from the Gaia DR2 data alone is:
 
 v_M31 = (0 ± 75, −176 ± 51, −84 ± 73) km/s
 
-and the value combining the Gaia DR2 and HST PM measurements
-is:
-
-v_M31 = (34 ± 36, −123 ± 25, −19 ± 37) km/s
-
 The Galactocentric velocity of M33 from the Gaia DR2 data alone is:
 
 v_M33 = (49 ± 74, 14 ± 70, 28 ± 73) km/s
 
-and the value combining the Gaia DR2 and VLBA PM measurements is:
-
-v_M33 =  (45 ± 20, 91 ± 22, 124 ± 26) km/s
-
-
 For now, we neglect the error bars in both the relative coordinates and velocities
 and adopt the central measured values only.
 
-Here, we take the Gaia DR2 data alone (see m31_m33_infall_vandermarel_gaia_hst.py
-for an alternative). The velocity of M33 relative to M31 is thus
+The velocity of M33 relative to M31 is thus
 
 v_rel = (49, 190, 112)
 
 The orbit is integrated for 10 Gyr to allow for a broader history.
-
-Note that this model does not take yet dynamical friction into account. This is done
-in m31_m33_infall_vandermarel_gaia_dynfric.py.
 
 '''
 
@@ -83,6 +69,11 @@ z2_0 = -129.8
 vx2_0 = 49.													# velocities (km/s):
 vy2_0 = 190.
 vz2_0 = 112.
+
+
+# Dynamical friction settings
+soft_length2 = 28.5													# softening length of M33
+Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
 
 # Info

@@ -73,4 +73,5 @@ vz2_0 = 230.308
 
 
 # Info
-# print("Virial radius (kpc): {}".format(Rvir1))
+# print("Virial radius (kpc): {:.3f}".format(Rvir1))
+
