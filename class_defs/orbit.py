@@ -493,7 +493,7 @@ class Orbit():
 			_T = (time_end - time_start)
 			_N = math.ceil( _T / time_step)
 
-			# initial conditions
+			# initial conditions (flip velocity sign if integrating backwards)
 			# note: the shape of _ics is dictated by module ode_leap
 			_ics = \
 				[time_start, \
@@ -510,15 +510,17 @@ class Orbit():
 			_F = [*self.set_accelerations(backwards_switch)]
 
 			print("\nOrbit integration{}".format(" (backwards):" if backwards_switch < 0 else ":"))
+			
 			if backwards_switch > 0:
 				print("\tTime range [t0,t1] = [{},{}]".format(time_start,time_end))
 			else:
 				print("\tTime range [t0,t1] = [{},{}]".format(backwards_switch*time_end,time_start))
 			print("\tTime steps {};  Step size: {:8.2E}".format(_N,time_step))
-			print("\nThe following are only valid in the absence of dissipative forces (e.g. dynamical friction):")
-			print("\tMaximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
-			# see http://physics.bu.edu/py502/lectures3/cmotion.pdf:
-			print("\tExpected accumulated error in x and v of order {:8.2E}".format((_T * time_step)**2))
+			
+			if self.b1.dynamical_friction is None and self.b2.dynamical_friction is None:
+				print("\tMaximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
+				# see http://physics.bu.edu/py502/lectures3/cmotion.pdf:
+				print("\tExpected accumulated error in x and v of order {:8.2E}".format((_T * time_step)**2))
 
 			# Integrate system
 			# Note: x1 = EoM[0], vx1 = EoM[1], y1 = EoM[2], vy1 = EoM[3], z1 = EoM[4], vz1 = EoM[5],
@@ -912,8 +914,8 @@ class Orbit():
 
 			f.close()
 
-			print("\nOutput written to file:\n\t{}\nwith timestep frequency {}\n".\
-				format(filename, output_freq))
+			print("\nOutput with timestep frequency {} written to file:\n\n\t{}\n".\
+				format(output_freq,filename))
 
 			# conservation laws
 			self.conservation(time=time_list,sv=state_vector)
@@ -961,8 +963,7 @@ class Orbit():
 			# set index for initial and final time steps
 			t_ini = 0
 			t_end = len(sv[0])-1
-			print("\tM1 final bound mass: {:E}".format(self.b1.mass))
-			print("\tM2 final bound mass: {:E}\n".format(self.b2.mass))
+			print("\nInitial / final state vectors:")
 			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
 					sv[0][t_ini], sv[1][t_ini], sv[2][t_ini], sv[3][t_ini], \
 					sv[4][t_ini], sv[5][t_ini], sv[6][t_ini], sv[7][t_ini], \
@@ -983,6 +984,9 @@ class Orbit():
 			print("\tFinal relative distance: {:.3f}".format(funcs.norm(*r_end)))
 			print("\tFinal relative velocity: ({:.3f},{:.3f},{:.3f})".format(*v_end))
 			print("\tFinal relative speed: {:.3f}\n".format(funcs.norm(*v_end)))
+			print("The following are only relevant is masses are allowed to evolved:")
+			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass))
+			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass))
 			return 0
 
 
@@ -1082,10 +1086,11 @@ class Orbit():
 				if lvecCons_t > lvecCons:
 					lvecCons = lvecCons_t 
 
+			print("Conservation laws:")
 			if self.b1.dynamical_friction is not None or self.b2.dynamical_friction is not None:
-				print("\n\nWARNING: Dynamical friction is switched on!")
-				print("Neither energy nor angular momentum will be conserved.")
-			print("\n{:>60} {:8.3E} %.".\
+				print("\n\nWARNING:\n\tDynamical friction is switched on!")
+				print("\tNeither energy nor angular momentum will be conserved.\n")
+			print("{:>60} {:8.3E} %.".\
 				format("Energy conservation to better than",1.e2*eTot_Cons))
 			print("{:>60} {:8.3E} %.".\
 				format("Angular momentum conservation (magnitude) to better than",1.e2*lCons))
@@ -1093,7 +1098,7 @@ class Orbit():
 				format("Angular momentum conservation (direction) to better than",1.e2*lvecCons))
 
 			if eTot_t > 1. or lCons_t > 1:
-				print("\tWARNING: Possible merger scenario! Inspect orbit carefully.\n")
+				print("\nWARNING:\n\tPossible merger scenario! Inspect orbit carefully.\n")
 
 			return 0
 
