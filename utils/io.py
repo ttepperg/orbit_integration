@@ -47,6 +47,25 @@ def get_input():
 		print("\nGathering input parameters from file {}...".format(ics_file))
 		ic = importlib.import_module(ics_file,package=relative_path)
 
+		# Time integration settings
+		try:
+			ic.t_0
+		except:
+			ic.t_0 = 0.
+		try:
+			ic.t_1
+		except:
+			ic.t_1 = 10.
+		try:
+			ic.delta_t
+		except:
+			ic.delta_t = 0.001
+
+		# sanity check in case of backwards integration
+		if ic.t_1 < 0 and ic.t_0 != 0:
+			raise \
+			ValueError("Initial time must be 0 for backwards integration")
+
 		# Body 1
 		try:
 			ic.Mass1
@@ -107,20 +126,6 @@ def get_input():
 			raise ValueError("Both bodies cannot excert dynamical friction simultaneously")
 		else:
 			print("Done.")
-
-		# Time integration settings
-		try:
-			ic.t_0
-		except:
-			ic.t_0 = 0.
-		try:
-			ic.t_1
-		except:
-			ic.t_1 = 10.
-		try:
-			ic.delta_t
-		except:
-			ic.delta_t = 0.001
 
 		# save init file name
 		ic.filename_prefix = ics_file
