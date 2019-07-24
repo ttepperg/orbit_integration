@@ -400,10 +400,10 @@ def Hernquist_Potential(mass = None, a = None):
 		def Hernquist_Pot(*r):
 			_amp = Grav*mass
 			_r = norm(*r)
-			if _r > 0:
+			if _r >= 0:
 				return -1. * (_amp / (_r+a))
 			else:
-				raise ValueError("Zero or negative radius in Hernquist_Potential")
+				raise ValueError("Negative radius in Hernquist_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
 		Hernquist_Pot._mass = mass
 		Hernquist_Pot._a = a
@@ -453,7 +453,7 @@ def Hernquist_Mass(mass = None, a = None):
 # Hernquist velocity dispersion
 def Hernquist_VelDisp(mass = None, a = None):
 	'''Returns the 1D Hernquist velocity dispersion,
-	as given by Hernqquist (1990, his equation 10)
+	as given by Hernquist (1990, his equation 10)
 	See http://adsabs.harvard.edu/abs/1990ApJ...356..359H
 	'''
 	if mass is None:
@@ -472,12 +472,12 @@ def Hernquist_VelDisp(mass = None, a = None):
 				_term1 = 12.*_r*_rpa**3*math.log(_rpa/_r)/a**4
 				_term2 = _r/_rpa
 				_term3 = 25. + _roa*(52 + _roa*(42. + _roa*12.))
-				if _term1 - _term2*_term3 >= 0:
+				if _term1 >= _term2*_term3:
 					return _amp*(_term1 - _term2*_term3)
 				else:
 					raise ValueError("Negative velocity dispersion in Hernquist_VelDisp")
 			else:
-				raise ValueError("Zero or negative radius in Hernquist_Mass")
+				raise ValueError("Zero or negative radius in Hernquist_VelDisp")
 		return Hernquist_veldisp
 			
 
@@ -620,11 +620,11 @@ def tidal_radius(*r, m1_func = None, m2_func = None):
 	- the tidal radius is not expected to be smaller than 1.e-5*r
 	'''
 	if m1_func is None:
-		raise ValueError("m1_func is a required parameter in tidal_radius_approx")
+		raise ValueError("m1_func is a required parameter in tidal_radius")
 	elif m2_func is None:
-		raise ValueError("m2_func is a required parameter in tidal_radius_approx")
+		raise ValueError("m2_func is a required parameter in tidal_radius")
 	elif len(r) < 1:
-		raise ValueError("r must have dimension >= 1 in tidal_radius_approx, but has {}".format(len(r)))
+		raise ValueError("r must have dimension >= 1 in tidal_radius, but has {}".format(len(r)))
 	else:
 		_r = norm(*r)
 		dMdr = grad_r(*r, func = m1_func)
@@ -632,7 +632,11 @@ def tidal_radius(*r, m1_func = None, m2_func = None):
 		def func(_rt):
 			m2 = m2_func(_rt)
 			return _rt**3*(2.-(_r/m1)*dMdr)*m1 - _r**3*m2
-		return brent_root(f = func, x0 = 1.e-5*_r, x1 = _r, max_iter=50, tolerance=1.e-5)
+		# find a range where root is bracketed
+		r0, r1 = 1.e-5*_r, _r
+		while func(r0)*func(r1)>0 and r0<r1:
+			r0 *= 1.1
+		return brent_root(f = func, x0 = r0, x1 = r1, max_iter=50, tolerance=1.e-5)
 
 
 def tidal_radius_approx(*r, m1_func = None, m2_func = None):
@@ -660,6 +664,10 @@ def tidal_radius_approx(*r, m1_func = None, m2_func = None):
 		def func(_rt):
 			_rrel = max(1.e-5*_r,abs(_r - _rt))
 			return 2.*_rt**3 * m1_func(_rrel) - _rrel**3 * m2_func(_rt)
+		# find a range where root is bracketed
+		r0, r1 = 1.e-5*_r, _r
+		while func(r0)*func(r1) > 0:
+			r0 *= 1.1
 		return brent_root(f = func, x0 = 1.e-5*_r, x1 = _r, max_iter=50, tolerance=1.e-5)
 
 
