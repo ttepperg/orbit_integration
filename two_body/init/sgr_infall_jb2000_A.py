@@ -1,7 +1,7 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This is setting is an attempt to reproduce model A of Jiang & Binney (2000), with
+This setup is an attempt to reproduce model A of Jiang & Binney (2000), with
 the following differences:
 
 - Both the MW and Sgr are free to move

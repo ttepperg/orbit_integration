@@ -1,7 +1,7 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This is setting is an attempt to reproduce the Sgr infall model of Dierickx & Loeb (2017a),
+This setup is an attempt to reproduce the Sgr infall model of Dierickx & Loeb (2017a),
 with the following differences:
 
 - Time integration is carried on using a leapfrog (rather than RK4) method;
@@ -54,3 +54,12 @@ Mass2_cum = funcs.Hernquist_Mass(mass=Mass2,a=a2)
 # Mass loss
 Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
 
+# Check
+t=0
+r0 = [x2_0,y2_0,z2_0]
+rt = funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass2_cum)
+print(funcs.norm(*r0))
+print(rt)
+print("{:E}".format(Mass2_evol(t,*r0)))
+print("{:E}".format(Potential2(*[0,])))
+# exit()

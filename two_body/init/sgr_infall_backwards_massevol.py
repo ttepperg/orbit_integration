@@ -1,10 +1,10 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This setup is an attempt to model the infall of the Sagittarius
-dwarf galaxy onto the Milky Way. The observed data used as initial conditons
-correspond to the values quoted by Dierickx & Loeb (2017a).
-We also adopt their mass models for each galaxy.
+This setup is essentially identical to sgr_infall_backwards.py, but taking
+the mass evolution (gain) of the LMC when integrating backwards.
+Recall: Because mass gets stripped at infall, the mass must have been higher
+at infall. This fact is taken into account here.
 
 '''
 
@@ -28,7 +28,7 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Sagittarius dwarf
-Mass2 = 1.3e10													# total mass (Msun)
+Mass2 = 1.9e9													# total mass (Msun)
 a2 = 9.81														# scale radius (kpc)
 Potential2 = funcs.Hernquist_Potential(mass=Mass2,a=a2)			# potential (km/s)^2
 x2_0 = 16.1														# positions (kpc)
@@ -42,4 +42,23 @@ vz2_0 = 228.1
 # Dynamical friction settings
 soft_length2 = 1.0													# softening length of LMC
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
+
+
+# Mass evolution
+Mass1_cum = funcs.Hernquist_Mass(mass=Mass1,a=a1)
+Mass2_cum = funcs.Hernquist_Mass(mass=Mass2,a=a2)
+Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
+
+
+# Test
+# t=0
+# r0 = [x2_0,y2_0,z2_0]
+# rt = funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass2_cum)
+# print(funcs.norm(*r0))
+# print(rt)
+# print("{:E}".format(Mass2_cum(rt)))
+# print("{:E}".format(Mass2_evol(t,*r0)))
+# exit()
+
+
 
