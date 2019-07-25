@@ -285,7 +285,7 @@ def NFW_Potential(mass = None, rs = None):
 
 		def NFW_Pot(*r):
 # 			_amp = -4. * math.pi * Grav * rho0 * rs**3
-			_amp = -Grav * mass
+			_amp = -1.*Grav * mass
 			_r = norm(*r)
 			if _r > 0:
 				return math.log(1.+_r/rs)*_amp/_r
@@ -310,8 +310,8 @@ def NFW_Density(mass = None, rs = None):
 	elif rs <= 0:
 		raise ValueError("rs must be positive in NFW_Density")
 	else:
-		rho0 = mass / (4.*math.pi*rs**3)
 		def NFW_dens(*r):
+			rho0 = mass / (4.*math.pi*rs**3)
 			_r = norm(*r)
 			_x = _r / rs
 			if _x > 0:
@@ -517,12 +517,12 @@ def Hernquist_VelDisp(mass = None, a = None):
 # Kormendy & Freeman (2016, https://ui.adsabs.harvard.edu/abs/2016ApJ...817...84K/abstract)
 
 # PITS potential
-def PITS_Potential(rho0 = None, a = None):
+def PITS_Potential(mass = None, a = None):
 	'''Implements a wrapper for the PITS potential'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in PITS_Potential")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in PITS_Potential")
+	if mass is None:
+		raise ValueError("mass is a required argument in PITS_Potential")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in PITS_Potential")
 	elif a is None:
 		raise ValueError("a is a required argument in PITS_Potential")
 	elif a <= 0:
@@ -530,7 +530,8 @@ def PITS_Potential(rho0 = None, a = None):
 	else:
 
 		def PITS_Pot(*r):
-			_amp = 4. * math.pi * Grav * rho0 * a**2
+# 			_amp = 4. * math.pi * Grav * rho0 * a**2
+			_amp = Grav * mass / a
 			_r = norm(*r)
 			_x = _r / a
 			if _x > 0:
@@ -540,23 +541,24 @@ def PITS_Potential(rho0 = None, a = None):
 
 		# private attributes (= parent func. params) to allow for access from outside
 		PITS_Pot._a = a
-		PITS_Pot._rho0 = rho0
+		PITS_Pot._mass = mass
 		return PITS_Pot
 
 
 # PITS density profile
-def PITS_Density(rho0 = None, a = None):
+def PITS_Density(mass = None, a = None):
 	'''Returns the PITS density at r'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in PITS_Density")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in PITS_Density")
+	if mass is None:
+		raise ValueError("mass is a required argument in PITS_Density")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in PITS_Density")
 	elif a is None:
 		raise ValueError("a is a required argument in PITS_Density")
 	elif a <= 0:
 		raise ValueError("a must be positive in PITS_Density")
 	else:
 		def PITS_dens(*r):
+			rho0 = mass / (4.*math.pi*a**3)
 			_r2 = norm2(*r)
 			_x2 = _r2 / a**2
 			return rho0 / (1. + _x2)
@@ -564,19 +566,20 @@ def PITS_Density(rho0 = None, a = None):
 
 
 # PITS cumulative mass
-def PITS_Mass(rho0 = None, a = None):
+def PITS_Mass(mass = None, a = None):
 	'''Returns the cumulative PITS mass at r'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in PITS_Mass")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in PITS_Mass")
+	if mass is None:
+		raise ValueError("mass is a required argument in PITS_Mass")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in PITS_Mass")
 	elif a is None:
 		raise ValueError("a is a required argument in PITS_Mass")
 	elif a <= 0:
 		raise ValueError("a must be positive in PITS_Mass")
 	else:
 		def PITS_M(*r):
-			_amp = 4. * math.pi * rho0 * a**3
+# 			_amp = 4. * math.pi * rho0 * a**3
+			_amp = mass
 			_r = norm(*r)
 			_x = _r / a
 			return _amp * (_x - math.atan(_x))
@@ -586,22 +589,23 @@ def PITS_Mass(rho0 = None, a = None):
 # PITS asymptotic circular velocity (V_infinity)
 # See de Blok (2010), their equation 1 and below:
 # https://ui.adsabs.harvard.edu/abs/2010AdAst2010E...5D/abstract)
-def PITS_Vinf(rho0 = None, a = None):
+def PITS_Vinf(mass = None, a = None):
 	'''Returns the asymptotic PITS circular velocity'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in PITS_Vinf")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in PITS_Vinf")
+	if mass is None:
+		raise ValueError("mass is a required argument in PITS_Vinf")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in PITS_Vinf")
 	elif a is None:
 		raise ValueError("a is a required argument in PITS_Vinf")
 	elif a <= 0:
 		raise ValueError("a must be positive in PITS_Vinf")
 	else:
-		return math.sqrt(4. * math.pi * Grav * rho0 * a**2)
+# 		return math.sqrt(4. * math.pi * Grav * rho0 * a**2)
+		return math.sqrt(Grav * mass / a)
 
 
 # PITS velocity dispersion
-def PITS_VelDisp(rho0 = None, a = None):
+def PITS_VelDisp(mass = None, a = None):
 	'''Returns the 1D PITS velocity dispersion.
 	The result is taken from Kormendy & Freeman (2016, their
 	equation 4). Beware that they may have adopted a different
@@ -609,10 +613,10 @@ def PITS_VelDisp(rho0 = None, a = None):
 	https://ui.adsabs.harvard.edu/abs/2016ApJ...817...84K/abstract;
 	their equation 1 and bottom of page.
 	'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in PITS_VelDisp")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in PITS_VelDisp")
+	if mass is None:
+		raise ValueError("mass is a required argument in PITS_VelDisp")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in PITS_VelDisp")
 	elif a is None:
 		raise ValueError("a is a required argument in PITS_VelDisp")
 	elif a <= 0:
@@ -623,7 +627,7 @@ def PITS_VelDisp(rho0 = None, a = None):
 			_x = _r / a
 			if _x > 0:
 				_atanx = math.atan(_x)
-				_vinf2 = (PITS_Vinf(rho0,a))**2
+				_vinf2 = (PITS_Vinf(mass,a))**2
 				return _vinf2 * (1.+_x**2) * (0.125*math.pi**2 - _atanx / _x - 0.5 * _atanx**2)
 			else:
 				raise ValueError("Zero or negative radius in PITS_VelDisp")
