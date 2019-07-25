@@ -6,42 +6,47 @@ N.B.: This is the time reversed evolution of the system defined by params_ini_3d
 This set of parameters produces a well-behaved two-body system, with a stable, highly precessing
 orbit characterised by the following parameters:
 
-                   Total mass of body 1:     1.2136E+06
+                   Total mass of body 1:     6.2832E+06
                    Total mass of body 2:     1.0000E+01
-                           Reduced mass:     9.9999E+00
+                           Reduced mass:     1.0000E+01
 
-          Initial rel. distance (r21_0):         0.8032
-             Initial rel. speed (v21_0):         1.7902
-      Initial tangential vel. (v_tan_0):         1.2441
-          Initial radial vel. (v_rad_0):         1.2874
-   Rel. specific ang. mom. vec. (h_vec): (-0.000,-0.000,-0.999)
+          Initial rel. distance (r21_0):         0.8162
+             Initial rel. speed (v21_0):         1.7473
+      Initial tangential vel. (v_tan_0):         1.2252
+          Initial radial vel. (v_rad_0):        -1.2457
+   Rel. specific ang. mom. vec. (h_vec): (-0.000,-0.000,-1.000)
                            [normalised]: (-0.000,-0.000,-1.000)
-                         [along z-axis]: (0.000,0.000,0.999)
-            Rel. specific ang. mom. (h):         0.9992
+                         [along z-axis]: (-0.000,-0.000,-1.000)
+            Rel. specific ang. mom. (h):         1.0000
 
-             Rel. semi-latus rectum (p):         0.2563
-       Rel. eccentricity vector (e_vec): (-0.685,0.322,-0.000)
-                  Rel. eccentricity (e):         0.7567
-                Rel. semimajor axis (a):         0.5998
-                Rel. semiminor axis (b):         0.3921
-             Apsidal angle (phi_0; deg):       155.5204
+                       Eccentricity (e):         0.7597
+                  Semi-latus rectum (p):         0.2511
+                     Semimajor axis (a):         0.5939
+                     Semiminor axis (b):         0.3862
        Orbital inclination (psi_0; deg):       180.0000
-                   Rel. pericentre (rp):         0.1459
-                Vel. at pericentre (vp):         6.8477
-                    Rel. apocentre (ra):         1.0537
-                 Vel. at apocentre (va):         0.9483
-                Rel. orbital period (T):         1.4789
-        Approx. orbit circumference (u):         3.1503
-        Approx. pericentric period (Tp):         0.4601
-         Approx. apocentric period (Ta):         3.3221
+                 Ascending node (n_vec): (0.000,0.000,0.000)
 
-              Rel. potential energy (T):    -1.9836E+02
-                Rel. kinetic energy (T):     1.6025E+01
-                  Rel. total energy (T):    -1.8233E+02
+WARNING: longitude of ascending node undefined. Set to 0 by convention.
+      Long. of asc. node (Omega_0; deg):         0.0000
+            Eccentricity vector (e_vec): (-0.683,0.332,0.000)
+             Apsidal angle (phi_0; deg):       154.0997
+   Argument of periapsis (omega_0; deg):       205.9003
+                   Rel. pericentre (rp):         0.1427
+                Vel. at pericentre (vp):         7.0067
+                    Rel. apocentre (ra):         1.0451
+                 Vel. at apocentre (va):         0.9568
+                Rel. orbital period (T):         1.4413
+        Approx. orbit circumference (u):         3.1138
+        Approx. pericentric period (Tp):         0.4444
+     Rel. specific potential energy (V):    -1.9758E+01
+       Rel. specific kinetic energy (T):     1.5265E+00
+         Rel. specific total energy (E):    -1.8231E+01
 
 
-           Energy conservation to better than 1.371E-04 %.
- Angular momentum conservation to better than 2.152E-10 %.
+Conservation laws:
+                          Energy conservation to better than 1.368E-04 %.
+    Angular momentum conservation (magnitude) to better than 1.583E-10 %.
+    Angular momentum conservation (direction) to better than 0.000E+00 %.
 
 A series of relevant plots for this system can be produced using:
 
@@ -62,6 +67,7 @@ pauseStep = 0.001
 '''
 
 from utils import funcs
+from math import pi
 
 
 t_0 = 0.0e0														# initial time (Gyr)
@@ -69,13 +75,10 @@ t_1 = 1.0e1														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-c1 = 1.0e0														# NFW concentration
 rs1 = 1.0e0														# NFW scale radius (kpc)
 rho01 = 5.0e5													# core density (Msun/kpc**3)
-Rvir1 = c1*rs1
-Potential1 = funcs.NFW_Potential(rho01,rs1)						# potential (km/s)^2
-Mass1_cum = funcs.NFW_Mass(rho01,rs1)
-Mass1 = Mass1_cum(Rvir1)											# total ('virial') mass (Msun)
+Mass1 = 4. * pi * rho01 * rs1**3
+Potential1 = funcs.NFW_Potential(Mass1,rs1)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -85,10 +88,10 @@ vz1_0 = 0.
 
 # Body 2
 Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
-x2_0 = 5.0467E-01												# positions (kpc)
-y2_0 = -6.2483E-01
-z2_0 = 8.9603E-13
-vx2_0 = -1.7767E+00												# velocities (km/s):
-vy2_0 = 2.1981E-01
-vz2_0 = 1.3800E-12
+Potential2 = funcs.Kepler_Potential(Mass2)			# potential (km/s)^2
+x2_0 = 0.52223													# positions (kpc)
+y2_0 = -0.62723
+z2_0 = 0.
+vx2_0 = -1.73865												# velocities (km/s):
+vy2_0 = 0.17338
+vz2_0 = 0.

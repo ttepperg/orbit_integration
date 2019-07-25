@@ -88,9 +88,9 @@ class Body():
 				else:
 					self.mass_cum = funcs.Hernquist_Mass(self.mass,_a)
 			elif pot_name == "NFW_Pot":
-				_mass0 = self.potential.__getattribute__('_mass0')
+				_mass = self.potential.__getattribute__('_mass')
 				_rs = self.potential.__getattribute__('_rs')
-				self.mass_cum = funcs.NFW_Mass(_mass0,_rs)
+				self.mass_cum = funcs.NFW_Mass(_mass,_rs)
 			elif pot_name == "PITS_Pot":
 				_rho0 = self.potential.__getattribute__('_rho0')
 				_a = self.potential.__getattribute__('_a')
@@ -121,10 +121,10 @@ class Body():
 						self.dens = funcs.Hernquist_Density(self.mass,_a)
 						self.vel_disp = funcs.Hernquist_VelDisp(self.mass,_a)
 				elif pot_name == "NFW_Pot":
-					_mass0 = self.potential.__getattribute__('_mass0')
+					_mass = self.potential.__getattribute__('_mass')
 					_rs = self.potential.__getattribute__('_rs')
-					self.dens = funcs.NFW_Density(_mass0,_rs)
-					self.vel_disp = funcs.NFW_VelDisp(_mass0,_rs)
+					self.dens = funcs.NFW_Density(_mass,_rs)
+					self.vel_disp = funcs.NFW_VelDisp(_mass,_rs)
 				elif pot_name == "PITS_Pot":
 					_rho0 = self.potential.__getattribute__('_rho0')
 					_a = self.potential.__getattribute__('_a')

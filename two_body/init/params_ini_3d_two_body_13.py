@@ -6,9 +6,9 @@ N.B.: This is the time reversed evolution of the system defined by params_ini_3d
 This set of parameters produces a well-behaved two-body system, with a stable, highly precessing
 orbit characterised by the following parameters:
 
-                   Total mass of body 1:     1.2136E+06
+                   Total mass of body 1:     6.2832E+06
                    Total mass of body 2:     1.0000E+01
-                           Reduced mass:     9.9999E+00
+                           Reduced mass:     1.0000E+01
 
           Initial rel. distance (r21_0):         1.0000
              Initial rel. speed (v21_0):         1.0000
@@ -19,13 +19,18 @@ orbit characterised by the following parameters:
                          [along z-axis]: (0.000,0.000,1.000)
             Rel. specific ang. mom. (h):         1.0000
 
-             Rel. semi-latus rectum (p):         0.1916
-       Rel. eccentricity vector (e_vec): (-0.808,0.000,0.000)
-                  Rel. eccentricity (e):         0.8084
-                Rel. semimajor axis (a):         0.5530
-                Rel. semiminor axis (b):         0.3255
-             Apsidal angle (phi_0; deg):       180.0000
+                       Eccentricity (e):         0.8084
+                  Semi-latus rectum (p):         0.1916
+                     Semimajor axis (a):         0.5530
+                     Semiminor axis (b):         0.3255
        Orbital inclination (psi_0; deg):         0.0000
+                 Ascending node (n_vec): (0.000,0.000,0.000)
+
+WARNING: longitude of ascending node undefined. Set to 0 by convention.
+      Long. of asc. node (Omega_0; deg):         0.0000
+            Eccentricity vector (e_vec): (-0.808,0.000,0.000)
+             Apsidal angle (phi_0; deg):       180.0000
+   Argument of periapsis (omega_0; deg):       180.0000
                    Rel. pericentre (rp):         0.1059
                 Vel. at pericentre (vp):         9.4391
                     Rel. apocentre (ra):         1.0000
@@ -33,15 +38,15 @@ orbit characterised by the following parameters:
                 Rel. orbital period (T):         1.1309
         Approx. orbit circumference (u):         2.8060
         Approx. pericentric period (Tp):         0.2973
-         Approx. apocentric period (Ta):         2.8060
-
-              Rel. potential energy (T):    -1.8731E+02
-                Rel. kinetic energy (T):     5.0000E+00
-                  Rel. total energy (T):    -1.8231E+02
+     Rel. specific potential energy (V):    -1.8731E+01
+       Rel. specific kinetic energy (T):     5.0000E-01
+         Rel. specific total energy (E):    -1.8231E+01
 
 
-           Energy conservation to better than 1.343E-04 %.
- Angular momentum conservation to better than 2.284E-10 %.
+Conservation laws:
+                          Energy conservation to better than 1.343E-04 %.
+    Angular momentum conservation (magnitude) to better than 1.780E-10 %.
+    Angular momentum conservation (direction) to better than 0.000E+00 %.
 
 A series of relevant plots for this system can be produced using:
 
@@ -62,6 +67,7 @@ pauseStep = 0.001
 '''
 
 from utils import funcs
+from math import pi
 
 
 t_0 = 0.0e0														# initial time (Gyr)
@@ -69,13 +75,10 @@ t_1 = 1.0e1														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-c1 = 1.0e0														# NFW concentration
 rs1 = 1.0e0														# NFW scale radius (kpc)
 rho01 = 5.0e5													# core density (Msun/kpc**3)
-Rvir1 = c1*rs1
-Potential1 = funcs.NFW_Potential(rho01,rs1)						# potential (km/s)^2
-Mass1_cum = funcs.NFW_Mass(rho01,rs1)
-Mass1 = Mass1_cum(Rvir1)										# total ('virial') mass (Msun)
+Mass1 = 4. * pi * rho01 * rs1**3
+Potential1 = funcs.NFW_Potential(Mass1,rs1)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.

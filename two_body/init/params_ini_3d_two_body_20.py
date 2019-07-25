@@ -6,9 +6,9 @@ both bodies being extended (as opposed to point-like) on a higly precessing orbi
 characterised by the following parameters:
 
 
-                   Total mass of body 1:     1.2136E+06
+                   Total mass of body 1:     6.2832E+06
                    Total mass of body 2:     1.0000E+06
-                           Reduced mass:     5.4824E+05
+                           Reduced mass:     8.6270E+05
 
           Initial rel. distance (r21_0):         1.4142
              Initial rel. speed (v21_0):         1.0000
@@ -36,13 +36,15 @@ characterised by the following parameters:
                 Rel. orbital period (T):         1.1666
         Approx. orbit circumference (u):         3.5712
         Approx. pericentric period (Tp):         0.2186
-              Rel. potential energy (V):    -1.0897E+07
-                Rel. kinetic energy (T):     2.7412E+05
-                  Rel. total energy (E):    -1.0622E+07
+     Rel. specific potential energy (V):    -1.9875E+01
+       Rel. specific kinetic energy (T):     5.0000E-01
+         Rel. specific total energy (E):    -1.9375E+01
 
 
-           Energy conservation to better than 7.206E-03 %.
- Angular momentum conservation to better than 2.152E-10 %.
+Conservation laws:
+                          Energy conservation to better than 7.215E-03 %.
+    Angular momentum conservation (magnitude) to better than 2.361E-10 %.
+    Angular momentum conservation (direction) to better than 5.762E-11 %.
 
 
 A series of relevant plots for this system can be produced using:
@@ -55,20 +57,18 @@ Try also setting plotRelOrbit = "F".
 '''
 
 from utils import funcs
+from math import pi
 
 
-t_0 = 0.														# initial time (Gyr)
+t_0 = 0.															# initial time (Gyr)
 t_1 = 10.														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-c1 = 1.0e0														# NFW concentration
 rs1 = 1.0e0														# NFW scale radius (kpc)
 rho01 = 5.0e5													# core density (Msun/kpc**3)
-Rvir1 = c1*rs1
-Potential1 = funcs.NFW_Potential(rho01,rs1)						# potential (km/s)^2
-Mass1_cum = funcs.NFW_Mass(rho01,rs1)
-Mass1 = Mass1_cum(Rvir1)										# total ('virial') mass (Msun)
+Mass1 = 4. * pi * rho01 * rs1**3
+Potential1 = funcs.NFW_Potential(Mass1,rs1)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -77,9 +77,9 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2 = 1.0e6													# total mass (Msun)
 rs2 = 1.e-1														# Plummer scale radius
-Potential2 = funcs.Plummer_Potential(mass=Mass2,a=rs2)			# potential (km/s)^2
+Mass2 = 1.0e6													# total mass (Msun)
+Potential2 = funcs.Plummer_Potential(Mass2,rs2)		# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 1.

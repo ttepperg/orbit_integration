@@ -1,8 +1,8 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This setup is essentially identical to sgr_infall_forward.py, but taking
-the mass evolution (loss) of the LMC as a result of tidal stripping.
+This setup is essentially identical to sgr_infall_forward.py, but
+neglecting dynamical friction.
 
 '''
 
@@ -35,14 +35,3 @@ z2_0 = 125.16118908506236
 vx2_0 = 65.79976992535424									# velocities (km/s):
 vy2_0 =  13.89047520759926
 vz2_0 = -71.08450826725453
-
-# Dynamical friction settings
-soft_length2 = 1.0																	# softening length of LMC
-Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
-
-
-# Mass evolution
-Mass1_cum = funcs.Hernquist_Mass(mass=Mass1,a=a1)
-Mass2_cum = funcs.Hernquist_Mass(mass=Mass2,a=a2)
-Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
-
