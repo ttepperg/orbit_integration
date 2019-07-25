@@ -312,7 +312,7 @@ class Orbit():
 			else:
 				return 2.*math.pi - math.acos(_n[0])
 		else:
-			print("\nWARNING:\n\tlongitude of ascending node undefined. Set to 0 by convention.")
+			print("\nWARNING:\n\tlongitude of ascending node undefined. Set to 0 by convention.\n")
 			return 0.
 
 
