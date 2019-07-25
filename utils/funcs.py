@@ -271,12 +271,12 @@ def Plummer_VelDisp(mass = None, a = None):
 # NAVARRO, FRENK, AND WHITE (1997) MODEL
 
 # NFW potential
-def NFW_Potential(rho0 = None, rs = None):
+def NFW_Potential(mass0 = None, rs = None):
 	'''Implements a wrapper for the NFW (1997) potential'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Potential")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Potential")
+	if mass0 is None:
+		raise ValueError("mass0 is a required argument in NFW_Potential")
+	elif mass0 <= 0:
+		raise ValueError("mass0 must be positive in NFW_Potential")
 	elif rs is None:
 		raise ValueError("rs is a required argument in NFW_Potential")
 	elif rs <= 0:
@@ -284,7 +284,8 @@ def NFW_Potential(rho0 = None, rs = None):
 	else:
 
 		def NFW_Pot(*r):
-			_amp = -4. * math.pi * Grav * rho0 * rs**3
+# 			_amp = -4. * math.pi * Grav * rho0 * rs**3
+			_amp = -Grav * mass0
 			_r = norm(*r)
 			if _r > 0:
 				return math.log(1.+_r/rs)*_amp/_r
@@ -293,22 +294,23 @@ def NFW_Potential(rho0 = None, rs = None):
 
 		# private attributes (= parent func. params) to allow for access from outside
 		NFW_Pot._rs = rs
-		NFW_Pot._rho0 = rho0
+		NFW_Pot._mass0 = mass0
 		return NFW_Pot
 
 
 # NFW density profile
-def NFW_Density(rho0 = None, rs = None):
+def NFW_Density(mass0 = None, rs = None):
 	'''Returns the NFW density at r'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Density")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Density")
+	if mass0 is None:
+		raise ValueError("mass0 is a required argument in NFW_Density")
+	elif mass0 <= 0:
+		raise ValueError("mass0 must be positive in NFW_Density")
 	elif rs is None:
 		raise ValueError("rs is a required argument in NFW_Density")
 	elif rs <= 0:
 		raise ValueError("rs must be positive in NFW_Density")
 	else:
+		rho0 = mass0 / (4.*math.pi*rs**3)
 		def NFW_dens(*r):
 			_r = norm(*r)
 			_x = _r / rs
@@ -320,31 +322,32 @@ def NFW_Density(rho0 = None, rs = None):
 
 
 # NFW cumulative mass
-def NFW_Mass(rho0 = None, rs = None):
+def NFW_Mass(mass0 = None, rs = None):
 	'''Returns the cumulative NFW mass at r'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Mass")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Mass")
+	if mass0 is None:
+		raise ValueError("mass0 is a required argument in NFW_Mass")
+	elif mass0 <= 0:
+		raise ValueError("mass0 must be positive in NFW_Mass")
 	elif rs is None:
 		raise ValueError("rs is a required argument in NFW_Mass")
 	elif rs <= 0:
 		raise ValueError("rs must be positive in NFW_Mass")
 	else:
 		def NFW_M(*r):
-			_amp = 4. * math.pi * rho0 * rs**3
+# 			_amp = 4. * math.pi * rho0 * rs**3
+			_amp = mass0
 			_r = norm(*r)
 			return _amp * (math.log(1.+_r/rs) - _r/(_r+rs))
 		return NFW_M
 
 
 # NFW circular velocity
-def NFW_Vcirc(rho0 = None, rs = None):
+def NFW_Vcirc(mass0 = None, rs = None):
 	'''Returns the spherical NFW circular velocity at r'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Vcirc")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Vcirc")
+	if mass0 is None:
+		raise ValueError("mass0 is a required argument in NFW_Vcirc")
+	elif mass0 <= 0:
+		raise ValueError("mass0 must be positive in NFW_Vcirc")
 	elif rs is None:
 		raise ValueError("rs is a required argument in NFW_Vcirc")
 	elif rs <= 0:
@@ -353,38 +356,38 @@ def NFW_Vcirc(rho0 = None, rs = None):
 		def NFW_Vc(*r):
 			_r = norm(*r)
 			if _r > 0:
-				return math.sqrt((1./_r)*Grav*NFW_Mass(rho0,rs)(*r))
+				return math.sqrt((1./_r)*Grav*NFW_Mass(mass0,rs)(*r))
 			else:
 				raise ValueError("Zero or negative radius in NFW_Vc")
 		return NFW_Vc
 
 
 # NFW maximum circular velocity
-def NFW_Vmax(rho0 = None, rs = None):
+def NFW_Vmax(mass0 = None, rs = None):
 	'''Returns the (approximate) maximum spherical NFW circular
 	velocity roughly reached at 2.16*rs.'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_Vmax")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_Vmax")
+	if mass0 is None:
+		raise ValueError("mass0 is a required argument in NFW_Vmax")
+	elif mass0 <= 0:
+		raise ValueError("mass0 must be positive in NFW_Vmax")
 	elif rs is None:
 		raise ValueError("rs is a required argument in NFW_Vmax")
 	elif rs <= 0:
 		raise ValueError("rs must be positive in NFW_Vmax")
 	else:
-		return NFW_Vcirc(rho0,rs)(2.16258*rs)
+		return NFW_Vcirc(mass0,rs)(2.16258*rs)
 
 
 # NFW velocity dispersion
-def NFW_VelDisp(rho0 = None, rs = None):
+def NFW_VelDisp(mass0 = None, rs = None):
 	'''Returns the approximate 1D NFW velocity dispersion.
 	The approximation is taken from Zentner and Bullock (2003,
 	their equation 6).
 	'''
-	if rho0 is None:
-		raise ValueError("rho0 is a required argument in NFW_VelDisp")
-	elif rho0 <= 0:
-		raise ValueError("rho0 must be positive in NFW_VelDisp")
+	if mass0 is None:
+		raise ValueError("mass0 is a required argument in NFW_VelDisp")
+	elif mass0 <= 0:
+		raise ValueError("mass0 must be positive in NFW_VelDisp")
 	elif rs is None:
 		raise ValueError("rs is a required argument in NFW_VelDisp")
 	elif rs <= 0:
@@ -393,7 +396,7 @@ def NFW_VelDisp(rho0 = None, rs = None):
 		def NFW_veldisp(*r):
 			_r = norm(*r)
 			_x = _r / rs
-			_vmax = NFW_Vmax(rho0,rs)
+			_vmax = NFW_Vmax(mass0,rs)
 			return (_vmax * (1.4393*_x**0.354/(1.+1.1756*_x**0.725)))**2
 		return NFW_veldisp
 

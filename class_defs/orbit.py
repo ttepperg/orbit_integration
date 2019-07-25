@@ -976,14 +976,14 @@ class Orbit():
 					sv[8][t_end], sv[9][t_end], sv[10][t_end], sv[11][t_end]
 			r_end = [x2-x1,y2-y1,z2-z1]
 			v_end = [vx2-vx1,vy2-vy1,vz2-vz1]
-			print("\tInitial relative position: ({:.3f},{:.3f},{:.3f})".format(*r_ini))
-			print("\tInitial relative distance: {:.3f}".format(funcs.norm(*r_ini)))
-			print("\tInitial relative velocity: ({:.3f},{:.3f},{:.3f})".format(*v_ini))
-			print("\tInitial relative speed: {:.3f}".format(funcs.norm(*v_ini)))
-			print("\tFinal relative position:({:.3f},{:.3f},{:.3f})".format(*r_end))
-			print("\tFinal relative distance: {:.3f}".format(funcs.norm(*r_end)))
-			print("\tFinal relative velocity: ({:.3f},{:.3f},{:.3f})".format(*v_end))
-			print("\tFinal relative speed: {:.3f}\n".format(funcs.norm(*v_end)))
+			print("\tInitial relative position: ({:.5f},{:.5f},{:.5f})".format(*r_ini))
+			print("\tInitial relative distance: {:.5f}".format(funcs.norm(*r_ini)))
+			print("\tInitial relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_ini))
+			print("\tInitial relative speed: {:.5f}".format(funcs.norm(*v_ini)))
+			print("\tFinal relative position:({:.5f},{:.5f},{:.5f})".format(*r_end))
+			print("\tFinal relative distance: {:.5f}".format(funcs.norm(*r_end)))
+			print("\tFinal relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_end))
+			print("\tFinal relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
 			print("The following are only relevant is masses are allowed to evolved:")
 			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass))
 			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass))
