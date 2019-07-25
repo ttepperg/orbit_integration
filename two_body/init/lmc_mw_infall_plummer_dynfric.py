@@ -27,7 +27,7 @@ vx1_0 = 0.														# velocities (km/s):
 vy1_0 = 0.
 vz1_0 = 0.
 
-# Large Magellanic Clouds
+# Large Magellanic Cloud
 Mass2 = 5.0e10													# total mass (Msun)
 Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
 x2_0 = -1.														# positions (kpc)
