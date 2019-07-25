@@ -172,7 +172,7 @@ class Orbit():
 		if e < 1 or e > 1:
 			return self.semi_latus_rec() / (1. - e**2)
 		else:
-			print("\nWARNING: semimajor axis not defined for e = 1.\n")
+			print("\nWARNING:\n\tsemimajor axis not defined for e = 1.\n")
 			return float('NaN')
 
 
@@ -182,7 +182,7 @@ class Orbit():
 		if e < 1 or e > 1:
 			return self.semi_latus_rec() / math.sqrt(abs(1. - e**2))
 		else:
-			print("\nWARNING: semiminor axis not defined for e = 1.\n")
+			print("\nWARNING:\n\tsemiminor axis not defined for e = 1.\n")
 			return float('NaN')
 
 
@@ -192,7 +192,7 @@ class Orbit():
 		if e < 1:
 			return	self.semi_latus_rec() / (1. - e)
 		else:
-			print("\nWARNING: apocentre not defined for e >= 1.\n")
+			print("\nWARNING:\n\tapocentre not defined for e >= 1.\n")
 			return float('NaN')
 
 
@@ -223,7 +223,7 @@ class Orbit():
 			# higher orders expansion exist!
 			return math.pi * (a+b) * (1.+corr+(corr/4.)**4)
 		else:
-			print("\nWARNING: orbital circumference not defined for e >= 1.\n")
+			print("\nWARNING:\n\torbital circumference not defined for e >= 1.\n")
 			return float('NaN')
 
 
@@ -233,7 +233,7 @@ class Orbit():
 		if a > 0:
 			return 2.*math.pi*a*math.sqrt(a/self.grav_param())
 		else:
-			print("\nWARNING: orbital period not defined for a < 0.\n")
+			print("\nWARNING:\n\torbital period not defined for a < 0.\n")
 			return float('NaN')
 
 
@@ -312,7 +312,7 @@ class Orbit():
 			else:
 				return 2.*math.pi - math.acos(_n[0])
 		else:
-			print("\nWARNING: longitude of ascending node undefined. Set to 0 by convention.")
+			print("\nWARNING:\n\tlongitude of ascending node undefined. Set to 0 by convention.")
 			return 0.
 
 
