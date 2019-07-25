@@ -132,7 +132,7 @@ def grad_r(*r, func = None):
 
 
 
-# POTENTIALS AND CORRESPONDING MASS PROFILES
+# POTENTIALS, MASS PROFILES, ETC.
 
 # KEPLER MODEL
 
@@ -160,6 +160,8 @@ def Kepler_Potential(mass = None):
 def Kepler_Mass(mass = None):
 	if mass is None:
 		raise ValueError("mass is a required parameter in Kepler_Mass")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Kepler_Mass")
 	else:
 		def Kepler_M(*r):
 			return mass
@@ -185,11 +187,11 @@ def Plummer_Potential(mass = None, a = None):
 		def Plummer_Pot(*r):
 			_amp = Grav*mass
 			_r2 = norm2(*r)
-			_r = math.sqrt(_r2+a**2)
-			if _r > 0:
-				return -1. * (_amp / _r)
+			_d = math.sqrt(_r2+a**2)
+			if _d > 0:
+				return -1. * (_amp / _d)
 			else:
-				raise ValueError("Zero or negative radius in Plummer_Potential")
+				raise ValueError("Zero or negative denominator in Plummer_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
 		Plummer_Pot._mass = mass
 		Plummer_Pot._a = a
@@ -201,15 +203,21 @@ def Plummer_Density(mass = None, a = None):
 	'''Returns the Plummer density at r'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Plummer_Density")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Plummer_Density")
 	elif a is None:
 		raise ValueError("a is a required parameter in Plummer_Density")
-	elif a < 0:
-		raise ValueError("a must be non-negative in Plummer_Density")
+	elif a <= 0:
+		raise ValueError("a must be positive in Plummer_Density")
 	else:
 		def Plummer_dens(*r):
 			_amp = 3.*mass*a**2 / (4.*math.pi)
 			_r = norm(*r)
-			return _amp / (a**2 + _r**2)**(2.5)
+			_d2 = (a**2 + _r**2)
+			if _d2 > 0:
+				return _amp / _d2**(2.5)
+			else:
+				raise ValueError("Zero or negative denominator in Plummer_Density")
 		return Plummer_dens
 
 
@@ -217,6 +225,8 @@ def Plummer_Density(mass = None, a = None):
 def Plummer_Mass(mass = None, a = None):
 	if mass is None:
 		raise ValueError("mass is a required parameter in Plummer_Mass")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Plummer_Mass")
 	elif a is None:
 		raise ValueError("a is a required parameter in Plummer_Mass")
 	elif a < 0:
@@ -249,7 +259,11 @@ def Plummer_VelDisp(mass = None, a = None):
 		def Plummer_veldisp(*r):
 			_amp = Grav*mass
 			_r = norm(*r)
-			return _amp / (6. * math.sqrt(_r**2+a**2))
+			_d = math.sqrt(_r**2+a**2)
+			if _d > 0:
+				return _amp / (6. * _d)
+			else:
+				raise ValueError("Zero or negative denominator in Plummer_VelDisp")
 		return Plummer_veldisp
 
 
@@ -298,7 +312,10 @@ def NFW_Density(rho0 = None, rs = None):
 		def NFW_dens(*r):
 			_r = norm(*r)
 			_x = _r / rs
-			return rho0 / (_x * (1.+_x)**2)
+			if _x > 0:
+				return rho0 / (_x * (1.+_x)**2)
+			else:
+				raise ValueError("Zero or negative radius in NFW_Density")
 		return NFW_dens
 
 
@@ -400,10 +417,11 @@ def Hernquist_Potential(mass = None, a = None):
 		def Hernquist_Pot(*r):
 			_amp = Grav*mass
 			_r = norm(*r)
-			if _r >= 0:
-				return -1. * (_amp / (_r+a))
+			_d = _r + a
+			if _d > 0:
+				return -1. * (_amp / _d)
 			else:
-				raise ValueError("Negative radius in Hernquist_Potential")
+				raise ValueError("Zero or negative denominator in Hernquist_Potential")
 		# private attributes (= parent func. params) to allow for access from outside
 		Hernquist_Pot._mass = mass
 		Hernquist_Pot._a = a
@@ -415,18 +433,21 @@ def Hernquist_Density(mass = None, a = None):
 	'''Returns the Hernquist density at r'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Hernquist_Mass")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Hernquist_Mass")
 	elif a is None:
 		raise ValueError("a is a required parameter in Hernquist_Mass")
 	elif a < 0:
 		raise ValueError("a must be non-negative in Hernquist_Mass")
 	else:
 		def Hernquist_dens(*r):
-			_r = norm(*r)
 			_amp = mass * a / (2.*math.pi)
-			if _r > 0:
-				return _amp / (_r * (_r + a)**3)
+			_r = norm(*r)
+			_d = _r + a
+			if _r > 0 and _d > 0:
+				return _amp / (_r * _d**3)
 			else:
-				raise ValueError("Zero or negative radius in Hernquist_Density")
+				raise ValueError("Zero or negative denominator in Hernquist_Density")
 		return Hernquist_dens
 
 
@@ -435,6 +456,8 @@ def Hernquist_Mass(mass = None, a = None):
 	'''Returns the cumulative Hernquist mass at r'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Hernquist_Mass")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Hernquist_Mass")
 	elif a is None:
 		raise ValueError("a is a required parameter in Hernquist_Mass")
 	elif a < 0:
@@ -443,10 +466,11 @@ def Hernquist_Mass(mass = None, a = None):
 		def Hernquist_M(*r):
 			_r2 = norm2(*r)
 			_r = norm(*r)
-			if _r > 0:
-				return mass * _r2 / (_r+a)**2
+			_d = _r + a
+			if _d > 0:
+				return mass * _r2 / _d**2
 			else:
-				raise ValueError("Zero or negative radius in Hernquist_Mass")
+				raise ValueError("Zero or negative denominator in Hernquist_Mass")
 		return Hernquist_M
 
 
@@ -458,10 +482,12 @@ def Hernquist_VelDisp(mass = None, a = None):
 	'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Hernquist_VelDisp")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Hernquist_VelDisp")
 	elif a is None:
 		raise ValueError("a is a required parameter in Hernquist_VelDisp")
-	elif a < 0:
-		raise ValueError("a must be non-negative in Hernquist_VelDisp")
+	elif a <= 0:
+		raise ValueError("a must be positive in Hernquist_VelDisp")
 	else:
 		def Hernquist_veldisp(*r):
 			_amp = Grav*mass/(12.*a)
@@ -480,7 +506,6 @@ def Hernquist_VelDisp(mass = None, a = None):
 				raise ValueError("Zero or negative radius in Hernquist_VelDisp")
 		return Hernquist_veldisp
 			
-
 
 
 # PSEUDO-ISOTHERMAL SPHERE (PITS)
@@ -504,8 +529,8 @@ def PITS_Potential(rho0 = None, a = None):
 		def PITS_Pot(*r):
 			_amp = 4. * math.pi * Grav * rho0 * a**2
 			_r = norm(*r)
-			if _r > 0:
-				_x = _r / a
+			_x = _r / a
+			if _x > 0:
 				return _amp * ( 0.5 * math.log(1.+_x**2) + math.atan(_x)/_x )
 			else:
 				raise ValueError("Zero or negative radius in PITS_Potential")
@@ -592,8 +617,8 @@ def PITS_VelDisp(rho0 = None, a = None):
 	else:
 		def PITS_veldisp(*r):
 			_r = norm(*r)
-			if _r > 0:
-				_x = _r / a
+			_x = _r / a
+			if _x > 0:
 				_atanx = math.atan(_x)
 				_vinf2 = (PITS_Vinf(rho0,a))**2
 				return _vinf2 * (1.+_x**2) * (0.125*math.pi**2 - _atanx / _x - 0.5 * _atanx**2)
