@@ -69,7 +69,6 @@ class Body():
 				self.potential = pot
 
 			# set cumulative mass function self-consistently
-			# IMPORTANT: Must include parameter checks for NFW and PITS
 			pot_name = self.potential.__name__
 			if pot_name == "Kepler_Pot": 
 				self.mass_cum = funcs.Kepler_Mass(self.mass_scale)
@@ -107,25 +106,18 @@ class Body():
 
 			# set density profile and velocity dispersion self-consistently
 			# for dynamical friction calculation
-			# IMPORTANT: Must include parameter checks for NFW and PITS
 			self.dynamical_friction = df
 			if self.dynamical_friction is not None:
 				if pot_name == "Plummer_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
-					if _mass != self.mass_scale:
-						raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
-					else:
-						self.dens = funcs.Plummer_Density(self.mass_scale,_a)
-						self.vel_disp = funcs.Plummer_VelDisp(self.mass_scale, _a)
+					self.dens = funcs.Plummer_Density(self.mass_scale,_a)
+					self.vel_disp = funcs.Plummer_VelDisp(self.mass_scale, _a)
 				elif pot_name == "Hernquist_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
-					if _mass != self.mass_scale:
-						raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
-					else:
-						self.dens = funcs.Hernquist_Density(self.mass_scale,_a)
-						self.vel_disp = funcs.Hernquist_VelDisp(self.mass_scale,_a)
+					self.dens = funcs.Hernquist_Density(self.mass_scale,_a)
+					self.vel_disp = funcs.Hernquist_VelDisp(self.mass_scale,_a)
 				elif pot_name == "NFW_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_rs = self.potential.__getattribute__('_rs')
