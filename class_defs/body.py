@@ -90,11 +90,17 @@ class Body():
 			elif pot_name == "NFW_Pot":
 				_mass = self.potential.__getattribute__('_mass')
 				_rs = self.potential.__getattribute__('_rs')
-				self.mass_cum = funcs.NFW_Mass(_mass,_rs)
+				if _mass != self.mass_scale:
+					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
+				else:
+					self.mass_cum = funcs.NFW_Mass(_mass,_rs)
 			elif pot_name == "PITS_Pot":
 				_mass = self.potential.__getattribute__('_mass')
 				_a = self.potential.__getattribute__('_a')
-				self.mass_cum = funcs.PITS_Mass(_mass,_a)
+				if _mass != self.mass_scale:
+					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
+				else:
+					self.mass_cum = funcs.PITS_Mass(_mass,_a)
 			else:
 				raise ValueError("No cumulative mass function available for Body instance with pot = {}.".\
 				format(pot_name))
