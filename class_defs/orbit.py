@@ -67,13 +67,13 @@ class Orbit():
 		return self.b2.speed_rel(self.b1)
 
 
-# Deprecated because not consistent
+# Deactivated because not consistent
 # 	def mtot(self):
 # 		'''total mass'''
 # 		return self.b1.mass_scale + self.b2.mass_scale
 
 
-# Deprecated because not consistent
+# Deactivated because not consistent
 # 	def mred(self):
 # 		'''reduced mass'''
 # 		return self.b1.mass_scale*self.b2.mass_scale/self.mtot()
@@ -986,9 +986,10 @@ class Orbit():
 			print("\tFinal relative distance: {:.5f}".format(funcs.norm(*r_end)))
 			print("\tFinal relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_end))
 			print("\tFinal relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
-			print("The following are only relevant is masses are allowed to evolved:")
-			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass_scale))
-			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass_scale))
+# Deactivated for now because not consistent:
+# 			print("The following are only relevant is masses are allowed to evolved:")
+# 			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass_scale))
+# 			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass_scale))
 			return 0
 
 
