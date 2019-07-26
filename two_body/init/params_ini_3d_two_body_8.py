@@ -66,9 +66,9 @@ t_1 = 1.0e0														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-4												# integration time step
 
 # Body 1
-Mass1_scale = 1.0e11													# total mass (Msun)
+Mass1_scale = 1.0e11													# mass scale (Msun)
 rs1 = 5.e0														# Plummer scale radius
-Potential1 = funcs.Plummer_Potential(mass=Mass1_scale,a=rs1)			# potential (km/s)^2
+Potential1 = funcs.Plummer_Potential(Mass1_scale,rs1)			# potential (km/s)^2
 x1_0 = -1														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -77,8 +77,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2_scale = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
+Mass2_scale = 1.0e1													# mass scale (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)					# potential (km/s)^2
 x2_0 = 8.2														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
@@ -90,7 +90,7 @@ vz2_0 = 0.
 # redefine velocities to obtain a circular orbit
 # assumption: centre of mass at rest
 from math import sqrt
-Mass1_cum = funcs.Plummer_Mass(mass=Mass1_scale,a=rs1)				# cumulative mass
+Mass1_cum = funcs.Plummer_Mass(Mass1_scale,rs1)				# cumulative mass
 Mass2_cum = funcs.Kepler_Mass(Mass2_scale)							# 'cumulative' mass, trivially equal to Mass2_scale
 r0 = [x2_0-x1_0,y2_0-y1_0,z2_0-z1_0]
 M1 = Mass1_cum(*r0)

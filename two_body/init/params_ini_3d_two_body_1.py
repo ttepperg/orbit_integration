@@ -58,8 +58,8 @@ t_1 = 10.														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-Mass1_scale = 1.0e1													# total mass (Msun)
-Potential1 = funcs.Kepler_Potential(mass=Mass1_scale)					# potential (km/s)^2
+Mass1_scale = 1.0e1													# mass scale (Msun)
+Potential1 = funcs.Kepler_Potential(Mass1_scale)					# potential (km/s)^2
 x1_0 = -0.01													# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -68,8 +68,8 @@ vy1_0 = -0.02
 vz1_0 = 0.02
 
 # Body 2
-Mass2_scale = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
+Mass2_scale = 1.0e1													# mass scale (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)					# potential (km/s)^2
 x2_0 = 0.01														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.

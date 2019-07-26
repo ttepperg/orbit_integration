@@ -87,8 +87,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2_scale = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
+Mass2_scale = 1.0e1													# mass scale (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)					# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.

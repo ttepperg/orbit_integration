@@ -59,8 +59,8 @@ t_1 = 10.														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-Mass1_scale = 1.0e6													# total mass (Msun)
-Potential1 = funcs.Kepler_Potential(mass=Mass1_scale)					# potential (km/s)^2
+Mass1_scale = 1.0e6													# mass scale (Msun)
+Potential1 = funcs.Kepler_Potential(Mass1_scale)					# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -69,12 +69,12 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2_scale = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
+Mass2_scale = 1.0e1													# mass scale (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)					# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
 vx2_0 = 0.														# velocities (km/s):
 sm_a = 0.7														# must be > r_0/2
-vy2_0 = funcs.vis_viva(x2_0,y2_0,z2_0,amp=pc.Grav*(Mass1_scale+Mass2_scale),a=sm_a)	# elliptical orbit with semi-major axis a > r/2
+vy2_0 = funcs.vis_viva(x2_0,y2_0,z2_0,amp=pc.Grav*(Mass1_scale+Mass2_scale),sm_a)	# elliptical orbit with semi-major axis a > r/2
 vz2_0 = 0.

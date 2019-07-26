@@ -78,7 +78,7 @@ vz1_0 = 0.
 
 # Body 2
 rs2 = 1.e-1														# Plummer scale radius
-Mass2_scale = 1.0e6													# total mass (Msun)
+Mass2_scale = 1.0e6													# mass scale (Msun)
 Potential2 = funcs.Plummer_Potential(Mass2_scale,rs2)		# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.

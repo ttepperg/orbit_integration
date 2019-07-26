@@ -42,9 +42,9 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # M33
-Mass2_scale = 5.e10													# total mass (Msun)
+Mass2_scale = 5.e10													# mass scale (Msun)
 rs2 = 1.															# scale radius (kpc)
-Potential2 = funcs.Plummer_Potential(mass=Mass2_scale,a=rs2)		# potential (km/s)^2
+Potential2 = funcs.Plummer_Potential(Mass2_scale,rs2)		# potential (km/s)^2
 x2_0 = -97.2													# positions (kpc)
 y2_0 = -121.6
 z2_0 = -129.8

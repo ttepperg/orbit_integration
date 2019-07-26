@@ -66,10 +66,10 @@ t_1 = 1.0e1														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-Mass1_scale = 1.e06													# total mass (Msun)
+Mass1_scale = 1.e06													# mass scale (Msun)
 rs1=2.e-1
-Potential1 = funcs.Hernquist_Potential(mass=Mass1_scale,a=rs1)		# potential (km/s)^2
-Mass1_cum =  funcs.Hernquist_Mass(mass=Mass1_scale,a=rs1)				# cumulative mass
+Potential1 = funcs.Hernquist_Potential(Mass1_scale,rs1)		# potential (km/s)^2
+Mass1_cum =  funcs.Hernquist_Mass(Mass1_scale,rs1)				# cumulative mass
 x1_0 = 0.
 y1_0 = 0.
 z1_0 = 0.
@@ -78,8 +78,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2_scale = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)			# potential (km/s)^2
+Mass2_scale = 1.0e1													# mass scale (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)			# potential (km/s)^2
 Mass2_cum = funcs.Kepler_Mass(Mass2_scale)							# 'cumulative' mass, trivially equal to Mass2_scale
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
