@@ -23,9 +23,9 @@ t_1 = 7.85														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Milky Way
-Mass1 = 1.25e12 #1.325e12										# total mass (Msun)
+Mass1_scale = 1.25e12 #1.325e12										# total mass (Msun)
 a1 = 25. #38.35													# scale radius (kpc)
-Potential1 = funcs.Hernquist_Potential(mass=Mass1,a=a1)			# potential (km/s)^2
+Potential1 = funcs.Hernquist_Potential(mass=Mass1_scale,a=a1)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -34,9 +34,9 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Sagittarius dwarf
-Mass2 = 1.2e10													# total mass (Msun)
+Mass2_scale = 1.2e10													# total mass (Msun)
 a2 = 9.81														# scale radius (kpc)
-Potential2 = funcs.Hernquist_Potential(mass=Mass2,a=a2)			# potential (km/s)^2
+Potential2 = funcs.Hernquist_Potential(mass=Mass2_scale,a=a2)			# potential (km/s)^2
 x2_0 = 125.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
@@ -48,18 +48,18 @@ vz2_0 = 71.66
 # Dynamical friction settings
 soft_length2 = 0.3 #1.0												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
-Mass1_cum = funcs.Hernquist_Mass(mass=Mass1,a=a1)
-Mass2_cum = funcs.Hernquist_Mass(mass=Mass2,a=a2)
 
 # Mass loss
-Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
+rtrunc2 = 1.e10														# truncation radius
+Mass1_cum = funcs.Hernquist_Mass(mass=Mass1_scale,a=a1)
+Mass2_cum = funcs.Hernquist_Mass(mass=Mass2_scale,a=a2)
+# Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
 
 # Check
 t=0
 r0 = [x2_0,y2_0,z2_0]
 rt = funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass2_cum)
-print(funcs.norm(*r0))
 print(rt)
-print("{:E}".format(Mass2_evol(t,*r0)))
-print("{:E}".format(Potential2(*[0,])))
+# print("{:E}".format(Mass2_evol(t,rt)))
+print("{:E}".format(Mass2_cum(rtrunc2)))
 # exit()

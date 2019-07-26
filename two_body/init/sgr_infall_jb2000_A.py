@@ -17,6 +17,7 @@ Therefore, some differences between theirs and our results are expected.
 
 import config.phys_consts as pc
 from utils import funcs
+from math import pi
 
 
 t_0 = 0.0e0														# initial time (Gyr)
@@ -24,12 +25,10 @@ t_1 = 1.135e1													# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Milky Way
-rho01 = 2.e8
 a1 = 1.e0														# PITS scale radius
-Potential1 = funcs.PITS_Potential(rho0=rho01,a=a1)				# potential (km/s)^2
-Mass1_cum = funcs.PITS_Mass(rho0=rho01,a=a1)					# mass function
-rt1 = [0.,0.,1000.]												# truncation radius
-Mass1 = Mass1_cum(*rt1)											# total mass (Msun)
+rho01 = 2.e8
+Mass1_scale_scale = 4. * pi * rho01 * a1**3
+Potential1 = funcs.PITS_Potential(Mass1_scale_scale,a1)						# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -38,12 +37,10 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Sagittarius dwarf
-rho02 = 1.2e8
 a2 = 1.e0														# PITS scale radius
-Potential2 = funcs.PITS_Potential(rho0=rho02,a=a2)				# potential (km/s)^2
-Mass2_cum = funcs.PITS_Mass(rho0=rho02,a=a2)					# mass function
-rt2 = [0.,0.,70.]												# truncation radius
-Mass2 = Mass2_cum(*rt2)											# total mass (Msun)
+rho02 = 1.2e8
+Mass2_scale_scale = 4. * pi * rho02 * a2**3
+Potential2 = funcs.PITS_Potential(Mass2_scale_scale,a2)						# potential (km/s)^2
 x2_0 = 0.														# positions (kpc)
 y2_0 = 0.
 z2_0 = -250.
@@ -57,11 +54,22 @@ soft_length2 = 2.0e1												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
 # Mass loss
+Mass1_cum = funcs.PITS_Mass(Mass1_scale_scale,a1)							# mass function
+Mass2_cum = funcs.PITS_Mass(Mass2_scale_scale,a2)							# mass function
 Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
 
 # Info
-# print("Mass of MW [Msun]: {:E}".format(Mass1))
-# print("Mass of Sgr [Msun]: {:E}".format(Mass2))
+rt1 = [0.,0.,1000.]												# truncation radius
+m1 = Mass1_cum(*rt1)											# total mass (Msun)
+rt2 = [0.,0.,70.]												# truncation radius
+m2 = Mass2_cum(*rt2)											# total mass (Msun)
+print("Mass of MW [Msun]: {:E}".format(m1))
+print("Mass of Sgr [Msun]: {:E}".format(m2))
+r0 = [x2_0,y2_0,z2_0]
+rt = funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass2_cum)
+print(rt)
+print("{:E}".format(Mass2_cum(rt)))
+# exit()
 # 
 # # Check
 # import math

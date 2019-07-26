@@ -68,9 +68,9 @@ t_1 = 10.														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Body 1
-Mass1 = 1.0e6													# total mass (Msun)
+Mass1_scale = 1.0e6													# total mass (Msun)
 rs = 1.e-1														# Plummer scale radius
-Potential1 = funcs.Plummer_Potential(mass=Mass1,a=rs)			# potential (km/s)^2
+Potential1 = funcs.Plummer_Potential(mass=Mass1_scale,a=rs)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -79,8 +79,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
+Mass2_scale = 1.0e1													# total mass (Msun)
+Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 1.

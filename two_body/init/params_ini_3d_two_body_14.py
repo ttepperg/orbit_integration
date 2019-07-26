@@ -76,8 +76,8 @@ delta_t = 1.0e-3												# integration time step
 # Body 1
 rs1 = 1.0e0														# NFW scale radius (kpc)
 rho01 = 5.0e5													# core density (Msun/kpc**3)
-Mass1 = 4. * pi * rho01 * rs1**3
-Potential1 = funcs.NFW_Potential(Mass1,rs1)			# potential (km/s)^2
+Mass1_scale = 4. * pi * rho01 * rs1**3
+Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)						# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -86,8 +86,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(Mass2)			# potential (km/s)^2
+Mass2_scale = 1.0e1													# total mass (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)						# potential (km/s)^2
 x2_0 = 1.														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
@@ -99,8 +99,8 @@ vz2_0 = 0.
 # redefine velocities to obtain a circular orbit
 # assumption: centre of mass at rest
 from math import sqrt
-Mass1_cum = funcs.NFW_Mass(Mass1,rs1)
-Mass2_cum = funcs.Kepler_Mass(Mass2)					# 'cumulative' mass, trivially equal to Mass2
+Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)
+Mass2_cum = funcs.Kepler_Mass(Mass2_scale)							# 'cumulative' mass, trivially equal to Mass2_scale
 r0 = [x2_0-x1_0,y2_0-y1_0,z2_0-z1_0]
 M1 = Mass1_cum(*r0)
 M2 = Mass2_cum(*r0)

@@ -65,8 +65,8 @@ t_1 = 10.														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# time step
 
 # Body 1
-Mass1 = 1.0e1													# total mass (Msun)
-Potential1 = funcs.Kepler_Potential(mass=Mass1)					# potential (km/s)^2
+Mass1_scale = 1.0e1													# total mass (Msun)
+Potential1 = funcs.Kepler_Potential(mass=Mass1_scale)					# potential (km/s)^2
 x1_0 = -0.01													# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -75,8 +75,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2 = 1.0e1													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
+Mass2_scale = 1.0e1													# total mass (Msun)
+Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
 x2_0 = 0.01														# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
@@ -88,8 +88,8 @@ vz2_0 = 0.
 # redefine velocities to obtain a circular orbit
 # assumption: centre of mass at rest
 from math import sqrt
-M1 = Mass1
-M2 = Mass2
+M1 = Mass1_scale
+M2 = Mass2_scale
 mu = M1*M2/(M1+M2)
 r0 = [x2_0-x1_0,y2_0-y1_0,z2_0-z1_0]
 gx,gy,gz = funcs.grav_field(*r0,pot=Potential1)

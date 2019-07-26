@@ -21,9 +21,9 @@ t_1 = -1.02e1													# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Milky Way
-Mass1 = 1.5e12
+Mass1_scale = 1.5e12
 rs = 4.0e1														# NFW scale radius (kpc)
-Potential1 = funcs.Hernquist_Potential(mass=Mass1,a=rs)			# potential (km/s)^2
+Potential1 = funcs.Hernquist_Potential(mass=Mass1_scale,a=rs)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -32,8 +32,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # Large Magellanic Clouds
-Mass2 = 5.0e10													# total mass (Msun)
-Potential2 = funcs.Kepler_Potential(mass=Mass2)					# potential (km/s)^2
+Mass2_scale = 5.0e10													# total mass (Msun)
+Potential2 = funcs.Kepler_Potential(mass=Mass2_scale)					# potential (km/s)^2
 x2_0 = -1.														# positions (kpc)
 y2_0 = -41.
 z2_0 = -28.
