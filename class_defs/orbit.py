@@ -67,14 +67,16 @@ class Orbit():
 		return self.b2.speed_rel(self.b1)
 
 
-	def mtot(self):
-		'''total mass'''
-		return self.b1.mass + self.b2.mass
+# Deprecated because not consistent
+# 	def mtot(self):
+# 		'''total mass'''
+# 		return self.b1.mass_scale + self.b2.mass_scale
 
 
-	def mred(self):
-		'''reduced mass'''
-		return self.b1.mass*self.b2.mass/self.mtot()
+# Deprecated because not consistent
+# 	def mred(self):
+# 		'''reduced mass'''
+# 		return self.b1.mass_scale*self.b2.mass_scale/self.mtot()
 
 
 	def grav_param(self):
@@ -377,12 +379,12 @@ class Orbit():
 			file = fileout)
 		print("{}{:>40}{:>15}".format(first_chr,"Potential of body 2:",self.b2.potential.__name__), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}".format(first_chr,"Total mass of body 1:",self.b1.mass), \
+		print("{}{:>40}{:15.4E}".format(first_chr,"Mass scale of body 1:",self.b1.mass_scale), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}".format(first_chr,"Total mass of body 2:",self.b2.mass), \
+		print("{}{:>40}{:15.4E}\n".format(first_chr,"Mass scale of body 2:",self.b2.mass_scale), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}\n".format(first_chr,"Reduced mass:",self.mred()), \
-			file = fileout)
+# 		print("{}{:>40}{:15.4E}\n".format(first_chr,"Reduced mass:",self.mred()), \
+# 			file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Initial rel. distance (r21_0):",self.dist()), \
 			file = fileout)
 		print("{}{:>40}{:15.4f}".format(first_chr,"Initial rel. speed (v21_0):",self.speed()), \
@@ -985,8 +987,8 @@ class Orbit():
 			print("\tFinal relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_end))
 			print("\tFinal relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
 			print("The following are only relevant is masses are allowed to evolved:")
-			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass))
-			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass))
+			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass_scale))
+			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass_scale))
 			return 0
 
 

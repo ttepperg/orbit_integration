@@ -44,7 +44,7 @@ class Body():
 		if mass is None:
 			raise ValueError("mass is a required parameter of Body instance.")
 		else:
-			self.mass = mass
+			self.mass_scale = mass
 		if r_vec is None:
 			raise ValueError("r_vec is a required parameter of Body instance.")
 		elif v_vec is None:
@@ -72,21 +72,21 @@ class Body():
 			# IMPORTANT: Must include parameter checks for NFW and PITS
 			pot_name = self.potential.__name__
 			if pot_name == "Kepler_Pot": 
-				self.mass_cum = funcs.Kepler_Mass(self.mass)
+				self.mass_cum = funcs.Kepler_Mass(self.mass_scale)
 			elif pot_name == "Plummer_Pot":
 				_a = self.potential.__getattribute__('_a')
 				_mass = self.potential.__getattribute__('_mass')
-				if _mass != self.mass:
+				if _mass != self.mass_scale:
 					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
 				else:
-					self.mass_cum = funcs.Plummer_Mass(self.mass,_a)
+					self.mass_cum = funcs.Plummer_Mass(self.mass_scale,_a)
 			elif pot_name == "Hernquist_Pot":
 				_a = self.potential.__getattribute__('_a')
 				_mass = self.potential.__getattribute__('_mass')
-				if _mass != self.mass:
+				if _mass != self.mass_scale:
 					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
 				else:
-					self.mass_cum = funcs.Hernquist_Mass(self.mass,_a)
+					self.mass_cum = funcs.Hernquist_Mass(self.mass_scale,_a)
 			elif pot_name == "NFW_Pot":
 				_mass = self.potential.__getattribute__('_mass')
 				_rs = self.potential.__getattribute__('_rs')
@@ -107,19 +107,19 @@ class Body():
 				if pot_name == "Plummer_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
-					if _mass != self.mass:
+					if _mass != self.mass_scale:
 						raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
 					else:
-						self.dens = funcs.Plummer_Density(self.mass,_a)
-						self.vel_disp = funcs.Plummer_VelDisp(self.mass, _a)
+						self.dens = funcs.Plummer_Density(self.mass_scale,_a)
+						self.vel_disp = funcs.Plummer_VelDisp(self.mass_scale, _a)
 				elif pot_name == "Hernquist_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
-					if _mass != self.mass:
+					if _mass != self.mass_scale:
 						raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
 					else:
-						self.dens = funcs.Hernquist_Density(self.mass,_a)
-						self.vel_disp = funcs.Hernquist_VelDisp(self.mass,_a)
+						self.dens = funcs.Hernquist_Density(self.mass_scale,_a)
+						self.vel_disp = funcs.Hernquist_VelDisp(self.mass_scale,_a)
 				elif pot_name == "NFW_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_rs = self.potential.__getattribute__('_rs')
@@ -140,13 +140,13 @@ class Body():
 			# IMPORTANT: mass evolution = mass loss (for now)
 			if massevol is None:			# no mass evolution
 				def _mass_evol(t,*r):
-					return self.mass
+					return self.mass_scale
 			else:								# mass evolution as set by input paramameter
 				def _mass_evol(t,*r):	# for now: mass evolution = mass loss
 					mb = massevol(t,*r)
-					if mb < self.mass:
-						self.mass = mb
-					return self.mass
+					if mb < self.mass_scale:
+						self.mass_scale = mb
+					return self.mass_scale
 			self.mass_evol = _mass_evol
 
 
