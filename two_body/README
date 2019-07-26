@@ -224,19 +224,18 @@ All the potentials other than the PITS potential are negative everywhere,
 and then to 0 at infinity. The PITS potential is positive everywhere and
 diverges at infinity.
 
-Potentials other than the Kepler potential require the value of an additional
+All potentials are consistently defined by setting a mass scale. Potentials
+other than the Kepler potential require the value of an additional
 parameter, i.e. the scale radius. If the potential is not Keplerian, and the
 required parameters are not explicitly set, an error is raised.
 
-Note that the mass of the NFW profile diverges with radius. Therefore, for
-this particular model instead of the total mass, it is necessary to specify
-the central density of the body, in addition the value of the concentration,
-as well as its extension (typically the virial radius) from which the total mass
-is calculated.
+Note that the mass of the NFW and PITS profile diverges with radius.
 
 The effect of dynamical friction is implemented but is optional. If desired,
 it needs to be specified in the input parameter file. In dynamical friction
 is switched on, mass loss due to tidal stripping may be switched on as well.
+Note that the latter is still an experimental feature. Mass gain shall be
+implemented in a future version of the code.
 
 It is worth emphasising that providing the state vectos r0 and v0 for each
 body is the preferred method to specify the initial conditions of the system.
@@ -437,13 +436,19 @@ assumptions:
 			different profiles (e.g. NFW, Hernquist) but still assumed a Maxwellian
 			velocity distribution.
 
-		- It may be worth exploring other parameterizations of the Couloumb logarithm;
-			- See https://galpy.readthedocs.io/en/v1.4.1/reference/potentialchandrasekhardynfric.html
+		- It may be worth exploring other parameterizations of the DF force, in particular
+		of the Couloumb logarithm;
 			- See Zentner and Bullock (2003, https://iopscience.iop.org/article/10.1086/378797/pdf)
+			- See https://galpy.readthedocs.io/en/v1.4.1/reference/potentialchandrasekhardynfric.html
+			- See Petts et al. (2016; https://arxiv.org/abs/1607.04284)
 
 		- Different sources in the literature use different values of M:
 			- Besla et al. (2007, https://iopscience.iop.org/article/10.1086/521385/pdf,
 			their equation 5) use the *total* mass; this is the most
 			common approach (see also Semczuk et al. 2018, their equation B3)
 			- Dierickx & Loeb (2017a, https://iopscience.iop.org/article/10.3847/1538-4357/836/1/92/pdf)
-			use the mass within the object's tidal radius
+			use the mass within the object's tidal radius (see also Jiang & Binney 2000). This
+			approach is deemed the correct one, although the implementation of mass loss
+			through tidal stripping introduces more complexity and requires care to
+			be implemented correctly and self-consistently.
+ 
