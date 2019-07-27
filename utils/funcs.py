@@ -715,7 +715,7 @@ def mass_bound(m1_func = None, m2_func = None):
 		raise ValueError("m2_func is a required parameter in mass_bound")
 	else:
 		# it must be a generic function of t and r
-		def _mass_b(t,*r):
+		def _mass_b(t=None,r=None):
 			_rt = [tidal_radius(*r,m1_func=m1_func,m2_func=m2_func)]
 			mb = m2_func(*_rt)
 			return mb
