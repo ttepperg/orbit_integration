@@ -7,9 +7,9 @@ import sys
 from utils import funcs
 import config.phys_consts as pc
 from num_diff.central_diff import cen_diff_first	# central finite difference scheme (recommended)
-																	# alternative: forward finite difference scheme
-from ode_int.leapfrog import ode_leap					# leapfrog time integrator (recommended)
-																	# alternative: euler-richardson
+													# alternative: forward finite difference scheme
+from ode_int.leapfrog import ode_leap				# leapfrog time integrator (recommended)
+													# alternative: euler-richardson
 from config import units
 
 
@@ -448,7 +448,7 @@ class Orbit():
 
 
 
-	def integrate(self,time_start = None, time_end = None, time_step = None):
+	def integrate(self, time_start = None, time_end = None, time_step = None):
 		"""
 		NAME:
 
@@ -545,7 +545,7 @@ class Orbit():
 			return time, EoM
 
 
-	def set_accelerations(self,bwi_switch=None):
+	def set_accelerations(self, bwi_switch=None):
 		"""
 		NAME:
 
@@ -640,7 +640,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,*_rvec), rho=self.b1.dens, \
+					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vx21
 				return force_grav+force_df
 
@@ -656,7 +656,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,*_rvec), rho=self.b1.dens, \
+					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vy21
 				return force_grav+force_df
 
@@ -672,7 +672,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,*_rvec), rho=self.b1.dens, \
+					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vz21
 				return force_grav+force_df
 		
@@ -690,7 +690,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,*_rvec), rho=self.b2.dens, \
+					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
 						veldisp=self.b2.vel_disp) * _vx12
 				return force_grav+force_df
 
@@ -706,7 +706,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,*_rvec), rho=self.b2.dens, \
+					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
 						veldisp=self.b2.vel_disp) * _vy12
 				return force_grav+force_df
 
@@ -722,7 +722,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,*_rvec), rho=self.b2.dens, \
+					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
 						veldisp=self.b2.vel_disp) * _vz12
 				return force_grav+force_df
 
@@ -930,7 +930,7 @@ class Orbit():
 			return 0
 
 
-	def ini_end_out(self,sv = None):
+	def ini_end_out(self, sv = None):
 		"""
 		NAME:
 
@@ -978,18 +978,18 @@ class Orbit():
 					sv[8][t_end], sv[9][t_end], sv[10][t_end], sv[11][t_end]
 			r_end = [x2-x1,y2-y1,z2-z1]
 			v_end = [vx2-vx1,vy2-vy1,vz2-vz1]
-			print("\tInitial relative position: ({:.5f},{:.5f},{:.5f})".format(*r_ini))
-			print("\tInitial relative distance: {:.5f}".format(funcs.norm(*r_ini)))
-			print("\tInitial relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_ini))
-			print("\tInitial relative speed: {:.5f}".format(funcs.norm(*v_ini)))
-			print("\tFinal relative position:({:.5f},{:.5f},{:.5f})".format(*r_end))
-			print("\tFinal relative distance: {:.5f}".format(funcs.norm(*r_end)))
-			print("\tFinal relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_end))
-			print("\tFinal relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
-# Deactivated for now because not consistent:
-# 			print("The following are only relevant is masses are allowed to evolved:")
-# 			print("\tFinal bound mass of body 1: {:E}".format(self.b1.mass_scale))
-# 			print("\tFinal bound mass of body 2: {:E}\n".format(self.b2.mass_scale))
+			print("\tInfall relative position: ({:.5f},{:.5f},{:.5f})".format(*r_ini))
+			print("\tInfall relative distance: {:.5f}".format(funcs.norm(*r_ini)))
+			print("\tInfall relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_ini))
+			print("\tInfall relative speed: {:.5f}".format(funcs.norm(*v_ini)))
+			print("\tPresent-day relative position: ({:.5f},{:.5f},{:.5f})".format(*r_end))
+			print("\tPresent-day relative distance: {:.5f}".format(funcs.norm(*r_end)))
+			print("\tPresent-day relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_end))
+			print("\tPresent-day relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
+			# This may not yet be entirely consistent:
+			print("The following are only relevant is masses are allowed to evolved:")
+			print("\tPresent-day bound mass of body 1: {:E}".format(self.b1.mass_bound))
+			print("\tPresent-day bound mass of body 2: {:E}\n".format(self.b2.mass_bound))
 			return 0
 
 

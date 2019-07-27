@@ -5,10 +5,11 @@ Author:	Thorsten Tepper Garcia
 import sys
 from utils import funcs
 import config.phys_consts as pc
+import math
 
 class Body():
 	"""General body class representing a body"""
-	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None, df = None, massevol = None):
+	def __init__(self,mass=None,pot=None,r_vec=None,v_vec=None, df = None, massevol = None, rt = None, mmin = None):
 		"""
 		NAME:
 
@@ -31,6 +32,10 @@ class Body():
 			df - dynamical friction function
 
 			massevol - mass evolution function (if df is switched on)
+			
+			rt - truncation radius; required if massevol is set
+
+			mmin - present-day mass; required if massevol is set and backwards integration is on
 
 		OUTPUT:
 
@@ -135,18 +140,65 @@ class Body():
 
 			# set mass evolution function (if not set by input parameter)
 			# only relevant for dynamical friction calculation (for now)
-			# IMPORTANT: mass evolution = mass loss (for now)
-			if massevol is None:			# no mass evolution
-				def _mass_evol(t,*r):
-					return self.mass_scale
-			else:								# mass evolution as set by input paramameter
-				def _mass_evol(t,*r):	# for now: mass evolution = mass loss
-					mb = massevol(t,*r)
-					if mb < self.mass_scale:
-						self.mass_scale = mb
-					return self.mass_scale
-			self.mass_evol = _mass_evol
+			# IMPORTANT:
+			# mass gain and mass loss are not (yet) fully symmetric. this
+			# has to do with the fact that calculating the mass increase at
+			# pericentre when integrating backwards requires knowledge of the
+			# earlier pericentric distance, which is impossible unless the
+			# orbit is known in advance.
 
+			if rt is not None:
+				self.rtrunc = rt
+			else:
+				self.rtrunc = 1.e10
+
+			self.mass_tot = self.mass_cum(self.rtrunc)
+			self.mass_bound = self.mass_cum(self.rtrunc)
+			self.rmin = 1.e10
+			self.vrneg = 1
+			self.vrpos = -1
+
+			if massevol is None:							# no mass evolution (trivial)
+				def _mass_evol(t,r,v,s):
+					_vr = funcs.dot_prod(r,v)
+					_r = funcs.norm(*r)
+					_v = funcs.norm(*r)
+					return self.mass_scale
+			else:											# mass evolution as set by input parameter
+				def _mass_evol(t,r,v,s):					# s - backwards integration switch (+/-1)
+					_mb = massevol(t,r)
+					_vr = funcs.dot_prod(r,v)
+					_r = funcs.norm(*r)
+					_v = funcs.norm(*r)
+					if _r < self.rmin:
+						self.rmin = _r
+						self.vrneg = math.copysign(1,_vr)
+						_massb = 0.
+					else:
+						if self.vrneg>0  and self.vrpos<0:
+							_massb = _mb
+							self.vrpos = math.copysign(1,self.vrneg)
+						else:
+							_massb = 0.
+							self.rmin = _r
+							self.vrneg = math.copysign(1,_vr)
+							self.vrpos = math.copysign(1,_vr)
+					if s == 1:								# forward integration: mass evolution = mass loss
+						if _mb < self.mass_bound:
+							self.mass_bound = _mb
+						if _massb > 0.:
+							print("{} {} {} {} {:E}".format(t,self.rmin,self.vrpos,self.vrneg,_massb))
+					else:									# backwards integration: mass evolution = mass 'gain'
+						if t == 0:
+# 							self.mass_bound = 6.176917e8	# = to the present-day mass
+							self.mass_bound = mmin			# = to the present-day mass
+						else:
+							if _massb > 0.:
+								self.mass_bound = _massb
+								print("{} {} {} {} {:E}".format(t,self.rmin,self.vrpos,self.vrneg,_massb))
+					return self.mass_bound
+
+			self.mass_evol = _mass_evol
 
 
 	def pos_rel(self,b):

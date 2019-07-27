@@ -95,12 +95,22 @@ def get_input():
 			RT1 = ic.rtrunc1
 		except:
 			RT1 = None
-		if mass1_evol is not None and RT1 is None:
-			raise \
+		try:
+			mass1_min = ic.Mass1_min
+		except:
+			mass1_min = None
+
+		if mass1_evol is not None:
+			if RT1 is None:
+				raise \
 				ValueError("Body 1 truncation radius is a required input parameter if mass evolution is set")
+			if ic.t_1 < 0 and mass1_min is None:
+				raise \
+				ValueError("Body 1 present-day mass is a required input parameter if mass evolution and backwards integration are set")
 
 		ic.body1 = \
-			body.Body(mass=ic.Mass1_scale,pot=Pot1,r_vec=r10_vec,v_vec=v10_vec,df=DF1,massevol=mass1_evol,rt=RT1)
+			body.Body(mass=ic.Mass1_scale,pot=Pot1,r_vec=r10_vec,v_vec=v10_vec,df=DF1,massevol=mass1_evol,rt=RT1,mmin=mass1_min)
+
 
 
 		# Body 2
@@ -132,12 +142,21 @@ def get_input():
 			RT2 = ic.rtrunc2
 		except:
 			RT2 = None
-		if mass2_evol is not None and RT2 is None:
-			raise \
+		try:
+			mass2_min = ic.Mass2_min
+		except:
+			mass2_min = None
+
+		if mass2_evol is not None:
+			if RT2 is None:
+				raise \
 				ValueError("Body 2 truncation radius is a required input parameter if mass evolution is set")
+			if ic.t_1 < 0 and mass2_min is None:
+				raise \
+				ValueError("Body 1 present-day mass is a required input parameter if mass evolution and backwards integration are set")
 
 		ic.body2 = \
-			body.Body(mass=ic.Mass2_scale,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2,massevol=mass2_evol,rt=RT2)
+			body.Body(mass=ic.Mass2_scale,pot=Pot2,r_vec=r20_vec,v_vec=v20_vec,df=DF2,massevol=mass2_evol,rt=RT2,mmin=mass2_min)
 
 		
 		# sanity checks
