@@ -4,7 +4,8 @@ Author:	Thorsten Tepper Garcia
 This set of parameters produces a well-behaved equal mass two-body system, with a stable,
 non-precessing elliptical orbit characterised by the following parameters:
 
-                           Reduced mass:     5.0000E+05
+                   Mass scale of body 1:     1.0000E+06
+                   Mass scale of body 2:     1.0000E+06
 
           Initial rel. distance (r21_0):         1.0000
              Initial rel. speed (v21_0):         2.0000
@@ -21,6 +22,10 @@ non-precessing elliptical orbit characterised by the following parameters:
                      Semiminor axis (b):         0.5504
        Orbital inclination (psi_0; deg):         0.0000
                  Ascending node (n_vec): (0.000,0.000,0.000)
+
+WARNING:
+	longitude of ascending node undefined. Set to 0 by convention.
+
       Long. of asc. node (Omega_0; deg):         0.0000
             Eccentricity vector (e_vec): (-0.535,0.000,0.000)
              Apsidal angle (phi_0; deg):       180.0000
@@ -32,12 +37,15 @@ non-precessing elliptical orbit characterised by the following parameters:
                 Rel. orbital period (T):         1.1265
         Approx. orbit circumference (u):         3.7825
         Approx. pericentric period (Tp):         0.5729
-              Rel. potential energy (V):    -4.3009E+06
-                Rel. kinetic energy (T):     1.0000E+06
-                  Rel. total energy (E):    -3.3009E+06
+     Rel. specific potential energy (V):    -8.6018E+00
+       Rel. specific kinetic energy (T):     2.0000E+00
+         Rel. specific total energy (E):    -6.6018E+00
 
-           Energy conservation to better than 1.148E-02 %.
- Angular momentum conservation to better than 4.681E-11 %.
+
+Conservation laws:
+                          Energy conservation to better than 1.148E-02 %.
+    Angular momentum conservation (magnitude) to better than 4.696E-11 %.
+    Angular momentum conservation (direction) to better than 0.000E+00 %.
 
 A series of relevant plots for this system can be produced using:
 

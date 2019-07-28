@@ -4,31 +4,50 @@ Author:	Thorsten Tepper Garcia
 This set of parameters produces a well-behaved two-body system, with a stable, non-precessing
 orbit characterised by the following parameters:
 
-              Total mass of body 1:  1.0000E+06
-              Total mass of body 2:  1.0000E+01
-                      Reduced mass:  9.9999E+00
-     Initial rel. distance (r21_0):      1.0000
-        Initial rel. speed (v21_0):      1.5677
- Initial tangential vel. (v_tan_0):      1.5677
-     Initial radial vel. (v_rad_0):      0.0000
-Rel. specific ang. mom. vec. (h_vec): (0.000,0.000,1.568)
-       Rel. specific ang. mom. (h):      1.5677
-              Rel. mean radius (p):      0.5714
-  Rel. eccentricity vector (e_vec): (-0.429,0.000,0.000)
-             Rel. eccentricity (e):      0.4286
-           Rel. semimajor axis (a):      0.7000
-           Rel. semiminor axis (b):      0.6325
-              Rel. pericentre (rp):      0.4000
-               Rel. apocentre (ra):      1.0000
- Orbital rotation angle (thetha_0):    180.0000
-           Rel. orbital period (T):      1.7744
-         Rel. potential energy (T): -4.3009E+01
-           Rel. kinetic energy (T):  1.2288E+01
-             Rel. total energy (T): -3.0721E+01
+                    Potential of body 1:     Kepler_Pot
+                    Potential of body 2:     Kepler_Pot
+                   Mass scale of body 1:     1.0000E+06
+                   Mass scale of body 2:     1.0000E+01
+
+          Initial rel. distance (r21_0):         1.0000
+             Initial rel. speed (v21_0):         1.5677
+      Initial tangential vel. (v_tan_0):         1.5677
+          Initial radial vel. (v_rad_0):         0.0000
+   Rel. specific ang. mom. vec. (h_vec): (0.000,0.000,1.568)
+                           [normalised]: (0.000,0.000,1.000)
+                         [along z-axis]: (0.000,0.000,1.568)
+            Rel. specific ang. mom. (h):         1.5677
+
+                       Eccentricity (e):         0.4286
+                  Semi-latus rectum (p):         0.5714
+                     Semimajor axis (a):         0.7000
+                     Semiminor axis (b):         0.6325
+       Orbital inclination (psi_0; deg):         0.0000
+                 Ascending node (n_vec): (0.000,0.000,0.000)
+
+WARNING:
+	longitude of ascending node undefined. Set to 0 by convention.
+
+      Long. of asc. node (Omega_0; deg):         0.0000
+            Eccentricity vector (e_vec): (-0.429,0.000,0.000)
+             Apsidal angle (phi_0; deg):       180.0000
+   Argument of periapsis (omega_0; deg):       180.0000
+                   Rel. pericentre (rp):         0.4000
+                Vel. at pericentre (vp):         3.9193
+                    Rel. apocentre (ra):         1.0000
+                 Vel. at apocentre (va):         1.5677
+                Rel. orbital period (T):         1.7744
+        Approx. orbit circumference (u):         4.1887
+        Approx. pericentric period (Tp):         1.0688
+     Rel. specific potential energy (V):    -4.3010E+00
+       Rel. specific kinetic energy (T):     1.2288E+00
+         Rel. specific total energy (E):    -3.0721E+00
 
 
-           Energy conservation to better than 1.816E-03 %.
- Angular momentum conservation to better than 7.636E-11 %.
+Conservation laws:
+                          Energy conservation to better than 1.816E-03 %.
+    Angular momentum conservation (magnitude) to better than 7.685E-11 %.
+    Angular momentum conservation (direction) to better than 0.000E+00 %.
 
 
 A series of relevant plots for this system can be produced using:
@@ -76,5 +95,6 @@ y2_0 = 0.
 z2_0 = 0.
 vx2_0 = 0.														# velocities (km/s):
 sm_a = 0.7														# must be > r_0/2
-vy2_0 = funcs.vis_viva(x2_0,y2_0,z2_0,amp=pc.Grav*(Mass1_scale+Mass2_scale),sm_a)	# elliptical orbit with semi-major axis a > r/2
+vy2_0 = \
+	funcs.vis_viva(x2_0,y2_0,z2_0,amp=pc.Grav*(Mass1_scale+Mass2_scale),a=sm_a)	# elliptical orbit with semi-major axis a > r/2
 vz2_0 = 0.

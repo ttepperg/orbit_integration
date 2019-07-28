@@ -1,16 +1,9 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This setup is an attempt to reproduce the Sgr infall model of Dierickx & Loeb (2017a),
-with the following differences:
+Experimental!
 
-- Time integration is carried on using a leapfrog (rather than RK4) method;
-- MW does not include a bulge or a stellar disc; their mass is added to the DM halo;
-- The scale length of the MW halo has been reduced from 38.35 to 25.
-- The mass of Sgr has been increased from 1.3e10 to 2e10 to roughly match its orbital
-history
-
-Therefore, some differences between their results and ours are expected.
+Present-day mass = observed mass or final bound mass given by integrating forward
 
 '''
 
@@ -19,7 +12,7 @@ from utils import funcs
 
 
 t_0 = 0.0e0														# initial time (Gyr)
-t_1 = 7.85														# total time (time unit ~ 0.978 Gyr)
+t_1 = -7.85														# total time (time unit ~ 0.978 Gyr)
 delta_t = 1.0e-3												# integration time step
 
 # Milky Way
@@ -37,20 +30,21 @@ vz1_0 = 0.
 Mass2_scale = 1.2e10											# mass scale (Msun)
 a2 = 9.81														# scale radius (kpc)
 Potential2 = funcs.Hernquist_Potential(Mass2_scale,a2)	# potential (km/s)^2
-x2_0 = 125.														# positions (kpc)
+x2_0 = 12.58921													# positions (kpc)
 y2_0 = 0.
-z2_0 = 0.
-vx2_0 = -11.6													# velocities (km/s):
+z2_0 = 24.20118
+vx2_0 = -365.14238												# velocities (km/s):
 vy2_0 = 0.
-vz2_0 = 71.66
+vz2_0 = -34.97262
 
 
 # Dynamical friction settings
 soft_length2 = 0.3 #1.0												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
-# Mass loss
+# Mass gain
 rtrunc2 = 1.e10														# ~ inf truncation radius
+Mass2_min = 6.176917e8												# present-day mass
 Mass1_cum = funcs.Hernquist_Mass(Mass1_scale,a1)
 Mass2_cum = funcs.Hernquist_Mass(Mass2_scale,a2)
 Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function

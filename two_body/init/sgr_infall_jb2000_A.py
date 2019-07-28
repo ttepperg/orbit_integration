@@ -54,6 +54,8 @@ soft_length2 = 2.0e1												# softening length of Sgr
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
 # Mass loss
+rtrunc1 = 1e3
+rtrunc2 = 70.
 Mass1_cum = funcs.PITS_Mass(Mass1_scale,a1)							# mass function
 Mass2_cum = funcs.PITS_Mass(Mass2_scale,a2)							# mass function
 Mass2_evol = funcs.mass_bound(m1_func=Mass1_cum,m2_func=Mass2_cum)	# mass evolution function
@@ -65,10 +67,10 @@ rt2 = [0.,0.,70.]												# truncation radius
 m2 = Mass2_cum(*rt2)											# mass scale (Msun)
 print("Mass of MW [Msun]: {:E}".format(m1))
 print("Mass of Sgr [Msun]: {:E}".format(m2))
-r0 = [x2_0,y2_0,z2_0]
-rt = funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass2_cum)
-print(rt)
-print("{:E}".format(Mass2_cum(rt)))
+# r0 = [x2_0,y2_0,z2_0]
+# rt = funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass2_cum)
+# print(rt)
+# print("{:E}".format(Mass2_cum(rt)))
 # exit()
 # 
 # # Check
