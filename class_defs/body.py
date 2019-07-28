@@ -152,52 +152,135 @@ class Body():
 			else:
 				self.rtrunc = 1.e10
 
-			self.mass_tot = self.mass_cum(self.rtrunc)
 			self.mass_bound = self.mass_cum(self.rtrunc)
-			self.rmin = 1.e10
-			self.vrneg = 1
-			self.vrpos = -1
 
 			if massevol is None:							# no mass evolution (trivial)
-				def _mass_evol(t,r,v,s):
-					_vr = funcs.dot_prod(r,v)
-					_r = funcs.norm(*r)
-					_v = funcs.norm(*r)
-					return self.mass_scale
+
+				def _mass_evol_x(t,r,v,s):
+					return self.mass_bound #self.mass_scale
+
+				def _mass_evol_y(t,r,v,s):
+					return self.mass_bound #self.mass_scale
+
+				def _mass_evol_z(t,r,v,s):
+					return self.mass_bound #self.mass_scale
+
 			else:											# mass evolution as set by input parameter
-				def _mass_evol(t,r,v,s):					# s - backwards integration switch (+/-1)
+
+				self.rmin = 1.e10
+				self.vrneg = 1
+				self.vrpos = -1
+
+				self.rmin_x = 1.e10
+				self.vrneg_x = 1
+				self.vrpos_x = -1
+
+				def _mass_evol_x(t,r,v,s):					# s - backwards integration switch (+/-1)
 					_mb = massevol(t,r)
 					_vr = funcs.dot_prod(r,v)
 					_r = funcs.norm(*r)
-					_v = funcs.norm(*r)
-					if _r < self.rmin:
-						self.rmin = _r
-						self.vrneg = math.copysign(1,_vr)
+					if _r < self.rmin_x:
+						self.rmin_x = _r
+						self.vrneg_x = math.copysign(1,_vr)
 						_massb = 0.
 					else:
-						if self.vrneg>0 and self.vrpos<0:
+						if self.vrneg_x>0 and self.vrpos_x<0:
 							_massb = _mb
-							self.vrpos = math.copysign(1,self.vrneg)
+							self.vrpos_x = math.copysign(1,self.vrneg_x)
 						else:
 							_massb = 0.
-							self.rmin = _r
-							self.vrneg = math.copysign(1,_vr)
-							self.vrpos = math.copysign(1,_vr)
+							self.rmin_x = _r
+							self.vrneg_x = math.copysign(1,_vr)
+							self.vrpos_x = math.copysign(1,_vr)
 					if s == 1:								# forward integration: mass evolution = mass loss
 						if _mb < self.mass_bound:
 							self.mass_bound = _mb
 						if _massb > 0.:
-							print("{} {} {} {} {:E}".format(t,self.rmin,self.vrpos,self.vrneg,_massb))
+							print("x: {} {} {} {} {:E}".format(t,self.rmin_x,self.vrpos_x,self.vrneg_x,_massb))
 					else:									# backwards integration: mass evolution = mass 'gain'
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
 						else:
 							if _massb > 0.:
 								self.mass_bound = _massb
-								print("{} {} {} {} {:E}".format(t,self.rmin,self.vrpos,self.vrneg,_massb))
+								print("x: {} {} {} {} {:E}".format(t,self.rmin_x,self.vrpos_x,self.vrneg_x,_massb))
 					return self.mass_bound
 
-			self.mass_evol = _mass_evol
+
+				self.rmin_y = 1.e10
+				self.vrneg_y = 1
+				self.vrpos_y = -1
+
+				def _mass_evol_y(t,r,v,s):					# s - backwards integration switch (+/-1)
+					_mb = massevol(t,r)
+					_vr = funcs.dot_prod(r,v)
+					_r = funcs.norm(*r)
+					if _r < self.rmin_y:
+						self.rmin_y = _r
+						self.vrneg_y = math.copysign(1,_vr)
+						_massb = 0.
+					else:
+						if self.vrneg_y>0 and self.vrpos_y<0:
+							_massb = _mb
+							self.vrpos_y = math.copysign(1,self.vrneg_y)
+						else:
+							_massb = 0.
+							self.rmin_y = _r
+							self.vrneg_y = math.copysign(1,_vr)
+							self.vrpos_y = math.copysign(1,_vr)
+					if s == 1:								# forward integration: mass evolution = mass loss
+						if _mb < self.mass_bound:
+							self.mass_bound = _mb
+						if _massb > 0.:
+							print("y: {} {} {} {} {:E}".format(t,self.rmin_y,self.vrpos_y,self.vrneg_y,_massb))
+					else:									# backwards integration: mass evolution = mass 'gain'
+						if t == 0:
+							self.mass_bound = mmin			# = to the present-day mass
+						else:
+							if _massb > 0.:
+								self.mass_bound = _massb
+								print("y: {} {} {} {} {:E}".format(t,self.rmin_y,self.vrpos_y,self.vrneg_y,_massb))
+					return self.mass_bound
+
+				self.rmin_z = 1.e10
+				self.vrneg_z = 1
+				self.vrpos_z = -1
+
+				def _mass_evol_z(t,r,v,s):					# s - backwards integration switch (+/-1)
+					_mb = massevol(t,r)
+					_vr = funcs.dot_prod(r,v)
+					_r = funcs.norm(*r)
+					if _r < self.rmin_z:
+						self.rmin_z = _r
+						self.vrneg_z = math.copysign(1,_vr)
+						_massb = 0.
+					else:
+						if self.vrneg_z>0 and self.vrpos_z<0:
+							_massb = _mb
+							self.vrpos_z = math.copysign(1,self.vrneg_z)
+						else:
+							_massb = 0.
+							self.rmin_z = _r
+							self.vrneg_z = math.copysign(1,_vr)
+							self.vrpos_z = math.copysign(1,_vr)
+					if s == 1:								# forward integration: mass evolution = mass loss
+						if _mb < self.mass_bound:
+							self.mass_bound = _mb
+						if _massb > 0.:
+							print("z: {} {} {} {} {:E}".format(t,self.rmin_z,self.vrpos_z,self.vrneg_z,_massb))
+					else:									# backwards integration: mass evolution = mass 'gain'
+						if t == 0:
+							self.mass_bound = mmin			# = to the present-day mass
+						else:
+							if _massb > 0.:
+								self.mass_bound = _massb
+								print("z: {} {} {} {} {:E}".format(t,self.rmin_z,self.vrpos_z,self.vrneg_z,_massb))
+					return self.mass_bound
+
+# 			self.mass_evol = _mass_evol
+			self.mass_evol_x = _mass_evol_x
+			self.mass_evol_y = _mass_evol_y
+			self.mass_evol_z = _mass_evol_z
 
 
 	def pos_rel(self,b):

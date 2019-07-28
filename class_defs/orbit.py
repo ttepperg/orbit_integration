@@ -640,7 +640,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=0, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
+					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol_x(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vx21
 				return force_grav+force_df
 
@@ -656,7 +656,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=1, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
+					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol_y(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vy21
 				return force_grav+force_df
 
@@ -672,7 +672,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
+					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol_z(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vz21
 				return force_grav+force_df
 		
@@ -690,7 +690,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=0, func=self.b2.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
+					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol_x(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
 						veldisp=self.b2.vel_disp) * _vx12
 				return force_grav+force_df
 
@@ -706,7 +706,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=1, func=self.b2.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
+					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol_y(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
 						veldisp=self.b2.vel_disp) * _vy12
 				return force_grav+force_df
 
@@ -722,7 +722,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=2, func=self.b2.potential, delta_x=intStep, order=accOrder)
 				force_df = bwi_switch * \
-					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
+					self.b2.dynamical_friction(r=_rvec, v=_vvec, mass=self.b1.mass_evol_z(t,_rvec,_vvec,bwi_switch), rho=self.b2.dens, \
 						veldisp=self.b2.vel_disp) * _vz12
 				return force_grav+force_df
 
