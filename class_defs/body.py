@@ -175,7 +175,7 @@ class Body():
 						self.vrneg = math.copysign(1,_vr)
 						_massb = 0.
 					else:
-						if self.vrneg>0  and self.vrpos<0:
+						if self.vrneg>0 and self.vrpos<0:
 							_massb = _mb
 							self.vrpos = math.copysign(1,self.vrneg)
 						else:
@@ -190,7 +190,6 @@ class Body():
 							print("{} {} {} {} {:E}".format(t,self.rmin,self.vrpos,self.vrneg,_massb))
 					else:									# backwards integration: mass evolution = mass 'gain'
 						if t == 0:
-# 							self.mass_bound = 6.176917e8	# = to the present-day mass
 							self.mass_bound = mmin			# = to the present-day mass
 						else:
 							if _massb > 0.:
