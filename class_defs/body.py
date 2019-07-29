@@ -92,6 +92,8 @@ class Body():
 				else:
 					self.mass_cum = funcs.Hernquist_Mass(self.mass_scale,_a)
 			elif pot_name == "NFW_Pot":
+				if rt is None:
+					raise ValueError("NFW model is mass-divergent and requires to set a truncation radius.")
 				_mass = self.potential.__getattribute__('_mass')
 				_rs = self.potential.__getattribute__('_rs')
 				if _mass != self.mass_scale:
@@ -99,6 +101,8 @@ class Body():
 				else:
 					self.mass_cum = funcs.NFW_Mass(_mass,_rs)
 			elif pot_name == "PITS_Pot":
+				if rt is None:
+					raise ValueError("PITS model is mass-divergent and requires to set a truncation radius.")
 				_mass = self.potential.__getattribute__('_mass')
 				_a = self.potential.__getattribute__('_a')
 				if _mass != self.mass_scale:
@@ -166,10 +170,6 @@ class Body():
 					return self.mass_bound #self.mass_scale
 
 			else:											# mass evolution as set by input parameter
-
-				self.rmin = 1.e10
-				self.vrneg = 1
-				self.vrpos = -1
 
 				self.rmin_x = 1.e10
 				self.vrneg_x = 1
