@@ -232,7 +232,9 @@ other than the Kepler potential require the value of an additional
 parameter, i.e. the scale radius. If the potential is not Keplerian, and the
 required parameters are not explicitly set, an error is raised.
 
-Note that the mass of the NFW and PITS profile diverges with radius.
+Note that the mass of the NFW and PITS profile diverges with radius, and they
+require setting a truncation radius. If the latter is not set, an error
+is raised.
 
 The effect of dynamical friction is implemented but is optional. If desired,
 it needs to be specified in the input parameter file. In dynamical friction
@@ -244,7 +246,7 @@ It is worth emphasising that providing the state vectos r0 and v0 for each
 body is the only method to specify the initial conditions of the system.
 In other words, it is not possible yet to specify an orbit directly in terms
 of, say, its eccentricity or orbital period. However, some methods are available
-to impose *within* the input parameter file certain conditions on the orbit,
+to impose -- *within* the input parameter file -- certain conditions on the orbit,
 e.g. a circular orbit 
 
 The corresponding orbital parameters (e.g. eccentricity, orbital period,
