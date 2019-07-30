@@ -53,7 +53,7 @@ vz2_0 = 10.6
 soft_length2 = 28.5													# softening length of M33
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=soft_length2)	# dynamical friction function
 
-# Mass loss
+# Mass evolution (unstripping)
 Mass2_min = 4e11
 Mass1_cum = funcs.Hernquist_Mass(Mass1_scale,rs1)
 Mass2_cum = funcs.Hernquist_Mass(Mass2_scale,rs2)
