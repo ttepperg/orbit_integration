@@ -185,7 +185,7 @@ class Body():
 						if _mb < self.mass_bound:
 							self.mass_bound = _mb
 						if _massb > 0.:
-							print("x(+1): {} {:E}".format(t,self.mass_bound))
+							print("x(+1): {} {} {:E}".format(t,_r,self.mass_bound))
 					else:									# backwards integration: mass evolution = mass 'gain'
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
@@ -193,7 +193,7 @@ class Body():
 							if _massb > 0.:
 								self.mass_bound = _massb
 						if _massb > 0.:
-							print("x(-1): {} {:E}".format(t,self.mass_bound))
+							print("x(-1): {} {} {:E}".format(t,_r,self.mass_bound))
 					return self.mass_bound
 
 				self.vrsave_y = -1
@@ -210,7 +210,7 @@ class Body():
 						if _mb < self.mass_bound:
 							self.mass_bound = _mb
 						if _massb > 0.:
-							print("y(+1): {} {:E}".format(t,self.mass_bound))
+							print("y(+1): {} {} {:E}".format(t,_r,self.mass_bound))
 					else:									# backwards integration: mass evolution = mass 'gain'
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
@@ -218,7 +218,7 @@ class Body():
 							if _massb > 0.:
 								self.mass_bound = _massb
 						if _massb > 0.:
-							print("y(-1): {} {:E}".format(t,self.mass_bound))
+							print("y(-1): {} {} {:E}".format(t,_r,self.mass_bound))
 					return self.mass_bound
 
 				self.vrsave_z = -1
@@ -235,7 +235,7 @@ class Body():
 						if _mb < self.mass_bound:
 							self.mass_bound = _mb
 						if _massb > 0.:
-							print("z(+1): {} {:E}".format(t,self.mass_bound))
+							print("z(+1): {} {} {:E}".format(t,_r,self.mass_bound))
 					else:									# backwards integration: mass evolution = mass 'gain'
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
@@ -243,7 +243,7 @@ class Body():
 							if _massb > 0.:
 								self.mass_bound = _massb
 						if _massb > 0.:
-							print("z(-1): {} {:E}".format(t,self.mass_bound))
+							print("z(-1): {} {} {:E}".format(t,_r,self.mass_bound))
 					return self.mass_bound
 
 			self.mass_evol_x = _mass_evol_x
