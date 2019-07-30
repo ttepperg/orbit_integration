@@ -379,9 +379,9 @@ class Orbit():
 			file = fileout)
 		print("{}{:>40}{:>15}".format(first_chr,"Potential of body 2:",self.b2.potential.__name__), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}".format(first_chr,"Mass scale of body 1:",self.b1.mass_scale), \
+		print("{}{:>40}{:15.4E}".format(first_chr,"Bound mass of body 1:",self.b1.mass_bound), \
 			file = fileout)
-		print("{}{:>40}{:15.4E}\n".format(first_chr,"Mass scale of body 2:",self.b2.mass_scale), \
+		print("{}{:>40}{:15.4E}\n".format(first_chr,"Bound mass of body 2:",self.b2.mass_bound), \
 			file = fileout)
 # 		print("{}{:>40}{:15.4E}\n".format(first_chr,"Reduced mass:",self.mred()), \
 # 			file = fileout)
