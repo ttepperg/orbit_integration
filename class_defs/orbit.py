@@ -511,7 +511,7 @@ class Orbit():
 			# note: the shape of _F is dictated by time integration module (ode_leap or ode_eulric)
 			_F = [*self.set_accelerations(backwards_switch)]
 
-			print("\nOrbit integration{}".format(" (backwards):" if backwards_switch < 0 else ":"))
+			print("\nOrbit integration{}".format(" (backwards):" if backwards_switch < 0 else " (forward):"))
 			
 			if backwards_switch > 0:
 				print("\tTime range [t0,t1] = [{},{}]".format(time_start,time_end))
@@ -925,12 +925,12 @@ class Orbit():
 			# Improve on this output; e.g. make it dependent on whether mass
 			# evolution was explicitly set by input parameter.
 			# mass evolution (if set)
-			self.ini_end_out(sv = state_vector)
+			self.ini_end_out(time=time_list,sv=state_vector)
 
 			return 0
 
 
-	def ini_end_out(self, sv = None):
+	def ini_end_out(self, time = None, sv = None):
 		"""
 		NAME:
 
@@ -946,6 +946,7 @@ class Orbit():
 
 		INPUT:
 
+			time - list of integration time steps (with length = time_steps)
 			sv - interleaved list if state vectors for each body:
 				  	(x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
 				  for each time step
@@ -959,12 +960,14 @@ class Orbit():
 			2019-07-23 - Written - TTG
 
 		"""
-		if sv is None:
+		if time is None:
+			raise ValueError("time is a required parameter in write_table")
+		elif sv is None:
 			raise ValueError("sv is a required parameter in ini_end_out")
 		else:
 			# set index for initial and final time steps
 			t_ini = 0
-			t_end = len(sv[0])-1
+			t_end = len(time)-1
 			print("\nInitial / final state vectors:")
 			x1, vx1, y1, vy1, z1, vz1, x2, vx2, y2, vy2, z2, vz2 = \
 					sv[0][t_ini], sv[1][t_ini], sv[2][t_ini], sv[3][t_ini], \
@@ -988,8 +991,13 @@ class Orbit():
 			print("\tPresent-day relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
 			# This may not yet be entirely consistent:
 			print("The following are only relevant is masses are allowed to evolved:")
-			print("\tPresent-day bound mass of body 1: {:E}".format(self.b1.mass_bound))
-			print("\tPresent-day bound mass of body 2: {:E}\n".format(self.b2.mass_bound))
+			if time[0] < 0:
+				out_string = "Infall"
+			else:
+				out_string = "Present-day"
+			print("\t{} bound mass of body 1: {:E}".format(out_string,self.b1.mass_bound))
+			print("\t{} bound mass of body 2: {:E}\n".format(out_string,self.b2.mass_bound))
+
 			return 0
 
 
