@@ -1,11 +1,21 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This set of parameters is essentially identical to m31_m33_infall_semczuk_salomon.py,
-but taking dynamical friction into account. See m31_m33_infall_semczuk_salomon.py for
-more information.
+This set of parameters is intended to reproduce the semi-analytic calculation
+for the infall of M33 onto M31 by Semczuk et al. (2018). See their appendices A and B.
 
-The resulting orbital parameters at -5 Gyr are:
+M31 is approximated by a NFW DM halo with a virial mass of 2x10^12 Msun.
+M33 is approximated by a NFW DM halo with a virial mass of 5x10^11 Msun.
+
+In that work, two different sets of the present-day velocities of M33 relative to M31
+are considered: van der Marel et al. (2012a); and Salomon et al.(2016).
+
+Here, we take the second set (see m31_m33_infall_semczuk_vandermarel.py for the alternative).
+
+For now, we neglect the error bars in both the relative coordinates and velocities
+and adopt the central measured values only.
+
+The orbit is integrated for 5 Gyr, in agreement with Semczuk et al. (2018).
 
 
 '''
@@ -22,8 +32,9 @@ delta_t = 1.0e-3												# integration time step
 # M31
 rs1 = 11.65														# NFW scale radius (kpc)
 rho01 = 4.2e7													# core density (Msun/kpc**3)
+rtrunc1 = 326.													# truncation (virial) radius
 Mass1_scale = 4. * pi * rho01 * rs1**3
-Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)			# potential (km/s)^2
+Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)				# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
 y1_0 = 0.
 z1_0 = 0.
@@ -33,10 +44,10 @@ vz1_0 = 0.
 
 # M33
 rs2 = 17.88														# NFW scale radius (kpc)
-# rho02 = 3.88e6													# core density (Msun/kpc**3)
 rho02 = 4.45e6													# core density (Msun/kpc**3)
+rtrunc2 = 197.													# truncation (virial) radius
 Mass2_scale = 4. * pi * rho02 * rs2**3
-Potential2 = funcs.NFW_Potential(Mass2_scale,rs2)			# potential (km/s)^2
+Potential2 = funcs.NFW_Potential(Mass2_scale,rs2)				# potential (km/s)^2
 x2_0 = -97.2													# positions (kpc)
 y2_0 = -121.6
 z2_0 = -129.8

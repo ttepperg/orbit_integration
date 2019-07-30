@@ -241,9 +241,11 @@ Note that the latter is still an experimental feature. Mass gain shall be
 implemented in a future version of the code.
 
 It is worth emphasising that providing the state vectos r0 and v0 for each
-body is the preferred method to specify the initial conditions of the system.
-However, some methods are available to impose certain conditions on the orbit,
-e.g. a circular orbit *within* the input parameter file.
+body is the only method to specify the initial conditions of the system.
+In other words, it is not possible yet to specify an orbit directly in terms
+of, say, its eccentricity or orbital period. However, some methods are available
+to impose *within* the input parameter file certain conditions on the orbit,
+e.g. a circular orbit 
 
 The corresponding orbital parameters (e.g. eccentricity, orbital period,
 etc.) are then calculated from the initial orbital state vectors at runtime
