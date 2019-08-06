@@ -182,7 +182,7 @@ The code can be run directly from command line via:
 
 	shell> ./two_body_orbit.py <input parameter file>
 
-using the prededfined python interpreter given in the first line,
+using the predefined python interpreter given in the first line,
 or:
 
 	shell> python3.X two_body_orbit.py <input parameter file>
