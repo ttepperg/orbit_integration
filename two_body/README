@@ -331,7 +331,7 @@ The script plots either 1) a full 3D view of the system; 2) a 2D projection
 along one of the principal axis of a standard Cartesian reference frame; or
 3) a 2D view of the system's evolution on the orbital plane. If the latter,
 the analytic result -- self-consistently calculated from the initial orbital
-parameters -- is included as  to allow for a check of the numerical result.
+parameters -- is included to allow for a check of the numerical result.
 Beware that in the case of non-closed orbits, the analytic result will merely
 agree with a fragment of the orbit only (osculating orbits).
 
@@ -362,14 +362,13 @@ input arguments and their default values.
 
 1) The conserved quantities are:
 
-- relative specific angular momentum;
+- *relative specific* angular momentum;
 	  
-- relative specific total (potential + kinetic) energy.
+- *relative specific* total (potential + kinetic) energy.
 
 The individual energies and angular momenta need not necessarily
-be conserved (?). The error in the conservation of angular momentum
-is generally orders of magnitude smaller than the error in the conservation
-of energy (why?).
+conserved. The error in the conservation of angular momentum is generally
+orders of magnitude smaller than the error in the conservation of energy (why?).
 
 Also, the spatial step and the order of accuracy used when calculating
 numerical derivatives of the potential affect the conservation of angular
@@ -377,12 +376,11 @@ momentum, but not the conservation of energy (which seems to depend on the
 time integration scheme only; why?).
 
 
-2) Closed orbits. Only a central, Kepler (i.e. point-mass) potential yields conic
-orbits; in particular, if the eccentricity is less than unity, it leads
-to *closed* orbits. In this case, the orbit can be described by a
-unique set of orbital parameters (eccentricity, semi-major axis, period,
-etc.) The code calculates a range of orbital parameters at runtime and
-prints them to stdout.
+2) Closed orbits. Only a central, Kepler (i.e. point-mass) potential yields
+conic orbits; in particular, if the eccentricity is less than unity, it leads
+to *closed* orbits. In this case, the orbit can be described by a unique set
+of orbital parameters (eccentricity, semi-major axis, period, etc.) The code
+calculates a range of orbital parameters at runtime and prints them to stdout.
 
 Extended, spherically symmetric bodies yield gravitational forces as
 though their masses were concentrated at their respective centres (Newton's
@@ -397,7 +395,7 @@ breaks the 1/d^2 dependence. Thus, by virtue of Bertrand's theorem
 (https://en.wikipedia.org/wiki/Bertrand%27s_theorem), extended central bodies
 do not lead to closed orbits, not even in the case that the initial conditions
 imply e < 1, unless e = 0 (i.e. circular orbits). With the notable exception of
-the case e=0, the orbital parameters set by the initial conditions correspond,
+the case e = 0, the orbital parameters set by the initial conditions correspond,
 at best, to *osculating* parameters in this case. The same is true for non-spherically
 symmetric potentials.
 
@@ -466,7 +464,8 @@ assumptions:
 			- Dierickx & Loeb (2017a,
 			https://iopscience.iop.org/article/10.3847/1538-4357/836/1/92/pdf)
 			use the mass within the object's tidal radius (see also Jiang & Binney 2000).
-			This approach is deemed the correct one, although the implementation of
-			mass loss through tidal stripping introduces more complexity and requires
-			care to be implemented correctly and self-consistently.
+			This approach is deemed the correct one, and is the one adopted here.
+			But beware that the implementation of mass loss through tidal stripping
+			introduces more complexity and requires care to be implemented correctly
+			and self-consistently.
  
