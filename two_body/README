@@ -199,12 +199,12 @@ state vectors, i.e. the initial position r0 and velocities v0 for each body.
 
 The initial and final times, as well as the timestep for the integration of
 the orbit can (and preferentially should) be specified. These default to 0.,
-10., and 1.e-4, in time units (see Section UNITS). The final time may be
+10., and 1.e-3, in time units (see Section UNITS). The final time may be
 negative; in this case, the orbit integration is performed backwards in time,
 such that the initial conditions in fact corresponds to the final (present-day)
 state of the system.
 
-In addition to the total mass, the potential for each body may be specified.
+In addition to the total mass, the potential for each body has to be specified.
 Currently, only a number of spherically symmetric potentials are implemented:
 
 - Kepler (or point-like) potential
@@ -222,7 +222,7 @@ Currently, only a number of spherically symmetric potentials are implemented:
 
 The potential needs to be explicitly set; otherwise an error is raised.
 All the potentials other than the PITS potential are negative everywhere,
-and then to 0 at infinity. The PITS potential is positive everywhere and
+and tend to 0 at infinity. The PITS potential is positive everywhere and
 diverges at infinity.
 
 All potentials are consistently defined by setting a mass scale. Potentials
@@ -235,12 +235,13 @@ require setting a truncation radius. If the latter is not set, an error
 is raised.
 
 The effect of dynamical friction is implemented but is optional. If desired,
-it needs to be specified in the input parameter file. In dynamical friction
+it needs to be specified in the input parameter file. If dynamical friction
 is switched on, mass loss due to tidal stripping may be switched on as well.
-Note that the latter is still an experimental feature. Mass gain shall be
-implemented in a future version of the code.
+Note that the latter is still an experimental feature. Mass gain (i.e. the
+opposite of mass stripping) is currently implemented for backwards integration
+and is still an experimental feature.
 
-It is worth emphasising that providing the state vectos r0 and v0 for each
+It is worth emphasizing that providing the state vectos r0 and v0 for each
 body is the only method to specify the initial conditions of the system.
 In other words, it is not possible yet to specify an orbit directly in terms
 of, say, its eccentricity or orbital period. However, some methods are available
@@ -249,7 +250,7 @@ e.g. a circular orbit
 
 The corresponding orbital parameters (e.g. eccentricity, orbital period,
 etc.) are then calculated from the initial orbital state vectors at runtime
-and written to stodut, as well as in the form of a header in the output file
+and written to stodut, and can be found in the form of a header in the output file
 (see Section OUTPUT).
 
 The parameter file needs to be present in the directory 'init'. There, a few
@@ -263,35 +264,38 @@ optionally mass loss due to tidal stripping.
 The output of the code consists of an ascii table redirected to the
 directory './output' named after the input parameter file and appended
 by the substring "_out.dat". If the directory 'output' does not exist,
-it needs to be created by hand.
+it needs to be created by hand. Otherwise an error will occur.
 
 The table contains a header enlisting the system's properties, e.g. the potential
-and masses of the bodies, their initial state, as well as a number of orbital
-parameters and their values. This output is identical to the one dumped by the
-program to stdout, with exception of warning or error messages (if any).
+and masses of the bodies; their initial state; a number of orbital
+parameters and their values; and the state of conservation laws. This output
+is identical to the one dumped by the program to stdout, with exception of
+warning or error messages (if any).
 
-The table data is organized in a total of 26 columns. The first 16 contain, in that
-order, the time, the specific relative angular momentum, the relative potential
-energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the
-bodies. The next 8 columnns contain (x',vx',y',vy') for each of the
-bodies, where the primed coordinates and velocities correspond to the coordinates
-and velocities on the orbital plane. In other words, these coordinates represent a
-rotated version of the intrinsic orbit such that the relative angular momentum
-of the system aligns with the z-axis. If the intrinsic orbit has this property,
-the primed and unprimed coordinates are identical. Note that the primed z
+The table data is organized in a total of 26 columns. The first 16 contain,
+respectively, the time, the specific relative angular momentum, the relative
+potential energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of
+the bodies. The next 8 columnns contain the coordinates (x',vx',y',vy') for each
+of the bodies, where the primed coordinates and velocities correspond to the
+coordinates and velocities on the orbital plane. In other words, these coordinates
+represent a rotated version of the intrinsic orbit such that the relative angular
+momentum of the system aligns with the z-axis. If the intrinsic orbit has this
+property, the primed and unprimed coordinates are identical. Note that the z'
 coordinates are ignored, because they all vanish by definition. The last two
 columns contain the (x,y) coordinates of the analytic solution of the problem,
 using the orbital parameters self-consistently calculated within the code.
-The latter can be directly compared to the set of primed coordinates as a check
-of the numerical result against the expected analytic solution, keeping in
-mind that for non-Keplerian potentials the analytic solution merely corresponds
-to an osculating orbit consistent with the initial conditions. In the case of
-backwards integration, the (osculating) orbital parameters will corresponds to
-the final (present-day) state, rather than to the initial state of the orbital
-evolution.
+The analytic orbital solution can be directly compared to the set of primed
+coordinates as a check of the numerical result against the expected analytic
+solution, keeping in mind that for non-Keplerian potentials the analytic solution
+may merely correspond to an osculating orbit consistent with the initial conditions.
+In the case of backwards integration, the (osculating) orbital parameters will
+correspond to the final (present-day) state, rather than to the initial state of
+the orbital evolution.
 
 Note that the ordering of the output data always follows the time arrow, i.e.
-from the earliest time to the latest time.
+from the earliest time (which is negative for backwards integration and 0 for
+forward integration) to the latest time (which is 0 for backwards integration and
+positive for forward integration).
 
 Beware that if the level of energy conservation dumped to stdout may differ
 from system (as in computer) to system. Also, it may differ from (i.e. it may be
