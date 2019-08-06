@@ -190,7 +190,6 @@ class Body():
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
 						else:
-# 							if _massb > 0.:
 							if _massb > self.mass_bound:
 								self.mass_bound = _massb
 						if _massb > 0.:
@@ -216,7 +215,6 @@ class Body():
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
 						else:
-# 							if _massb > 0.:
 							if _massb > self.mass_bound:
 								self.mass_bound = _massb
 						if _massb > 0.:
@@ -242,7 +240,6 @@ class Body():
 						if t == 0:
 							self.mass_bound = mmin			# = to the present-day mass
 						else:
-# 							if _massb > 0.:
 							if _massb > self.mass_bound:
 								self.mass_bound = _massb
 						if _massb > 0.:
