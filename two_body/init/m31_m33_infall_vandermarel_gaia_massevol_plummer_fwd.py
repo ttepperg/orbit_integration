@@ -10,7 +10,6 @@ The boundary conditions are:
 - M33's present-day mass => ~3x10^11 Msun (at the low end of the range
   estimated by Corbelli et al. 2014)
 
-
 Initial conditions: the most recent Gaia proper motion measurements
 for both galaxies by van der Marel et al. (2019), available from:
 https://ui.adsabs.harvard.edu/abs/2019ApJ...872...24V/abstract
