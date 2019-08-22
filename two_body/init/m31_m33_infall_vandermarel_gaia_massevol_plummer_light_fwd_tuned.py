@@ -1,15 +1,12 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This setup is essentially aims at tuning the infall of M33 onto M31
-iteratively by hand, alternating between this setup and
-m31_m33_infall_vandermarel_gaia_massevol.py.
-
-The boundary conditions are:
-- present-day position and velocity of M33 relative to M31
-- M33's present-day mass => ~1.3x10^11 Msun (at the centre of the range
-adopted by Patel et al. 2017).
-- Infall mass of M33 should be ~2.6x10^11 Msun
+This setup is essentially identical to
+m31_m33_infall_vandermarel_gaia_massevol_plummer_light_fwd.py, but
+adopting a different (smaller) smoothing length for M33.
+The reason is that an N-body simulation based on the former suggests
+that the semi-analytic calculation severely underestimates the
+effect of dynamical friction OR overestimates tidal stripping.
 
 '''
 
@@ -50,7 +47,8 @@ vz2_0 = 91.89645
 
 
 # Dynamical friction settings
-Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=rs2)		# dynamical friction function
+# eps is tuned to match Nbody sim
+Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=2.e-1*rs2)
 
 # Mass evolution (stripping)
 Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)

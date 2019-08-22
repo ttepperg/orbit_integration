@@ -67,7 +67,7 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # M33
-rs2 = 17.88														# NFW scale radius (kpc)
+rs2 = 17.88														# Plummer scale radius (kpc)
 rho02 = 7e6														# core density (Msun/kpc**3)
 rtrunc2 = 197.													# truncation (virial) radius
 Mass2_scale = 4. * pi * rho02 * rs2**3

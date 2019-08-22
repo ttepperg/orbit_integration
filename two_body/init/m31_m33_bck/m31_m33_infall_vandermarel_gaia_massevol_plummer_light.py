@@ -7,13 +7,13 @@ for a shorter time span.
 
 The infall state vectors are:
 
-	Infall relative position: (-322.98444,247.08110,-195.71482)
-	Infall relative distance: 451.30069
-	Infall relative velocity: (121.60311,-42.69608,91.89645)
-	Infall relative speed: 158.28843
+	Infall relative position: (-414.09016,256.09449,-272.87683)
+	Infall relative distance: 558.13691
+	Infall relative velocity: (93.00287,-18.61860,75.36137)
+	Infall relative speed: 121.14256
 
 	Infall bound mass of body 1: 2.003856E+12
-	Infall bound mass of body 2: 2.036044E+11
+	Infall bound mass of body 2: 2.969531E+11
 
 '''
 
@@ -40,8 +40,8 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # M33
-rs2 = 17.88														# Plummer scale radius (kpc)
-rho02 = 5e6														# core density (Msun/kpc**3)
+rs2 = 17.88														# NFW scale radius (kpc)
+rho02 = 7e6														# core density (Msun/kpc**3)
 rtrunc2 = 197.													# truncation (virial) radius
 Mass2_scale = 4. * pi * rho02 * rs2**3
 Potential2 = funcs.Plummer_Potential(Mass2_scale,rs2)				# potential (km/s)^2
@@ -57,7 +57,7 @@ vz2_0 = 112.
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=rs2)		# dynamical friction function
 
 # Mass evolution (unstripping)
-Mass2_min = 1.3e11															# present-day mass
+Mass2_min = 1.e11
 Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)
 Mass2_cum = funcs.Plummer_Mass(Mass2_scale,rs2)
-Mass2_evol = funcs.mass_bound(Mass1_cum,Mass2_cum)					# mass evolution function
+Mass2_evol = funcs.mass_bound(Mass1_cum,Mass2_cum)	# mass evolution function

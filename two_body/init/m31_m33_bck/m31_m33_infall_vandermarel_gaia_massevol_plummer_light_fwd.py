@@ -7,9 +7,9 @@ m31_m33_infall_vandermarel_gaia_massevol.py.
 
 The boundary conditions are:
 - present-day position and velocity of M33 relative to M31
-- M33's present-day mass => ~1.3x10^11 Msun (at the centre of the range
+- M33's present-day mass => ~1x10^11 Msun (at the centre of the range
 adopted by Patel et al. 2017).
-- Infall mass of M33 should be ~2.6x10^11 Msun
+- Infall mass of M33 should be ~3x10^11 Msun
 
 '''
 
@@ -36,17 +36,17 @@ vy1_0 = 0.
 vz1_0 = 0.
 
 # M33
-rs2 = 17.88														# Plummer scale radius (kpc)
-rho02 = 3.66e6													# core density (Msun/kpc**3)
+rs2 = 17.88														# NFW scale radius (kpc)
+rho02 = 4.1e6 #7e6														# core density (Msun/kpc**3)
 rtrunc2 = 197.													# truncation (virial) radius
 Mass2_scale = 4. * pi * rho02 * rs2**3
 Potential2 = funcs.Plummer_Potential(Mass2_scale,rs2)	# potential (km/s)^2
-x2_0 = -322.98444													# positions (kpc)
-y2_0 = 247.08110
-z2_0 = -195.71482
-vx2_0 = 121.60311													# velocities (km/s):
-vy2_0 = -42.69608
-vz2_0 = 91.89645
+x2_0 = -414.09016													# positions (kpc)
+y2_0 = 256.09449
+z2_0 = -272.87683
+vx2_0 = 93.00287													# velocities (km/s):
+vy2_0 = -18.61860
+vz2_0 = 75.36137
 
 
 # Dynamical friction settings
@@ -55,10 +55,4 @@ Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=rs2)		# dynamical friction 
 # Mass evolution (stripping)
 Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)
 Mass2_cum = funcs.Plummer_Mass(Mass2_scale,rs2)
-Mass2_evol = funcs.mass_bound(Mass1_cum,Mass2_cum)					# mass evolution function
-
-# Info
-r0 = (x2_0,y2_0,z2_0)
-print("\nTidal radius of mass 2 at {}: {:E}".format(r0,funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass1_cum)))
-print("Bound mass 2 at {}: {:E}\n".format(r0,Mass2_evol(0.,r0)))
-
+Mass2_evol = funcs.mass_bound(Mass1_cum,Mass2_cum)	# mass evolution function

@@ -1,19 +1,23 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This setup is essentially similar to m31_m33_infall_vandermarel_gaia_massevol_plummer.py
-but adopting a lighter M33 (see Patel et al. 2017, their table 3), and integrating
-for a shorter time span.
+This setup is essentially identical to
+m31_m33_infall_vandermarel_gaia_massevol_plummer_light_fwd.py, but
+adopting a different (smaller) smoothing length for M33.
+The reason is that an N-body simulation based on the former suggests
+that the semi-analytic calculation severely underestimates the
+effect of dynamical friction OR overestimates tidal stripping.
+
 
 The infall state vectors are:
 
-	Infall relative position: (-322.98444,247.08110,-195.71482)
-	Infall relative distance: 451.30069
-	Infall relative velocity: (121.60311,-42.69608,91.89645)
-	Infall relative speed: 158.28843
+	Infall relative position: (-320.71800,306.05750,-172.37540)
+	Infall relative distance: 475.65167
+	Infall relative velocity: (174.80037,-107.14605,115.53696)
+	Infall relative speed: 235.33855
 
 	Infall bound mass of body 1: 2.003856E+12
-	Infall bound mass of body 2: 2.036044E+11
+	Infall bound mass of body 2: 2.306989E+11
 
 '''
 
@@ -54,7 +58,8 @@ vz2_0 = 112.
 
 
 # Dynamical friction settings
-Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=rs2)		# dynamical friction function
+# eps is tuned to match Nbody sim
+Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=2.e-1*rs2)
 
 # Mass evolution (unstripping)
 Mass2_min = 1.3e11															# present-day mass
