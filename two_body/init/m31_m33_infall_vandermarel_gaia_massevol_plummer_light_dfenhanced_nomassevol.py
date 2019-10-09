@@ -1,26 +1,10 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-THIS ARE THE INITIAL CONDITIONS USED FOR MY DICE M31-M33 MODEL 4
-AND THE CORRESPONDING PAPER WHEN MOVING BACKWARDS IN TIME!!!
-
-This setup is essentially identical to
-m31_m33_infall_vandermarel_gaia_massevol_plummer_light_fwd.py, but
-adopting a different (smaller) smoothing length for M33.
-The reason is that an N-body simulation based on the former suggests
-that the semi-analytic calculation severely underestimates the
-effect of dynamical friction OR overestimates tidal stripping.
-
-
-The infall state vectors are:
-
-	Infall relative position: (-320.71800,306.05750,-172.37540)
-	Infall relative distance: 475.65167
-	Infall relative velocity: (174.80037,-107.14605,115.53696)
-	Infall relative speed: 235.33855
-
-	Infall bound mass of body 1: 2.003856E+12
-	Infall bound mass of body 2: 2.306989E+11
+This setup is essentially identica to
+m31_m33_infall_vandermarel_gaia_massevol_plummer_light_dfenhanced.py
+but without stripping, and a modified M33 mass to match the infall
+mass of the latter.
 
 '''
 
@@ -48,7 +32,7 @@ vz1_0 = 0.
 
 # M33
 rs2 = 17.88														# Plummer scale radius (kpc)
-rho02 = 5e6														# core density (Msun/kpc**3)
+rho02 = 3.25e6													# core density (Msun/kpc**3)
 rtrunc2 = 197.													# truncation (virial) radius
 Mass2_scale = 4. * pi * rho02 * rs2**3
 Potential2 = funcs.Plummer_Potential(Mass2_scale,rs2)				# potential (km/s)^2
@@ -63,9 +47,3 @@ vz2_0 = 112.
 # Dynamical friction settings
 # eps is tuned to match Nbody sim
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=2.e-1*rs2)
-
-# Mass evolution (unstripping)
-Mass2_min = 1.3e11															# present-day mass
-Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)
-Mass2_cum = funcs.Plummer_Mass(Mass2_scale,rs2)
-Mass2_evol = funcs.mass_bound(Mass1_cum,Mass2_cum)					# mass evolution function

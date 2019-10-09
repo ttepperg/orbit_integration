@@ -1,16 +1,10 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-THIS ARE THE INITIAL CONDITIONS USED FOR MY DICE M31-M33 MODEL 4
-AND THE CORRESPONDING PAPER WHEN MOVING FORWARD IN TIME!!!
+This setup is essentially identica to
+m31_m33_infall_vandermarel_gaia_massevol_plummer_light_dfenhanced_fwd.py
+but ignoring tidal stripping.
 
-
-This setup is essentially identical to
-m31_m33_infall_vandermarel_gaia_massevol_plummer_light_fwd.py, but
-adopting a different (smaller) smoothing length for M33.
-The reason is that an N-body simulation based on the former suggests
-that the semi-analytic calculation severely underestimates the
-effect of dynamical friction OR overestimates tidal stripping.
 
 '''
 
@@ -52,14 +46,3 @@ vz2_0 = 115.53696
 # Dynamical friction settings
 # eps is tuned to match Nbody sim
 Dynamical_Friction1 = funcs.dyn_friction_maxwell(eps=2.e-1*rs2)
-
-# Mass evolution (stripping)
-Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)
-Mass2_cum = funcs.Plummer_Mass(Mass2_scale,rs2)
-Mass2_evol = funcs.mass_bound(Mass1_cum,Mass2_cum)					# mass evolution function
-
-# Info
-r0 = (x2_0,y2_0,z2_0)
-print("\nTidal radius of mass 2 at {}: {:E}".format(r0,funcs.tidal_radius(*r0,m1_func=Mass1_cum,m2_func=Mass1_cum)))
-print("Bound mass 2 at {}: {:E}\n".format(r0,Mass2_evol(0.,r0)))
-
