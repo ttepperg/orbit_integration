@@ -32,6 +32,7 @@ delta_t = 1.0e-3												# integration time step
 # M31
 rs1 = 35.15														# NFW scale radius (kpc)
 rho01 = 2.683e6												# core density (Msun/kpc**3)
+rtrunc1 = 329.													# truncation (virial) radius
 Mass1_scale = 4. * pi * rho01 * rs1**3
 Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)
