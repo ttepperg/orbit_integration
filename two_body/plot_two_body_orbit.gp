@@ -32,8 +32,8 @@
 # The mandatory input parameters and their possible values are:
 #
 # dataFile - full path to input data file (string)
-# timeStep - value of integration time step (float)
-# timeFreq - value of time step output frequency (int)
+# delta_t - value of integration time step (float)
+# output_freq - value of time step output frequency (int)
 #
 #
 # The optional input parameters and their possible values are:
@@ -65,14 +65,14 @@ if(!exists('dataFile')){
 	print "gnuplot -e 'dataFile = \"full-path-to-file\"' plot_two_body_orbit.gp\n"
 	quit
 }
-if(!exists("timeStep")){
+if(!exists("delta_t")){
 	print "\nNeed to specify time step, either in file or via command-line e.g.:"
-	print "gnuplot -e 'timeStep = 1.e-4' plot_two_body_orbit.gp\n"
+	print "gnuplot -e 'delta_t = 1.e-4' plot_two_body_orbit.gp\n"
 	quit
 }
-if(!exists("timeFreq")){
+if(!exists("output_freq")){
 	print "\nNeed to specify time step, either in file or via command-line e.g.:"
-	print "gnuplot -e 'timeFreq = 10' plot_two_body_orbit.gp\n"
+	print "gnuplot -e 'output_freq = 10' plot_two_body_orbit.gp\n"
 	quit
 }
 if(!exists("velVectorScale")){
@@ -500,7 +500,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecords-2:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -514,7 +514,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -535,7 +535,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecords-2:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
@@ -551,7 +551,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
@@ -631,7 +631,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -647,7 +647,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -668,7 +668,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
@@ -684,7 +684,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*delta_t*output_freq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \

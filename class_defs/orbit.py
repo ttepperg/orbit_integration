@@ -916,7 +916,7 @@ class Orbit():
 
 			f.close()
 
-			print("\nOutput with timestep frequency {} written to file:\n\n\t{}\n".\
+			print("\nOutput with timestep frequency output_freq={} written to file:\n\n\t{}\n".\
 				format(output_freq,filename))
 
 			# conservation laws
