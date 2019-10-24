@@ -402,6 +402,11 @@ unset y2tics
 unset grid
 set ytics mirror
 
+# Uncomment to dump the orbital history to a table
+# set table dataFile."_pos_vel_tab"
+# pl dataFile u @plotColsRelDist, \
+# '' u @plotColsRelSpeed
+# unset table
 
 
 #----------------------------------------------------------------------------------------
@@ -495,7 +500,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecords-2:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -509,7 +514,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				'+' u (0):(0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -530,7 +535,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecords-2:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
@@ -546,7 +551,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecords-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoords
 				@plotCmdOrbit \
 				dataFile u @plotColsOrbit1_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
@@ -626,7 +631,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -642,7 +647,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				'+' u (0):(0) w p pt 7 ps 2 lw 2 lc rgb body1Colour t "body 1", \
@@ -663,7 +668,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=NumRecordsProj-2:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
@@ -679,7 +684,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 			do for [i=0:NumRecordsProj-1]{ \
 				unset label
-				set label sprintf("T = %5.3f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
+				set label sprintf("T = %7.5f %s", i*timeUnit*timeStep*timeFreq,timeUnitName) \
 				at @timeLabelCoordsProj
 				@plotCmdOrbitProj \
 				dataFile u @plotColsOrbit1Proj_dot w p pt 7 ps 2 lc rgb body1Colour t "body 1", \
