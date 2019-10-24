@@ -2,7 +2,6 @@
 
 '''
 Author:			Thorsten Tepper Garcia
-Last modified:	09/07/2019
 
 See README for information on the code's background, usage, etc.
 
