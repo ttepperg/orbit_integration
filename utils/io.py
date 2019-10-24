@@ -16,7 +16,7 @@ def get_input():
 
 	PURPOSE:
 
-		Gather initial conditions for and initialize an body instances
+		Gather initial conditions for and initialize body instances
 
 	INPUT:
 
@@ -24,7 +24,7 @@ def get_input():
 
 	OUTPUT:
 
-		ics - Object with initial conditons parameters
+		ics - Object with initial conditions parameters
 
 	HISTORY:
 
@@ -60,6 +60,10 @@ def get_input():
 			ic.delta_t
 		except:
 			ic.delta_t = 0.001
+		try:
+			ic.output_freq
+		except:
+			ic.output_freq = 10
 
 		# sanity check in case of backwards integration
 		if ic.t_1 < 0 and ic.t_0 != 0:

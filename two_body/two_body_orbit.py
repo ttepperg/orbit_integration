@@ -32,4 +32,4 @@ time, EoM = orbit.integrate(ics.t_0,ics.t_1,ics.delta_t)
 outDir = "./output/"
 outFile = outDir + ics.filename_prefix + "_out.dat"
 
-orbit.write_table(time_list = time, state_vector = EoM, filename = outFile, output_freq = 10)
+orbit.write_table(time_list = time, state_vector = EoM, filename = outFile, output_freq = ics.output_freq)
