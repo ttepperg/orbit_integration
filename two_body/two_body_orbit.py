@@ -1,5 +1,3 @@
-#!/opt/local/bin//python3.5
-
 '''
 Author:			Thorsten Tepper Garcia
 

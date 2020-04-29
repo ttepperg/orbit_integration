@@ -32,7 +32,7 @@ class Orbit():
 
 		OUTPUT:
 
-			Instance          
+			Instance
 
 		HISTORY:
 
@@ -442,7 +442,7 @@ class Orbit():
 			file = fileout)
 		print("{}{:>40}{:15.4E}\n".format(first_chr,"Rel. specific total energy (E):",self.energy_tot()), \
 			file = fileout)
-		
+
 		if filename is not None:
 			fileout.close()
 
@@ -465,7 +465,7 @@ class Orbit():
 			time_step - size of time step
 
 		OUTPUT:
-          
+
           time_steps - Number of time steps
           time - list of integration time steps (with length = time_steps)
           EoM - interleaved list if state vectors for each body (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
@@ -490,7 +490,7 @@ class Orbit():
 			if time_end < 0:
 				backwards_switch = -1
 				time_end = backwards_switch * time_end
-				
+
 			# number of time steps
 			_T = (time_end - time_start)
 			_N = math.ceil( _T / time_step)
@@ -512,13 +512,13 @@ class Orbit():
 			_F = [*self.set_accelerations(backwards_switch)]
 
 			print("\nOrbit integration{}".format(" (backwards):" if backwards_switch < 0 else " (forward):"))
-			
+
 			if backwards_switch > 0:
 				print("\tTime range [t0,t1] = [{},{}]".format(time_start,time_end))
 			else:
 				print("\tTime range [t0,t1] = [{},{}]".format(backwards_switch*time_end,time_start))
 			print("\tTime steps {};  Step size: {:8.2E}".format(_N,time_step))
-			
+
 			if self.b1.dynamical_friction is None and self.b2.dynamical_friction is None:
 				print("\tMaximum time step to avoid energy drift: {:12.6E}".format(self.energy_drift_lim()))
 				# see http://physics.bu.edu/py502/lectures3/cmotion.pdf:
@@ -531,7 +531,7 @@ class Orbit():
 			# 		given integration time, i.e. EoM[i][t]
 			time, EoM = ode_leap(dr2dt2 = _F, rank = 12, initCond = _ics, steps = _N, stepSize = time_step)
 
-			
+
 			# invert time arrow and velocities after backwards integration
 			if backwards_switch < 1:
 				for i in range(len(time)):
@@ -577,15 +577,15 @@ class Orbit():
 		HISTORY:
 
 			2019-07-11 - Written - TTG
-		
+
 		NOTES:
-		
+
 			Could be integrated instead into the Body class (TTG)
 
 		"""
 		if bwi_switch is None:
 			bwi_switch = 1
-		
+
 		# Central finite difference scheme parameters:
 		# Notes:
 		# - a 2nd order scheme conserves well both energy and angular momentum.
@@ -597,7 +597,7 @@ class Orbit():
 		# Note: the array f = (x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
 		# the shape of f is dictated by the module cen_diff_first
 		# Recall: Force field = - Grad Phi
-		
+
 		# Dynamical friction: can only be exerted by one body onto the other!
 		if self.b1.dynamical_friction is not None:
 
@@ -675,7 +675,7 @@ class Orbit():
 					self.b1.dynamical_friction(r=_rvec, v=_vvec, mass=self.b2.mass_evol_z(t,_rvec,_vvec,bwi_switch), rho=self.b1.dens, \
 						veldisp=self.b1.vel_disp) * _vz21
 				return force_grav+force_df
-		
+
 		elif self.b2.dynamical_friction is not None:
 
 			def dvx1dt(t,*f):
@@ -752,7 +752,7 @@ class Orbit():
 				force_grav = \
 					-1.*cen_diff_first(*_rvec, var=2, func=self.b1.potential, delta_x=intStep, order=accOrder)
 				return force_grav
-		
+
 		else:	# no dynamical friction
 
 			def dvx1dt(t,*f):
@@ -835,7 +835,7 @@ class Orbit():
 				  					(x1,vx1,y1,vy1,z1,vz1,x2,vx2,y2,vy2,z2,vz2)
 				  				for each time step
 		OUTPUT:
-          
+
 			None
 
 		HISTORY:
@@ -921,7 +921,7 @@ class Orbit():
 
 			# conservation laws
 			self.conservation(time=time_list,sv=state_vector)
-			
+
 			# Improve on this output; e.g. make it dependent on whether mass
 			# evolution was explicitly set by input parameter.
 			# mass evolution (if set)
@@ -952,7 +952,7 @@ class Orbit():
 				  for each time step
 
 		OUTPUT:
-          
+
 			None
 
 		HISTORY:
@@ -990,7 +990,7 @@ class Orbit():
 			print("\tPresent-day relative velocity: ({:.5f},{:.5f},{:.5f})".format(*v_end))
 			print("\tPresent-day relative speed: {:.5f}\n".format(funcs.norm(*v_end)))
 			# This may not yet be entirely consistent:
-			print("The following are only relevant is masses are allowed to evolved:")
+			print("The following are only relevant if masses are allowed to evolved:")
 			if time[0] < 0:
 				out_string = "Infall"
 			else:
@@ -1023,7 +1023,7 @@ class Orbit():
 				  for each time step
 
 		OUTPUT:
-          
+
 			None
 
 		HISTORY:
@@ -1095,7 +1095,7 @@ class Orbit():
 					lvecConsz_t = 0.
 				lvecCons_t = max(lvecConsx_t,max(lvecConsy_t,lvecConsz_t))
 				if lvecCons_t > lvecCons:
-					lvecCons = lvecCons_t 
+					lvecCons = lvecCons_t
 
 			print("Conservation laws:")
 			if self.b1.dynamical_friction is not None or self.b2.dynamical_friction is not None:
@@ -1112,4 +1112,3 @@ class Orbit():
 				print("\nWARNING:\n\tPossible merger scenario! Inspect orbit carefully.\n")
 
 			return 0
-
