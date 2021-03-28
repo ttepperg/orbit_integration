@@ -1,12 +1,12 @@
 #!/opt/local/bin/gnuplot -persist
 #
-#    
+#
 #    	G N U P L O T
-#    	Version 5.2 patchlevel 6    last modified 2019-01-01 
-#    
+#    	Version 5.2 patchlevel 6    last modified 2019-01-01
+#
 #    	Copyright (C) 1986-1993, 1998, 2004, 2007-2018
 #    	Thomas Williams, Colin Kelley and many others
-#    
+#
 #    	gnuplot home:     http://www.gnuplot.info
 #    	faq, bugs, etc:   type "help FAQ"
 #    	immediate help:   type "help"  (plot window: hit 'h')
@@ -16,16 +16,16 @@
 # Author:			Thorsten Tepper Garcia
 
 #----------------------------------------------------------------------------------------
-# Invoke example
+# Invoke example (note that dataFile, delta_t and output_freq are mandatory input parameters):
 
 # Plot data evolution in 3D view
-# $> gnuplot -e 'dataFile="./output/filename.dat"; plotRelOrbit = "T"' plot_orbit_two_body.gp
+# $> gnuplot -e 'dataFile="./output/filename.dat"; plotRelOrbit = "T"; delta_t = 1.e-4; output_freq = 10' plot_two_body_orbit.gp
 
 # Plot data evolution projected onto 2D
-# $> gnuplot e 'dataFile="./output/filename.dat"; plotRelOrbit = "T"; projPlane = "xz"' plot_orbit_two_body.gp
+# $> gnuplot -e 'dataFile="./output/filename.dat"; plotRelOrbit = "T"; projPlane = "xz"; delta_t = 1.e-4; output_freq = 10' plot_two_body_orbit.gp
 
 # Plot full data (no evolution) projected onto 2D
-# $> gnuplot e 'ffw=1; dataFile="./output/filename.dat"; plotRelOrbit = "T"; projPlane = "xz"' plot_orbit_two_body.gp
+# $> gnuplot -e 'ffw=1; dataFile="./output/filename.dat"; plotRelOrbit = "T"; projPlane = "xz"; delta_t = 1.e-4; output_freq = 10' plot_two_body_orbit.gp
 
 
 # The mandatory input parameters and their possible values are:
@@ -36,7 +36,7 @@
 #
 #
 # The optional input parameters and their possible values are:
-# 
+#
 # plotRelOrbit - T / F (string); T means that the relative orbit is plotted; otherwise the
 #				 individual orbit of each body are plotted
 # projPlane - xy, xz, yz, or op (string); if set, plot the orbit on an orthogonal Cartesian
@@ -44,7 +44,7 @@
 # ffw - 1 / 0 (int); 0 yields an animation to the orbit's evolution; 1 fast-forwards in time
 # 		and plots the full evolution in one step
 # pauseStep - (float) pause in seconds between frames when ffw=0
-# 
+#
 #----------------------------------------------------------------------------------------
 # User settings
 
@@ -679,7 +679,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 			} # do
 
 		} else {
-	
+
 
 			do for [i=0:NumRecordsProj-1]{ \
 				unset label
@@ -696,12 +696,10 @@ if(!exists("projPlane")||(projPlane ne "op")){
 			} # do
 
 		} # fast-forward?
-	
+
 
 	} # plot relative orbit?
 
 } # full 3D, orthogonal projection, or projection onto orbital plane?
 
 #EOF
-
-
