@@ -4,8 +4,7 @@ Author: 		Thorsten Tepper Garcia
 
 # BACKGROUND
 
-The 3D equations of motion of two bodies of mass M1 and M2 orbiting around each
-others potential are:
+The 3D equations of motion of two bodies of mass M1 and M2 orbiting around each others potential are:
 
 	dr1dt = v1
 	dv1dt = - Grad Phi2
@@ -20,23 +19,13 @@ where,
 	Grad := gradient operator (nabla)
 	Phi(r) = := grav. potential of body 1 or 2
 
-Here, we consider the case where body is possibly an extended object of 'total' mass M1,
-represented by an arbitrary, static potential Phi1, and a point-like body 2 of mass M2
-described by a Kepler potential (i.e. Phi1 = - G M2 / r). The latter assumption may be
-relaxed in future versions of the code. Note that the 'total' mass M1 may be subject to
-definition, e.g. in the case of a NFW potential for which the mass diverges with radius.
+Here, we consider the case where body is possibly an extended object of 'total' mass M1, represented by an arbitrary, static potential Phi1, and a point-like body 2 of mass M2 described by a Kepler potential (i.e. Phi1 = - G M2 / r). The latter assumption may be relaxed in future versions of the code. Note that the 'total' mass M1 may be subject to definition, e.g. in the case of a NFW potential for which the mass diverges with radius.
 
-Both Phi1 and Phi2 are taken to be central potentials that depend on the distance
-bwetween the bodies only.
+Both Phi1 and Phi2 are taken to be central potentials that depend on the distance bwetween the bodies only.
 
-Even though the equation of motion is of second order (m=2) in dt,
-due to its 3D vector nature, it is equivalent to a system of six
-first order ODEs, for each body. Thus, the rank of the system is determined
-by the order m and the dimensionality of the system D=3 as 2 * m * D = 12 in
-this case.
+Even though the equation of motion is of second order (m=2) in dt, due to its 3D vector nature, it is equivalent to a system of six first order ODEs, for each body. Thus, the rank of the system is determined by the order m and the dimensionality of the system D=3 as 2 * m * D = 12 in this case.
 
-Thus, the above vectorial equations can be written down as a system of 12
-coupled ordinary differential equations of first order in dt:
+Thus, the above vectorial equations can be written down as a system of 12 coupled ordinary differential equations of first order in dt:
 
 	dx1dt = vx1
 	dy1dt = vy1
@@ -52,73 +41,38 @@ coupled ordinary differential equations of first order in dt:
 	dvy2dt = - Grad_y Phi1(|r12|)
 	dvz2dt = - Grad_z Phi1(|r12|)
 
-Here, r12 = r1 - r2. Note that the force is radial and directed towards
-the centre of the potential at all times, by assumption.
+Here, r12 = r1 - r2. Note that the force is radial and directed towards the centre of the potential at all times, by assumption.
 
-Note that a 2D system can be simulated equally well with this code by simply
-setting all z-components to 0 initially.
+Note that a 2D system can be simulated equally well with this code by simply setting all z-components to 0 initially.
 
-Currently, only a number of spherically symmetric potentials are implemented.
-The effect of dynamical friction is implemented but its optional. Similarly,
-mass loss due to tidal stripping can be switched on if required. Obviously,
-these should be used in the case of extended bodies only.
-See Section INPUT below for more information.
+Currently, only a number of spherically symmetric potentials are implemented. The effect of dynamical friction is implemented but its optional. Similarly, mass loss due to tidal stripping can be switched on if required. Obviously, these should be used in the case of extended bodies only. See Section INPUT below for more information.
 
 
 # TIME INTEGRATION
 
-The system of equations is numerically integrated using a 2nd order
-leapfrog (kick-drift-kick) method (see https://en.wikipedia.org/wiki/Leapfrog_integration),
-also know as Velocity Verlet algorithm (https://en.wikipedia.org/wiki/Verlet_integration).
-This scheme is symplectic and thus features desired properties such as time
-reversibility, conservation of the relative total energy to any desired
-accuracy -- even over significant integration times --, if the time step is
-chosen small enough, and conservation of the linear momentum and of the specific
-angular momentum generally to machine precision.
+The system of equations is numerically integrated using a 2nd order leapfrog (kick-drift-kick) method (see https://en.wikipedia.org/wiki/Leapfrog_integration), also know as Velocity Verlet algorithm (https://en.wikipedia.org/wiki/Verlet_integration).
 
-The error scaling is of order (time step)^4 and (time step)^2 in the position and
-in the velocity, respectively, over a single step, and of order T^2 (time step)^2 in
-both over cumulative (significant) integration times T, i.e. after
-a large number of integration steps. The error in the energy is bound, with the
-energy oscillating around its true value.
+This scheme is symplectic and thus features desired properties such as time reversibility, conservation of the relative total energy to any desired accuracy -- even over significant integration times --, if the time step is chosen small enough, and conservation of the linear momentum and of the specific angular momentum generally to machine precision.
 
-In the presence of dissipative forces (e.g. dynamical friction), the leapfrog method
-scheme is characterized by error scaling in position and velocity is of order
-(time step)^3 and (time step), respectively, on a single step (see
-http://physics.bu.edu/py502/lectures3/cmotion.pdf, also available
-in ../refs/Sandvik_2018.pdf). An alternative form of the method is preferred in
-the presence of dissipative forces but it is not yet implemented here, such as the
-Euler-Richardson method (see e.g.
-http://www.physics.udel.edu/~bnikolic/teaching/phys660/numerical_ode/node4.html,
-also available in ../refs/Allen_2014.pdf).
+The error scaling is of order (time step)^4 and (time step)^2 in the position and in the velocity, respectively, over a single step, and of order T^2 (time step)^2 in both over cumulative (significant) integration times T, i.e. after a large number of integration steps. The error in the energy is bound, with the energy oscillating around its true value.
 
-Beware that the scheme may lead to orbit precession if the integration step is
-not small enough. As a general rule of thumb, the time step delta_t should
-satisfy:
+In the presence of dissipative forces (e.g. dynamical friction), the leapfrog method scheme is characterized by error scaling in position and velocity is of order (time step)^3 and (time step), respectively, on a single step (see
+http://physics.bu.edu/py502/lectures3/cmotion.pdf, also available in ../refs/Sandvik_2018.pdf). An alternative form of the method is preferred in the presence of dissipative forces but it is not yet implemented here, such as the Euler-Richardson method (see e.g. http://www.physics.udel.edu/~bnikolic/teaching/phys660/numerical_ode/node4.html, also available in ../refs/Allen_2014.pdf).
+
+Beware that the scheme may lead to orbit precession if the integration step is not small enough. As a general rule of thumb, the time step delta_t should satisfy:
 
 	delta_t < T / sqrt(2) pi ~ 0.225 T,
 
-where T is the (shortest) period of the system (see
-https://en.wikipedia.org/wiki/Energy_drift).
+where T is the (shortest) period of the system (see https://en.wikipedia.org/wiki/Energy_drift).
 
-Also, orbit precession may naturally result from central potentials other than
-point-like masses (Bertrand's Theorem; https://en.wikipedia.org/wiki/Bertrand%27s_theorem)
-and it thus does not necessarily indicate an error in the integration scheme (see
-Section 'IMPORTANT REMARKS' below).
+Also, orbit precession may naturally result from central potentials other than point-like masses (Bertrand's Theorem; https://en.wikipedia.org/wiki/Bertrand%27s_theorem) and it thus does not necessarily indicate an error in the integration scheme (see Section 'IMPORTANT REMARKS' below).
 
-As an alternative to the leapfrog method, the Euler-Richardson is implemented.
-This method presumably shows a better performance in the presence of velocity-dependent
-forces (e.g. dynamical friction). However, some preliminary tests show no obvious
-improvement with respect to the leapfrog method in the presence of dynamical friction,
-but they do show a less satisfactory performance in terms of conservation laws in
-standard test cases without dissipative forces.
-
+As an alternative to the leapfrog method, the Euler-Richardson is implemented. This method presumably shows a better performance in the presence of velocity dependent forces (e.g. dynamical friction). However, some preliminary tests show no obvious improvement with respect to the leapfrog method in the presence of dynamical friction, but they do show a less satisfactory performance in terms of conservation laws in standard test cases without dissipative forces.
 
 
 # SPATIAL DERIVATIVES
 
-A number of first order, partial, spatial derivatives are required when calculating
-the force corresponding to a given potential. Two methods are implemented here:
+A number of first order, partial, spatial derivatives are required when calculating the force corresponding to a given potential. Two methods are implemented here:
 
 1) A central finite difference scheme of orders 2 and 4;
 
@@ -126,30 +80,22 @@ the force corresponding to a given potential. Two methods are implemented here:
 
 (see https://en.wikipedia.org/wiki/Finite_difference_coefficient).
 
-Method 1 is preferred (and is the default), in particular because it leads to a
-better conservation of angular momentum for extrem potentials such as a
-point-like mass potential. Note that using a different scheme requires
-to change the invoked scheme explicitly in the calculation of the accelerations.
+Method 1 is preferred (and is the default), in particular because it leads to a better conservation of angular momentum for extrem potentials such as a point-like mass potential. Note that using a different scheme requires to change the invoked scheme explicitly in the calculation of the accelerations.
 
 An example on how to invoke the differentiation routines is as follows:
 
-1) To calculate the first partial derivative of f with respect to x (var=0) at
-point r = [x,y,z], using a CFD scheme of order 4 with an integration step 1.e-3
-to achieve a precision of order (1.e-3)^4 use:
+1) To calculate the first partial derivative of f with respect to x (var=0) at point r = [x,y,z], using a CFD scheme of order 4 with an integration step 1.e-3 to achieve a precision of order (1.e-3)^4 use:
 
 	fwd_diff_first(*r, var = 0, func = f, delta_x = 1.e-3, order = 4)
 
-2) To calculate the first partial derivative of f with respect to y (var=1) at
-point r = [x,y,z], using a FFD scheme of order 3 with an integration step 1.e-4
-to achieve a precision of order (1.e-4)^3 use:
+2) To calculate the first partial derivative of f with respect to y (var=1) at point r = [x,y,z], using a FFD scheme of order 3 with an integration step 1.e-4 to achieve a precision of order (1.e-4)^3 use:
 
 	fwd_diff_first(*r, var = 1, func = f, delta_x = 1.e-4, order = 3)
 
 
 # UNITS
 
-This code is intended mainly for astrophysical applications. Therefore, the
-following units are adopted:
+This code is intended mainly for astrophysical applications. Therefore, the following units are adopted:
 
 	Gravitational constant:	4.301E-06 kpc km^2 / Msun s^2
 	Mass unit:				1.000 solMass = 1.988475E+33 g
@@ -157,10 +103,7 @@ following units are adopted:
 	Velocity unit:			1.000 km / s = 1.000000E+05 cm / s
 	Time unit:				0.978 Gyr = 3.085678E+16 s
 
-Note that the conversion factor for the time parameter is fixed by the others.
-The choice of units for G is convenient, since any given potential (or specific
-potential energy) automatically has units of (km/s)^2, i.e. identical to the
-specific kinetic energy.
+Note that the conversion factor for the time parameter is fixed by the others. The choice of units for G is convenient, since any given potential (or specific potential energy) automatically has units of (km/s)^2, i.e. identical to the specific kinetic energy.
 
 
 # REQUIRED / OPTIONAL PACKAGES
@@ -182,30 +125,20 @@ The code can be run directly from command line via:
 
 	shell> ./two_body_orbit.py <input parameter file>
 
-using the predefined python interpreter given in the first line,
-or:
+using the predefined python interpreter given in the first line, or:
 
 	shell> python3.X two_body_orbit.py <input parameter file>
 
-using an alternative python interpreter. Note that a python version 3.X is
-required.
+using an alternative python interpreter. Note that a python version 3.X is required.
 
 
 # INPUT
 
-The input of this program consists of a python (i.e. filename.py) input
-parameter file which must contain as a minimum a the masses, and the inital
-state vectors, i.e. the initial position r0 and velocities v0 for each body.
+The input of this program consists of a python (i.e. filename.py) input parameter file which must contain as a minimum a the masses, and the inital state vectors, i.e. the initial position r0 and velocities v0 for each body.
 
-The initial and final times, as well as the timestep for the integration of
-the orbit can (and preferentially should) be specified. These default to 0.,
-10., and 1.e-3, in time units (see Section UNITS). The final time may be
-negative; in this case, the orbit integration is performed backwards in time,
-such that the initial conditions in fact corresponds to the final (present-day)
-state of the system.
+The initial and final times, as well as the timestep for the integration of the orbit can (and preferentially should) be specified. These default to 0., 10., and 1.e-3, in time units (see Section UNITS). The final time may be negative; in this case, the orbit integration is performed backwards in time, such that the initial conditions in fact corresponds to the final (present-day) state of the system.
 
-In addition to the total mass, the potential for each body has to be specified.
-Currently, only a number of spherically symmetric potentials are implemented:
+In addition to the total mass, the potential for each body has to be specified. Currently, only a number of spherically symmetric potentials are implemented:
 
 - Kepler (or point-like) potential
 
@@ -217,103 +150,46 @@ Currently, only a number of spherically symmetric potentials are implemented:
 
 - Navarro, Frenk, and White (1997; NFW) potential
  (see https://en.wikipedia.org/wiki/Navarro–Frenk–White_profile)
- 
-- Pseudo Isothermal Sphere (PITS) potential 
 
-The potential needs to be explicitly set; otherwise an error is raised.
-All the potentials other than the PITS potential are negative everywhere,
-and tend to 0 at infinity. The PITS potential is positive everywhere and
-diverges at infinity.
+- Pseudo Isothermal Sphere (PITS) potential
 
-All potentials are consistently defined by setting a mass scale. Potentials
-other than the Kepler potential require the value of an additional
-parameter, i.e. the scale radius. If the potential is not Keplerian, and the
-required parameters are not explicitly set, an error is raised.
+The potential needs to be explicitly set; otherwise an error is raised. All the potentials other than the PITS potential are negative everywhere, and tend to 0 at infinity. The PITS potential is positive everywhere and diverges at infinity.
 
-Note that the mass of the NFW and PITS profile diverges with radius, and they
-require setting a truncation radius. If the latter is not set, an error
-is raised.
+All potentials are consistently defined by setting a mass scale. Potentials other than the Kepler potential require the value of an additional parameter, i.e. the scale radius. If the potential is not Keplerian, and the required parameters are not explicitly set, an error is raised.
 
-The effect of dynamical friction is implemented but is optional. If desired,
-it needs to be specified in the input parameter file. If dynamical friction
-is switched on, mass loss due to tidal stripping may be switched on as well.
-Note that the latter is still an experimental feature. Mass gain (i.e. the
-opposite of mass stripping) is currently implemented for backwards integration
-and is still an experimental feature.
+Note that the mass of the NFW and PITS profile diverges with radius, and they require setting a truncation radius. If the latter is not set, an error is raised.
 
-It is worth emphasizing that providing the state vectos r0 and v0 for each
-body is the only method to specify the initial conditions of the system.
-In other words, it is not possible yet to specify an orbit directly in terms
-of, say, its eccentricity or orbital period. However, some methods are available
-to impose -- *within* the input parameter file -- certain conditions on the orbit,
-e.g. a circular orbit 
+The effect of dynamical friction is implemented but is optional. If desired, it needs to be specified in the input parameter file. If dynamical friction is switched on, mass loss due to tidal stripping may be switched on as well. Note that the latter is still an experimental feature. Mass gain (i.e. the opposite of mass stripping) is currently implemented for backwards integration and is still an experimental feature.
 
-The corresponding orbital parameters (e.g. eccentricity, orbital period,
-etc.) are then calculated from the initial orbital state vectors at runtime
-and written to stodut, and can be found in the form of a header in the output file
-(see Section OUTPUT).
+It is worth emphasizing that providing the state vectos r0 and v0 for each body is the only method to specify the initial conditions of the system. In other words, it is not possible yet to specify an orbit directly in terms of, say, its eccentricity or orbital period. However, some methods are available to impose -- *within* the input parameter file -- certain conditions on the orbit, e.g. a circular orbit
 
-The parameter file needs to be present in the directory 'init'. There, a few
-example parameter files are provided, for guidance. These show, e.g. how
-to set up different potentials, how to switch on dynamical friction and
-optionally mass loss due to tidal stripping.
+The corresponding orbital parameters (e.g. eccentricity, orbital period, etc.) are then calculated from the initial orbital state vectors at runtime and written to stodut, and can be found in the form of a header in the output file (see Section OUTPUT).
+
+The parameter file needs to be present in the directory 'init'. There, a few example parameter files are provided, for guidance. These show, e.g. how to set up different potentials, how to switch on dynamical friction and optionally mass loss due to tidal stripping.
 
 
 # OUTPUT
 
-The output of the code consists of an ascii table redirected to the
-directory './output' named after the input parameter file and appended
-by the substring "_out.dat". If the directory 'output' does not exist,
-it needs to be created by hand. Otherwise an error will occur.
+The output of the code consists of an ascii table redirected to the directory './output' named after the input parameter file and appended by the substring "_out.dat". If the directory 'output' does not exist, it needs to be created by hand. Otherwise an error will occur.
 
-The table contains a header enlisting the system's properties, e.g. the potential
-and masses of the bodies; their initial state; a number of orbital
-parameters and their values; and the state of conservation laws. This output
-is identical to the one dumped by the program to stdout, with exception of
-warning or error messages (if any).
+The table contains a header enlisting the system's properties, e.g. the potential and masses of the bodies; their initial state; a number of orbital parameters and their values; and the state of conservation laws. This output is identical to the one dumped by the program to stdout, with exception of warning or error messages (if any).
 
-The table data is organized in a total of 26 columns. The first 16 contain,
-respectively, the time, the specific relative angular momentum, the relative
-potential energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of
-the bodies. The next 8 columnns contain the coordinates (x',vx',y',vy') for each
-of the bodies, where the primed coordinates and velocities correspond to the
-coordinates and velocities on the orbital plane. In other words, these coordinates
-represent a rotated version of the intrinsic orbit such that the relative angular
-momentum of the system aligns with the z-axis. If the intrinsic orbit has this
-property, the primed and unprimed coordinates are identical. Note that the z'
-coordinates are ignored, because they all vanish by definition. The last two
-columns contain the (x,y) coordinates of the analytic solution of the problem,
-using the orbital parameters self-consistently calculated within the code.
-The analytic orbital solution can be directly compared to the set of primed
-coordinates as a check of the numerical result against the expected analytic
-solution, keeping in mind that for non-Keplerian potentials the analytic solution
-may merely correspond to an osculating orbit consistent with the initial conditions.
-In the case of backwards integration, the (osculating) orbital parameters will
-correspond to the final (present-day) state, rather than to the initial state of
-the orbital evolution.
+The table data is organized in a total of 26 columns. The first 16 contain, respectively, the time, the specific relative angular momentum, the relative potential energy, the relative kinetic energy, and (x,vx,y,vy,z,vz) for each of the bodies. The next 8 columnns contain the coordinates (x',vx',y',vy') for each of the bodies, where the primed coordinates and velocities correspond to the coordinates and velocities on the orbital plane. In other words, these coordinates represent a rotated version of the intrinsic orbit such that the relative angular momentum of the system aligns with the z-axis. If the intrinsic orbit has this property, the primed and unprimed coordinates are identical. Note that the z' coordinates are ignored, because they all vanish by definition. The last two columns contain the (x,y) coordinates of the analytic solution of the problem, using the orbital parameters self-consistently calculated within the code.
 
-Note that the ordering of the output data always follows the time arrow, i.e.
-from the earliest time (which is negative for backwards integration and 0 for
-forward integration) to the latest time (which is 0 for backwards integration and
-positive for forward integration).
+The analytic orbital solution can be directly compared to the set of primed ecoordinates as a check of the numerical result against the expected analytic solution, keeping in mind that for non-Keplerian potentials the analytic solution may merely correspond to an osculating orbit consistent with the initial conditions.
 
-Beware that if the level of energy conservation dumped to stdout may differ
-from system (as in computer) to system. Also, it may differ from (i.e. it may be
-better than) the values displayed graphically. If so, this is most likely due to
-round-off of the numbers when writing the table. In this case, the precision
-of the format string may be increased, although in reality it is not an issue
-as these may be differences at the > 7th decimal place (in percent).
-It is also important to bear in mind that, in the presence of dissipative
-forces, energy changes may exceed the (perhaps naively) expected limit of
-100%, because the potential energy (with except of the PITS potential) becomes
-increasingly negative (and may not have a lower bound) as the body sinks.
+In the case of backwards integration, the (osculating) orbital parameters will correspond to the final (present-day) state, rather than to the initial state of the orbital evolution.
+
+Note that the ordering of the output data always follows the time arrow, i.e. from the earliest time (which is negative for backwards integration and 0 for forward integration) to the latest time (which is 0 for backwards integration and positive for forward integration).
+
+Beware that if the level of energy conservation dumped to stdout may differ from system (as in computer) to system. Also, it may differ from (i.e. it may be better than) the values displayed graphically. If so, this is most likely due to round-off of the numbers when writing the table. In this case, the precision of the format string may be increased, although in reality it is not an issue as these may be differences at the > 7th decimal place (in percent).
+
+It is also important to bear in mind that, in the presence of dissipative forces, energy changes may exceed the (perhaps naively) expected limit of 100%, because the potential energy (with except of the PITS potential) becomes increasingly negative (and may not have a lower bound) as the body sinks.
 
 
 # VISUALISATION
 
-A simple visualisation of the evolution of the system can be obtained
-using the gnuplot script plot_two_body_orbit.gp provided with the code's
-distribution.
+A simple visualisation of the evolution of the system can be obtained using the gnuplot script plot_two_body_orbit.gp provided with the code's distribution.
 
 This script can be run:
 
@@ -327,34 +203,13 @@ or
 
 	gnuplot> call 'plot_two_body_orbit.gp' <arg1=value> <arg2=value> ...
 
-The script plots either 1) a full 3D view of the system; 2) a 2D projection
-along one of the principal axis of a standard Cartesian reference frame; or
-3) a 2D view of the system's evolution on the orbital plane. If the latter,
-the analytic result -- self-consistently calculated from the initial orbital
-parameters -- is included to allow for a check of the numerical result.
-Beware that in the case of non-closed orbits, the analytic result will merely
-agree with a fragment of the orbit only (osculating orbits).
+The script plots either 1) a full 3D view of the system; 2) a 2D projection along one of the principal axis of a standard Cartesian reference frame; or 3) a 2D view of the system's evolution on the orbital plane. If the latter, the analytic result -- self-consistently calculated from the initial orbital parameters -- is included to allow for a check of the numerical result. Beware that in the case of non-closed orbits, the analytic result will merely agree with a fragment of the orbit only (osculating orbits).
 
-In addition, the script provides a visualisation of the evolution of the total
-energy and the relative specific angular momentum. The maximum error in either
-quantity is dumped to stdout at runtime, along with the theoretically expected
-error (to order of magnitude), and can be used as a check for the performance
-of the code. Beware that in the presence of dissipative forces (e.g. dynamical
-friction) neither the energy nor the angular momentum are conserved. Also,
-when using backwards integration, the bounds on the error in energy and angular
-momentum printed to stdout will differ from the bounds shown in the evolution
-as the reference values are not the same. The code uses the actual initial
-values, whereas the visualisation script uses the values on the first row of
-the output file, which in turn corresponds to the values at the time in the past.
+In addition, the script provides a visualisation of the evolution of the total energy and the relative specific angular momentum. The maximum error in either quantity is dumped to stdout at runtime, along with the theoretically expected error (to order of magnitude), and can be used as a check for the performance of the code. Beware that in the presence of dissipative forces (e.g. dynamical friction) neither the energy nor the angular momentum are conserved. Also, when using backwards integration, the bounds on the error in energy and angular momentum printed to stdout will differ from the bounds shown in the evolution as the reference values are not the same. The code uses the actual initial values, whereas the visualisation script uses the values on the first row of the output file, which in turn corresponds to the values at the time in the past.
 
-The script requires some settings. These can be accomplished by directly editing
-the script's header to set e.g. the physical units, or via input arguments.
-Some of the latter are optional and set to reasonable defaults. Other are mandatory,
-such as input data filename, the time step, and the time output frequency, whose
-values are printed to stdout by the python code at runtime.
+The script requires some settings. These can be accomplished by directly editing the script's header to set e.g. the physical units, or via input arguments. Some of the latter are optional and set to reasonable defaults. Other are mandatory, such as input data filename, the time step, and the time output frequency, whose values are printed to stdout by the python code at runtime.
 
-Please consult the script's header for additional information on these
-input arguments and their default values.
+Please consult the script's header for additional information on these input arguments and their default values.
 
 
 
@@ -363,94 +218,51 @@ input arguments and their default values.
 1) The conserved quantities are:
 
 - *relative specific* angular momentum;
-	  
+
 - *relative specific* total (potential + kinetic) energy.
 
-The individual energies and angular momenta need not necessarily
-conserved. The error in the conservation of angular momentum is generally
-orders of magnitude smaller than the error in the conservation of energy (why?).
+The individual energies and angular momenta need not necessarily conserved. The error in the conservation of angular momentum is generally orders of magnitude smaller than the error in the conservation of energy (why?).
 
-Also, the spatial step and the order of accuracy used when calculating
-numerical derivatives of the potential affect the conservation of angular
-momentum, but not the conservation of energy (which seems to depend on the
-time integration scheme only; why?).
+Also, the spatial step and the order of accuracy used when calculating numerical derivatives of the potential affect the conservation of angular momentum, but not the conservation of energy (which seems to depend on the time integration scheme only; why?).
 
 
-2) Closed orbits. Only a central, Kepler (i.e. point-mass) potential yields
-conic orbits; in particular, if the eccentricity is less than unity, it leads
-to *closed* orbits. In this case, the orbit can be described by a unique set
-of orbital parameters (eccentricity, semi-major axis, period, etc.) The code
-calculates a range of orbital parameters at runtime and prints them to stdout.
+2) Closed orbits. Only a central, Kepler (i.e. point-mass) potential yields conic orbits; in particular, if the eccentricity is less than unity, it leads to *closed* orbits. In this case, the orbit can be described by a unique set of orbital parameters (eccentricity, semi-major axis, period, etc.) The code calculates a range of orbital parameters at runtime and prints them to stdout.
 
-Extended, spherically symmetric bodies yield gravitational forces as
-though their masses were concentrated at their respective centres (Newton's
-shell theorem; https://en.wikipedia.org/wiki/Shell_theorem). This implies
-that the gravitational force between an extended body and a point-like mass
-in principle behaves with their relative distance d as 1/d^2. This is, however,
-misleading, as the the mass of the extended body `felt' by the point-like body
-depends on their relative position, and can therefore be considered as variable
-along the point-like body's orbit. In other words, the changing mass introduces a
-dependence of distance into the expression for the gravitational force that
-breaks the 1/d^2 dependence. Thus, by virtue of Bertrand's theorem
-(https://en.wikipedia.org/wiki/Bertrand%27s_theorem), extended central bodies
-do not lead to closed orbits, not even in the case that the initial conditions
-imply e < 1, unless e = 0 (i.e. circular orbits). With the notable exception of
-the case e = 0, the orbital parameters set by the initial conditions correspond,
-at best, to *osculating* parameters in this case. The same is true for non-spherically
-symmetric potentials.
+Extended, spherically symmetric bodies yield gravitational forces as though their masses were concentrated at their respective centres (Newton's shell theorem; https://en.wikipedia.org/wiki/Shell_theorem). This implies that the gravitational force between an extended body and a point-like mass in principle behaves with their relative distance d as 1/d^2. This is, however, misleading, as the the mass of the extended body `felt' by the point-like body depends on their relative position, and can therefore be considered as variable along the point-like body's orbit. In other words, the changing mass introduces a dependence of distance into the expression for the gravitational force that breaks the 1/d^2 dependence. Thus, by virtue of Bertrand's theorem (https://en.wikipedia.org/wiki/Bertrand%27s_theorem), extended central bodies do not lead to closed orbits, not even in the case that the initial conditions imply e < 1, unless e = 0 (i.e. circular orbits). With the notable exception of the case e = 0, the orbital parameters set by the initial conditions correspond, at best, to *osculating* parameters in this case. The same is true for non-spherically symmetric potentials.
 
-For a reference of celestial mechanics and Keplerian orbital elements in 3D see
-http://www.sns.ias.edu/ckfinder/userfiles/files/isima1.pdf, also available in
-../refs/Tremaine_2014.pdf.
-For a reference on osculating orbits see http://adsabs.harvard.edu/abs/2016arXiv160900915K
-also available in ../refs/Klioner_2016.pdf.
+For a reference of celestial mechanics and Keplerian orbital elements in 3D see http://www.sns.ias.edu/ckfinder/userfiles/files/isima1.pdf, also available in ../refs/Tremaine_2014.pdf.
+
+For a reference on osculating orbits see http://adsabs.harvard.edu/abs/2016arXiv160900915K also available in ../refs/Klioner_2016.pdf.
 
 
-3) Backwards integration. When integrating an orbit backwards in time, beware that
-the (osculating) orbital parameters correspond to the final (present-day) state, as
-these are in fact set by the initial conditions.
+3) Backwards integration. When integrating an orbit backwards in time, beware that the (osculating) orbital parameters correspond to the final (present-day) state, as these are in fact set by the initial conditions.
 
 
-4) Dynamical friction (deceleration). It is calculated adopting a number of simplifying
-assumptions:
+4) Dynamical friction (deceleration). It is calculated adopting a number of simplifying assumptions:
 
-	1 - The object (host) exerting dynamical friction is approximated by a matter density
-	field composed of particles with mass m
+	1 - The object (host) exerting dynamical friction is approximated by a matter density field composed of particles with mass m
 
 	2 - The particle's velocity distribution is Maxwellian
 
 	3 - The mass of the object (satellite) experiencing dynamical friction is M >> m
 
 	4 - The Couloumb logarithm is calculated using the parametrization by
-	Hashimoto et al. (2003, https://iopscience.iop.org/article/10.1086/344260/pdf,
-	their equation 5)
+	Hashimoto et al. (2003, https://iopscience.iop.org/article/10.1086/344260/pdf, their equation 5)
 
-	5 - The velocity dispersion within the host is calculated using (approximate)
-	analytic expressions specific for each case (host potential) rather than from the
-	spherically symmetric Jeans (1915) equation, whose integration is expensive.
+	5 - The velocity dispersion within the host is calculated using (approximate) analytic expressions specific for each case (host potential) rather than from the spherically symmetric Jeans (1915) equation, whose integration is expensive.
 
 
 	Notes:
-		- Dynamical friction is a *dissipative* force! Energy and angular momentum are
-		not longer conserved when DF is switched on. Beware that energy or angular
-		momentum changes over 100% may be non-physical and indicate a merger scenario.
-		Make sure to inspect the orbit carefully.
+		- Dynamical friction is a *dissipative* force! Energy and angular momentum are not longer conserved when DF is switched on. Beware that energy or angular momentum changes over 100% may be non-physical and indicate a merger scenario. Make sure to inspect the orbit carefully.
 
-		- Point-like masses cannot exert dynamical friction, by definition
+		- Point-like masses cannot exert dynamical friction, by definition.
 
-		- Not two bodies can exert dynamical friction on one another at the same time;
-		the less extended is assumed to always experiencing DF from the more extended one
+		- Not two bodies can exert dynamical friction on one another at the same time; the less extended is assumed to always experiencing DF from the more extended one.
 
-		- It might be worth exploring the effect or relaxing assumption 2 above and use
-		instead the true velocity distribution for a given density field (i.e. profile).
-			- Hashimoto et al. (2003) approximate the density field by a King profile;
-			its velocity distribution is a truncated Maxwellian, thus very close to the
-			assumption. However, most of the following work (see references below) used
-			different profiles (e.g. NFW, Hernquist) but still assumed a Maxwellian
-			velocity distribution.
+		- It might be worth exploring the effect or relaxing assumption 2 above and use instead the true velocity distribution for a given density field (i.e. profile).
+			- Hashimoto et al. (2003) approximate the density field by a King profile; its velocity distribution is a truncated Maxwellian, thus very close to the assumption. However, most of the following work (see references below) used different profiles (e.g. NFW, Hernquist) but still assumed a Maxwellian velocity distribution.
 
-		- It may be worth exploring other parameterizations of the DF force, in particular
-		of the Couloumb logarithm;
+		- It may be worth exploring other parameterizations of the DF force, in particular of the Couloumb logarithm;
 			- See Zentner and Bullock (2003,
 			  https://iopscience.iop.org/article/10.1086/378797/pdf)
 			- Galpy's documentation:
@@ -458,14 +270,6 @@ assumptions:
 			- See Petts et al. (2016; https://arxiv.org/abs/1607.04284)
 
 		- Different sources in the literature use different values of M:
-			- Besla et al. (2007, https://iopscience.iop.org/article/10.1086/521385/pdf,
-			their equation 5) use the *total* mass; this is the most
+			- Besla et al. (2007, https://iopscience.iop.org/article/10.1086/521385/pdf, their equation 5) use the *total* mass; this is the most
 			common approach (see also Semczuk et al. 2018, their equation B3)
-			- Dierickx & Loeb (2017a,
-			https://iopscience.iop.org/article/10.3847/1538-4357/836/1/92/pdf)
-			use the mass within the object's tidal radius (see also Jiang & Binney 2000).
-			This approach is deemed the correct one, and is the one adopted here.
-			But beware that the implementation of mass loss through tidal stripping
-			introduces more complexity and requires care to be implemented correctly
-			and self-consistently.
- 
+			- Dierickx & Loeb (2017a, https://iopscience.iop.org/article/10.3847/1538-4357/836/1/92/pdf) use the mass within the object's tidal radius (see also Jiang & Binney 2000). This approach is deemed the correct one, and is the one adopted here. But beware that the implementation of mass loss through tidal stripping  introduces more complexity and requires care to be implemented correctly and self-consistently.
