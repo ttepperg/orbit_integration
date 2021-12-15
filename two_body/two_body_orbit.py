@@ -11,7 +11,7 @@ See README for information on the code's background, usage, etc.
 import sys
 
 # costum modules
-sys.path.insert(0,"../.")							# include top directory in module search path
+sys.path.insert(0,"../.") # include top directory in module search path
 from utils import io
 from class_defs import orbit
 
