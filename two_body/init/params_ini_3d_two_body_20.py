@@ -1,7 +1,7 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This set of parameters produces a well-behaved equal mass, two-body system, with 
+This set of parameters produces a well-behaved equal mass, two-body system, with
 both bodies being extended (as opposed to point-like) on a higly precessing orbit
 characterised by the following parameters:
 
@@ -67,6 +67,7 @@ delta_t = 1.0e-3												# integration time step
 # Body 1
 rs1 = 1.0e0														# NFW scale radius (kpc)
 rho01 = 5.0e5													# core density (Msun/kpc**3)
+rtrunc1 = 10.         					 		# truncation (virial) radius
 Mass1_scale = 4. * pi * rho01 * rs1**3
 Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)			# potential (km/s)^2
 x1_0 = 0.														# positions (kpc)

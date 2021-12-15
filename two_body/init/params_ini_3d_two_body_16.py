@@ -45,7 +45,7 @@ Conservation laws:
                           Energy conservation to better than 1.343E-04 %.
     Angular momentum conservation (magnitude) to better than 1.780E-10 %.
     Angular momentum conservation (direction) to better than 0.000E+00 %.
- 
+
 
 A series of relevant plots for this system can be produced using:
 
@@ -69,29 +69,30 @@ from utils import funcs
 from math import pi
 
 
-t_0 = 0.0e0														# initial time (Gyr)
-t_1 = 1.0e1														# total time (time unit ~ 0.978 Gyr)
-delta_t = 1.0e-3												# integration time step
+t_0 = 0.0e0										# initial time (Gyr)
+t_1 = 1.0e1										# total time (time unit ~ 0.978 Gyr)
+delta_t = 1.0e-3								# integration time step
 
 # Body 1
-rs1 = 1.0e0														# NFW scale radius (kpc)
-rho01 = 5.0e5													# core density (Msun/kpc**3)
+rs1 = 1.0e0										# NFW scale radius (kpc)
+rho01 = 5.0e5									# core density (Msun/kpc**3)
+rtrunc1 = 10.         					 		# truncation (virial) radius
 Mass1_scale = 4. * pi * rho01 * rs1**3
-Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)						# potential (km/s)^2
+Potential1 = funcs.NFW_Potential(Mass1_scale,rs1)	# potential (km/s)^2
 x1_0 = 0.
 y1_0 = 0.
 z1_0 = 0.
-vx1_0 = 0.														# velocities (km/s):
+vx1_0 = 0.											# velocities (km/s):
 vy1_0 = 0.
 vz1_0 = 0.
 
 # Body 2
-Mass2_scale = 1.0e1													# mass scale (Msun)
-Potential2 = funcs.Kepler_Potential(Mass2_scale)					# potential (km/s)^2
-x2_0 = 1.														# positions (kpc)
+Mass2_scale = 1.0e1									# mass scale (Msun)
+Potential2 = funcs.Kepler_Potential(Mass2_scale)	# potential (km/s)^2
+x2_0 = 1.											# positions (kpc)
 y2_0 = 0.
 z2_0 = 0.
-vx2_0 = 0.														# velocities (km/s):
+vx2_0 = 0.											# velocities (km/s):
 vy2_0 = 1.
 vz2_0 = 0.
 
@@ -99,4 +100,3 @@ vz2_0 = 0.
 # test area
 print("{:E}".format(Mass1_scale))
 # exit()
-
