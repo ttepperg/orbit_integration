@@ -11,11 +11,11 @@
 #    	faq, bugs, etc:   type "help FAQ"
 #    	immediate help:   type "help"  (plot window: hit 'h')
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
 # Author:			Thorsten Tepper Garcia
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Invoke example (note that dataFile, delta_t and output_freq are mandatory input parameters):
 
 # Plot data evolution in 3D view
@@ -37,15 +37,26 @@
 #
 # The optional input parameters and their possible values are:
 #
-# plotRelOrbit - T / F (string); T means that the relative orbit is plotted; otherwise the
-#				 individual orbit of each body are plotted
-# projPlane - xy, xz, yz, or op (string); if set, plot the orbit on an orthogonal Cartesian
-# 			  projection, or onto the orbital plane. The latter includes the analytic result.
-# ffw - 1 / 0 (int); 0 yields an animation to the orbit's evolution; 1 fast-forwards in time
-# 		and plots the full evolution in one step
-# pauseStep - (float) pause in seconds between frames when ffw=0
+# plotRelOrbit - T / F (string)
 #
-#----------------------------------------------------------------------------------------
+# T means that the relative orbit is plotted; otherwise the individual orbit of
+# each body are plotted. Default value: T
+#
+# projPlane - xy, xz, yz, or op (string)
+#
+# if set, plot the orbit on an orthogonal Cartesian projection, or onto the
+# orbital plane. The latter includes the analytic result. Default value: none, e.g. 3D orbit is plotted.
+#
+# ffw - 1 / 0 (int)
+#
+# 0 yields an animation to the orbit's evolution; 1 fast forwards in time and
+# plots the full evolution in one step. Default value: 0.
+#
+# pauseStep - (float)
+#
+# pause in seconds between frames when ffw=0. Default value: 0.001
+#
+# -----------------------------------------------------------------------------
 # User settings
 
 # The following are set by the orbit integration program
@@ -88,7 +99,7 @@ if(!exists("ffw")){
 	ffw = 0
 }
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Internal settings
 
 # Functions
@@ -364,10 +375,10 @@ if(exists("projPlane")){ # orthogonal 3D projection onto 2D
 
 # } # projection plane = orbital plane
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # PLOTS
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Energy conservation
 set terminal x11 0 persist title "Energy" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
@@ -376,7 +387,7 @@ set grid
 pl dataFile u @plotColsEnergy w l not
 unset grid
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Angular momentum conservation
 set terminal x11 1 persist title "Angular momentum" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
@@ -385,7 +396,7 @@ set grid
 pl dataFile u @plotColsAngMom w l not
 unset grid
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Orbital history (Relative distance and relative speed)
 set terminal x11 2 persist title "Distance and speed" size 800,600 font "Times-Roman,14" enhanced solid
 set xlabel "Time".unit(timeUnitName)
@@ -408,10 +419,10 @@ set ytics mirror
 # unset table
 
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # Orbit
 
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # 1: Full 3D or 2D orthogonal projection
 
 if(!exists("projPlane")||(projPlane ne "op")){
@@ -568,7 +579,7 @@ if(!exists("projPlane")||(projPlane ne "op")){
 
 
 } else {
-#----------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 # 2: System's evolution projected onto orbital plane
 
 	set xrange [ * : * ]
