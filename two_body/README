@@ -209,7 +209,7 @@ In addition, the script provides a visualisation of the evolution of the total e
 
 The script requires some settings. These can be accomplished by directly editing the script's header to set e.g. the physical units, or via input arguments. Some of the latter are optional and set to reasonable defaults. Other are mandatory, such as input data filename, the time step, and the time output frequency, whose values are printed to stdout by the python code at runtime.
 
-Please consult the script's header for additional information on these input arguments and their default values.
+IMPORTANT: Please consult the script's header for additional information on these input arguments and their default values.
 
 
 
