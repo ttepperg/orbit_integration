@@ -1,8 +1,7 @@
 '''
 Author:	Thorsten Tepper Garcia
 
-This set of parameters produces a well-behaved two-body system, with a stable, nearly perfect
-circular orbit characterised by the following parameters:
+This set of parameters produces a well-behaved two-body system, with a stable, nearly perfect circular orbit characterised by the following parameters:
 
                    Total mass of body 1:     6.2832E+06
                    Total mass of body 2:     1.0000E+01
@@ -101,7 +100,7 @@ vz2_0 = 0.
 # assumption: centre of mass at rest
 from math import sqrt
 Mass1_cum = funcs.NFW_Mass(Mass1_scale,rs1)
-Mass2_cum = funcs.Kepler_Mass(Mass2_scale)							# 'cumulative' mass, trivially equal to Mass2_scale
+Mass2_cum = funcs.Kepler_Mass(Mass2_scale)		# 'cumulative' mass, trivially equal to Mass2_scale
 r0 = [x2_0-x1_0,y2_0-y1_0,z2_0-z1_0]
 M1 = Mass1_cum(*r0)
 M2 = Mass2_cum(*r0)
