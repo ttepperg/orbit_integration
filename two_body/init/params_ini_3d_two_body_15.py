@@ -3,8 +3,7 @@ Author:	Thorsten Tepper Garcia
 
 N.B.: This is the time reversed evolution of the system defined by params_ini_3d_two_body_13.py.
 
-This set of parameters produces a well-behaved two-body system, with a stable, highly precessing
-orbit characterised by the following parameters:
+This set of parameters produces a well-behaved two-body system, with a stable, highly precessing orbit characterised by the following parameters:
 
                    Total mass of body 1:     6.2832E+06
                    Total mass of body 2:     1.0000E+01
