@@ -267,7 +267,6 @@ def Sphere_VelDisp(mass = None, a = None):
 
 
 
-
 # PLUMMER (1911) MODEL
 
 # Plummer potential
