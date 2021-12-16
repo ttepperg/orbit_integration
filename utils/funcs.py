@@ -243,7 +243,7 @@ def Plummer_Mass(mass = None, a = None):
 		return Plummer_M
 
 
-# Plumer velocity dispersion
+# Plummer velocity dispersion
 def Plummer_VelDisp(mass = None, a = None):
 	'''Returns the 1D Plummer radial velocity dispersion at r, sigma_r(r)^2
 	See https://en.wikipedia.org/wiki/Plummer_model
