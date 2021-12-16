@@ -223,6 +223,7 @@ def Plummer_Density(mass = None, a = None):
 
 # Plummer cumulative mass
 def Plummer_Mass(mass = None, a = None):
+	'''Returns the cumulative mass of a Plummer sphere at r'''
 	if mass is None:
 		raise ValueError("mass is a required parameter in Plummer_Mass")
 	elif mass <= 0:
