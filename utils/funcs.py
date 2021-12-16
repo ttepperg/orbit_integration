@@ -63,12 +63,12 @@ def dot_prod(r = None, v = None):
 def rodrigues_rot(vec = None, axis = None, incl = None):
 	'''Implements Rodrigues' rotation formula to rotate a vector 'vec'
 	by an angle 'incl' around a prescribed 'axis' represented by an unit
-	vector k: 
-		
+	vector k:
+
 	vec_rot = vec cos_theta + (k x vec) sin_theta + k(k . vec)(1-cos_theta)
-	
+
 	See: https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
-	
+
 	'''
 	if vec is None:
 		raise ValueError("vec is a required parameter in rodrigues_rot")
@@ -244,9 +244,10 @@ def Plummer_Mass(mass = None, a = None):
 
 
 # Plumer velocity dispersion
-# See https://en.wikipedia.org/wiki/Plummer_model
 def Plummer_VelDisp(mass = None, a = None):
-	'''Returns the 1D Plummer velocity dispersion'''
+	'''Returns the 1D Plummer radial velocity dispersion at r, sigma_r(r)^2
+	See https://en.wikipedia.org/wiki/Plummer_model
+	'''
 	if mass is None:
 		raise ValueError("mass is a required argument in Plummer_VelDisp")
 	elif mass <= 0:
@@ -380,8 +381,7 @@ def NFW_Vmax(mass = None, rs = None):
 
 # NFW velocity dispersion
 def NFW_VelDisp(mass = None, rs = None):
-	'''Returns the approximate 1D NFW velocity dispersion.
-	The approximation is taken from Zentner and Bullock (2003,
+	'''Returns the approximate 1D NFW radial velocity dispersion at r, sigma_r(r)^2. The approximation is taken from Zentner and Bullock (2003,
 	their equation 6).
 	'''
 	if mass is None:
@@ -479,7 +479,7 @@ def Hernquist_Mass(mass = None, a = None):
 
 # Hernquist velocity dispersion
 def Hernquist_VelDisp(mass = None, a = None):
-	'''Returns the 1D Hernquist velocity dispersion,
+	'''Returns the 1D Hernquist radial velocity dispersion at r, sigma_r(r)^2,
 	as given by Hernquist (1990, his equation 10)
 	See http://adsabs.harvard.edu/abs/1990ApJ...356..359H
 	'''
@@ -508,7 +508,7 @@ def Hernquist_VelDisp(mass = None, a = None):
 			else:
 				raise ValueError("Zero or negative radius in Hernquist_VelDisp")
 		return Hernquist_veldisp
-			
+
 
 
 # PSEUDO-ISOTHERMAL SPHERE (PITS)
@@ -606,7 +606,7 @@ def PITS_Vinf(mass = None, a = None):
 
 # PITS velocity dispersion
 def PITS_VelDisp(mass = None, a = None):
-	'''Returns the 1D PITS velocity dispersion.
+	'''Returns the 1D PITS  radial velocity dispersion at r, sigma_r(r)^2.
 	The result is taken from Kormendy & Freeman (2016, their
 	equation 4). Beware that they may have adopted a different
 	convention for v_inf as we do here (see Kormendy & Freeman (2016,
@@ -720,7 +720,7 @@ def mass_bound(m1_func = None, m2_func = None):
 			mb = m2_func(*_rt)
 			return mb
 		return _mass_b
- 
+
 
 
 def dyn_friction_simpl():
