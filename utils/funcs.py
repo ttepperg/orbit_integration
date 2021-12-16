@@ -245,6 +245,7 @@ def Sphere_Mass(mass = None, a = None):
 # Homogeneous sphere velocity dispersion
 def Sphere_VelDisp(mass = None, a = None):
 	'''Returns the 1D Homogeneous sphere radial velocity dispersion at r, sigma_r(r)^2. Can be easily derived from the spherically symmetric Jeans equation for isotropic systems (beta = 0) and constant density. In this case, the velocity dispersion is equal to minus the potential.
+	IMPORTANT: Strictly speaking, the vel.disp. should be 0 for r > a, but I won't implement that explicity as it may cause a division by 0 when calculating the dynamical friction force. Instead, I set its value to a very large value so as to nullify the dyn.fric. force
 	'''
 	if mass is None:
 		raise ValueError("mass is a required argument in Sphere_VelDisp")
@@ -256,7 +257,12 @@ def Sphere_VelDisp(mass = None, a = None):
 		raise ValueError("a must be non-negative in Sphere_VelDisp")
 	else:
 		def Sphere_veldisp(*r):
-			return -1 * Sphere_Potential(mass,a)
+			_r = norm(*r)
+			if _r < a:
+				return -1 * Sphere_Potential(mass,a)
+			else:
+				return 1.e100 # should be 0, but this yield a 0 dyn.fric. force
+
 		return Sphere_veldisp
 
 
