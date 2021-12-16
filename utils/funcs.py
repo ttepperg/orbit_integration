@@ -169,6 +169,99 @@ def Kepler_Mass(mass = None):
 
 
 
+# HOMOGENEOUS SPHERE
+
+# Homogeneous sphere potential
+def Sphere_Potential(mass = None, a = None):
+	'''Implements a wrapper for the potential of an homogeneous sphere of given mass and radius a. Reduces to Kepler potential for r >= a'''
+	if mass is None:
+		raise ValueError("mass is a required argument in Sphere_Potential")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Sphere_Potential")
+	elif a is None:
+		raise ValueError("a is a required argument in Sphere_Potential")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Sphere_Potential")
+	else:
+		def Sphere_Pot(*r):
+			_amp = Grav * mass
+			_r = norm(*r)
+			_r2 = _r**2
+			_a2 = a**2
+			if _r < a:
+				return 0.5 * _amp / (a * _a2) * (_r2 - 3. * _a2)
+			else:
+				return -1 * _amp / _r
+
+		# private attributes (= parent func. params) to allow for access from outside
+		Sphere_Pot._mass = mass
+		Sphere_Pot._a = a
+		return Sphere_Pot
+
+
+# Homogeneous sphere density profile
+def Sphere_Density(mass = None, a = None):
+	'''Returns the Homogeneous sphere density at r, which is constant for r < a and zero otherwise'''
+	if mass is None:
+		raise ValueError("mass is a required parameter in Sphere_Density")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Sphere_Density")
+	elif a is None:
+		raise ValueError("a is a required parameter in Sphere_Density")
+	elif a <= 0:
+		raise ValueError("a must be positive in Sphere_Density")
+	else:
+		def Sphere_dens(*r):
+			_r = norm(*r)
+			if _r < a:
+				return 3. * mass / (4. * math.pi * a**3)
+			else:
+				return 0.
+		return Sphere_dens
+
+
+# Homogeneous sphere cumulative mass
+def Sphere_Mass(mass = None, a = None):
+	'''Returns the cumulative mass of an homogeneous sphere at r'''
+	if mass is None:
+		raise ValueError("mass is a required parameter in Sphere_Mass")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Sphere_Mass")
+	elif a is None:
+		raise ValueError("a is a required parameter in Sphere_Mass")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Sphere_Mass")
+	else:
+		def Sphere_M(*r):
+			_amp = mass / a**3
+			_r = norm(*r)
+			if _r < a:
+				return _amp * _r**3
+			else:
+				return mass
+		return Sphere_M
+
+
+# Homogeneous sphere velocity dispersion
+def Sphere_VelDisp(mass = None, a = None):
+	'''Returns the 1D Homogeneous sphere radial velocity dispersion at r, sigma_r(r)^2. Can be easily derived from the spherically symmetric Jeans equation for isotropic systems (beta = 0) and constant density. In this case, the velocity dispersion is equal to minus the potential.
+	'''
+	if mass is None:
+		raise ValueError("mass is a required argument in Sphere_VelDisp")
+	elif mass <= 0:
+		raise ValueError("mass must be positive in Sphere_VelDisp")
+	elif a is None:
+		raise ValueError("a is a required argument in Sphere_VelDisp")
+	elif a < 0:
+		raise ValueError("a must be non-negative in Sphere_VelDisp")
+	else:
+		def Sphere_veldisp(*r):
+			return -1 * Sphere_Potential(mass,a)
+		return Sphere_veldisp
+
+
+
+
 # PLUMMER (1911) MODEL
 
 # Plummer potential

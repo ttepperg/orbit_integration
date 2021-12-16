@@ -28,18 +28,18 @@ class Body():
 			r_vec - initial position vector of body (list)
 
 			v_vec - initial velocity vector of body (list)
-			
+
 			df - dynamical friction function
 
 			massevol - mass evolution function (if df is switched on)
-			
+
 			rt - truncation radius; required if massevol is set
 
 			mmin - present-day mass; required if massevol is set and backwards integration is on
 
 		OUTPUT:
 
-			Instance          
+			Instance
 
 		HISTORY:
 
@@ -75,8 +75,15 @@ class Body():
 
 			# set cumulative mass function self-consistently
 			pot_name = self.potential.__name__
-			if pot_name == "Kepler_Pot": 
+			if pot_name == "Kepler_Pot":
 				self.mass_cum = funcs.Kepler_Mass(self.mass_scale)
+			elif pot_name == "Sphere_Pot":
+				_a = self.potential.__getattribute__('_a')
+				_mass = self.potential.__getattribute__('_mass')
+				if _mass != self.mass_scale:
+					raise ValueError("Non-matching mass in Body's potential {}".format(pot_name))
+				else:
+					self.mass_cum = funcs.Sphere_Mass(self.mass_scale,_a)
 			elif pot_name == "Plummer_Pot":
 				_a = self.potential.__getattribute__('_a')
 				_mass = self.potential.__getattribute__('_mass')
@@ -117,7 +124,12 @@ class Body():
 			# for dynamical friction calculation
 			self.dynamical_friction = df
 			if self.dynamical_friction is not None:
-				if pot_name == "Plummer_Pot":
+				if pot_name == "Sphere_Pot":
+					_mass = self.potential.__getattribute__('_mass')
+					_a = self.potential.__getattribute__('_a')
+					self.dens = funcs.Sphere_Density(self.mass_scale,_a)
+					self.vel_disp = funcs.Sphere_VelDisp(self.mass_scale, _a)
+				elif pot_name == "Plummer_Pot":
 					_mass = self.potential.__getattribute__('_mass')
 					_a = self.potential.__getattribute__('_a')
 					self.dens = funcs.Plummer_Density(self.mass_scale,_a)
@@ -266,4 +278,3 @@ class Body():
 	def speed_rel(self,b):
 		'''Relative speed of Body instance relative to another Body instance'''
 		return funcs.norm(*self.vel_rel(b))
-
