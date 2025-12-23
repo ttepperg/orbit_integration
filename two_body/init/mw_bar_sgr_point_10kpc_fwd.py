@@ -8,7 +8,7 @@ ABOUT:
 	This is the NEAR orbit intended to model the MW(bar)-Sgr interaction with AGAMA. It is based on model hbd_9
 
 NOTES:
-	The initial orbital parameters are obtained from the infall parameters calculated with mw_bar_sgr_point_20kpc_bck.py. Recall that a self-consistent result implies infall parameters calcualted with one init file (e.g. bck) matching the present-day parameters of its counterpart (e.g. fwd).
+	The initial orbital parameters are obtained from the infall parameters calculated with mw_bar_sgr_point_20kpc_bck.py. Recall that a self-consistent result implies infall parameters calculated with one init file (e.g. bck) matching the present-day parameters of its counterpart (e.g. fwd).
 
 	Set t_1 = 6.0e-1 to integrate beyond the crossing point at z=0 and R=20 to check whether the orbit is truly hyperbolic (appers to be not).
 
